@@ -1,0 +1,9 @@
+LIBRARY	"StringConvertor"
+EXPORTS
+GBKToUtf16
+Utf16ToGBK
+GBKToUtf8
+Utf8ToGBK
+Utf16ToUtf8
+Utf8ToUtf16
+
