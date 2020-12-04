@@ -65,7 +65,8 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>StringConvertor.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -85,7 +86,8 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>StringConvertor.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -95,9 +97,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="StringConvertor.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="StringConvertor.def" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StringConvertor.h" />

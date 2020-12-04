@@ -92,7 +92,7 @@
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\openssl_1.0.2;$(SolutionDir)..\ThirdPartyLibrarys;$(SolutionDir)..\Utils;$(SolutionDir)..\ThirdPartyLibrarys\protobuf\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Includes;$(SolutionDir)..\Includes\openssl_1.0.2;$(SolutionDir)..\ThirdPartyLibrarys;$(SolutionDir)..\Utils;$(SolutionDir)..\ThirdPartyLibrarys\protobuf\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,7 +124,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\openssl_1.0.2;$(SolutionDir)..\ThirdPartyLibrarys;$(SolutionDir)..\Utils;$(SolutionDir)..\ThirdPartyLibrarys\protobuf\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Includes;$(SolutionDir)..\Includes\openssl_1.0.2;$(SolutionDir)..\ThirdPartyLibrarys;$(SolutionDir)..\Utils;$(SolutionDir)..\ThirdPartyLibrarys\protobuf\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

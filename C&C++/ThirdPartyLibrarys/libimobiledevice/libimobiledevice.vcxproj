@@ -87,7 +87,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\openssl_1.0.2;./include;../libplist/include;../libusbmuxd;../libgen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Includes;$(SolutionDir)..\Includes\openssl_1.0.2;./include;../libplist/include;../libusbmuxd;../libgen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBIMOBILEDEVICE_EXPORTS;ASN1_STATIC;HAVE_OPENSSL;__LITTLE_ENDIAN__;plist_STATIC;LIBUSBMUXD_STATIC;DIAGNOSTICS_EXPORT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -110,7 +110,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;./include;../libplist/include;../libusbmuxd;../libgen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Includes;./include;../libplist/include;../libusbmuxd;../libgen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_AMD64_;_DEBUG;_WINDOWS;_USRDLL;LIBIMOBILEDEVICE_EXPORTS;ASN1_STATIC;HAVE_OPENSSL;__LITTLE_ENDIAN__;plist_STATIC;LIBUSBMUXD_STATIC;DIAGNOSTICS_EXPORT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -132,7 +132,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\include;$(SolutionDir)..\include\openssl_1.0.2;./include;../libplist/include;../libusbmuxd;../libgen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Includes;$(SolutionDir)..\Includes\openssl_1.0.2;./include;../libplist/include;../libusbmuxd;../libgen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBIMOBILEDEVICE_EXPORTS;ASN1_STATIC;HAVE_OPENSSL;__LITTLE_ENDIAN__;plist_STATIC;LIBUSBMUXD_STATIC;DIAGNOSTICS_EXPORT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -157,7 +157,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;./include;../libplist/include;../libusbmuxd;../libgen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\include\openssl_1.0.2;./include;../libplist/include;../libusbmuxd;../libgen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_AMD64_;WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBIMOBILEDEVICE_EXPORTS;ASN1_STATIC;HAVE_OPENSSL;__LITTLE_ENDIAN__;plist_STATIC;LIBUSBMUXD_STATIC;DIAGNOSTICS_EXPORT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
