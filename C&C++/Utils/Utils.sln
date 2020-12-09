@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageConverter", "ImageConv
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StringConvertor", "StringConvertor\StringConvertor.vcxproj", "{8DBD599E-97E3-4310-8F60-E6BE0F11C85C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinProcessUtils", "WinProcessUtils\WinProcessUtils.vcxproj", "{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -49,6 +51,14 @@ Global
 		{8DBD599E-97E3-4310-8F60-E6BE0F11C85C}.Release|x64.ActiveCfg = Release|Win32
 		{8DBD599E-97E3-4310-8F60-E6BE0F11C85C}.Release|x86.ActiveCfg = Release|Win32
 		{8DBD599E-97E3-4310-8F60-E6BE0F11C85C}.Release|x86.Build.0 = Release|Win32
+		{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}.Debug|x64.ActiveCfg = Debug|x64
+		{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}.Debug|x64.Build.0 = Debug|x64
+		{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}.Debug|x86.ActiveCfg = Debug|Win32
+		{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}.Debug|x86.Build.0 = Debug|Win32
+		{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}.Release|x64.ActiveCfg = Release|x64
+		{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}.Release|x64.Build.0 = Release|x64
+		{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}.Release|x86.ActiveCfg = Release|Win32
+		{3531CCF0-F2F3-47BF-ADB5-E04B1B98D389}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

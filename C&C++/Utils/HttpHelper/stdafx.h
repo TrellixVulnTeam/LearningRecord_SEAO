@@ -22,6 +22,8 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <chrono>
+#include <future>
 
 #pragma comment(lib, "libcurl")
 #pragma comment(lib, "StringConvertor")

@@ -4,19 +4,48 @@
 #include "stdafx.h"
 #include "HttpHelper.h"
 
-size_t ProcessDataToString(void *buffer, size_t size, size_t nmemb, void *user_p);
+size_t ProcessDataToString(
+    void *buffer,
+    size_t size,
+    size_t nmemb,
+    void *user_p
+);
 
-size_t ProcessDataToFile(void *buffer, size_t size, size_t nmemb, void *user_p);
+size_t ProcessDataToFile(
+    void *buffer,
+    size_t size,
+    size_t nmemb,
+    void *user_p
+);
 
-bool HttpGetHelp(const std::string &strUrl, const std::string &strHeader, const std::wstring &wstrSaveFile,
-	std::string &strSaveData, const std::string &strCookie = "");
+bool HttpGetHelp(
+    const std::string &strUrl,
+    const std::string &strHeader,
+    const std::wstring &wstrSaveFile,
+	std::string &strSaveData,
+    const std::string &strCookie = ""
+);
 
-bool HttpPostHelp(const std::string &strUrl, const std::string &strHeader, const std::string &strPostData,
-	const std::wstring &wstrSaveFile, std::string &strSaveData, const std::string &strCookie="");
+bool HttpPostHelp(
+    const std::string &strUrl,
+    const std::string &strHeader,
+    const std::string &strPostData,
+	const std::wstring &wstrSaveFile,
+    std::string &strSaveData,
+    const std::string &strCookie=""
+);
 
-void SplitLines(const std::string &str, const std::string &split, std::list<std::string> &lines);
+void SplitLines(
+    const std::string &str,
+    const std::string &split,
+    std::list<std::string> &lines
+);
 
-std::string HttpGet(const std::string &strUrl, const std::string &strHeader, const std::string &strCookie)
+std::string HttpGet(
+    const std::string &strUrl,
+    const std::string &strHeader,
+    const std::string &strCookie
+)
 {
     std::string strSaveData;
 
@@ -25,14 +54,24 @@ std::string HttpGet(const std::string &strUrl, const std::string &strHeader, con
     return strSaveData;
 }
 
-bool HttpGetToFile(const std::string &strUrl, const std::string &strHeader, const std::wstring &wstrSaveFile, const std::string &strCookie)
+bool HttpGetToFile(
+    const std::string &strUrl,
+    const std::string &strHeader,
+    const std::wstring &wstrSaveFile,
+    const std::string &strCookie
+)
 {
     std::string strSaveData;
 
     return HttpGetHelp(strUrl, strHeader, wstrSaveFile, strSaveData, strCookie);
 }
 
-std::string HttpPost(const std::string &strUrl, const std::string &strHeader, const std::string &strPostData, const std::string &strCookie)
+std::string HttpPost(
+    const std::string &strUrl,
+    const std::string &strHeader,
+    const std::string &strPostData,
+    const std::string &strCookie
+)
 {
     std::string strSaveData;
 
@@ -41,7 +80,13 @@ std::string HttpPost(const std::string &strUrl, const std::string &strHeader, co
     return strSaveData;
 }
 
-bool HttpPostToFile(const std::string &strUrl, const std::string &strHeader, const std::string &strPostData, const std::wstring &wstrSaveFile, const std::string &strCookie)
+bool HttpPostToFile(
+    const std::string &strUrl,
+    const std::string &strHeader,
+    const std::string &strPostData,
+    const std::wstring &wstrSaveFile,
+    const std::string &strCookie
+)
 {
     std::string strSaveData;
 
@@ -51,17 +96,14 @@ bool HttpPostToFile(const std::string &strUrl, const std::string &strHeader, con
 // 检测internet 连接
 bool CheckNetFree()
 {
-	static std::atomic<bool> bFree;
-	bFree.store(false);
-
-	auto fn = [](std::atomic<bool> *pParam)->void {
-		pParam->store(false);
+	auto fn = [](std::promise<bool> *promiseObj)->void {
 		WSADATA wd = { 0 };
 
 		if (0 != WSAStartup(MAKEWORD(2, 2), &wd))
 		{
 			return;
 		}
+
 		if (LOBYTE(wd.wHighVersion) != 2 || HIBYTE(wd.wHighVersion) != 2)
 		{
 			WSACleanup();
@@ -72,19 +114,34 @@ bool CheckNetFree()
 		hostent *ht = gethostbyname(hostUrl);
 		if (ht)
 		{
-			pParam->store(true);
+			promiseObj->set_value(true);
 		}
 		WSACleanup();
 		return;
 	};
-	std::thread netCheckThread(fn,&bFree);
+	
+	std::promise<bool> promiseObj;
+	std::future<bool> futureObj = promiseObj.get_future();
 
-	::WaitForSingleObject((HANDLE)netCheckThread.native_handle(), 2000);
+	std::thread netCheckThread(fn, &promiseObj);
+	netCheckThread.detach();
 
-	return bFree.load();
+	bool networkConnect = false;
+	std::future_status status = futureObj.wait_for(std::chrono::seconds(2));
+	if (std::future_status::ready == status)
+	{
+		networkConnect = futureObj.get();
+	}
+
+	return networkConnect;
 }
 
-size_t ProcessDataToString(void *buffer, size_t size, size_t nmemb, void *user_p)
+size_t ProcessDataToString(
+    void *buffer,
+    size_t size,
+    size_t nmemb,
+    void *user_p
+)
 {
     std::string *lpStr = (std::string *)user_p;
     if (NULL != lpStr && NULL != buffer)
@@ -96,7 +153,12 @@ size_t ProcessDataToString(void *buffer, size_t size, size_t nmemb, void *user_p
     return size * nmemb;
 }
 
-size_t ProcessDataToFile(void *buffer, size_t size, size_t nmemb, void *user_p)
+size_t ProcessDataToFile(
+    void *buffer,
+    size_t size,
+    size_t nmemb,
+    void *user_p
+)
 {
     size_t return_size = size * nmemb;
     FILE *fp = (FILE *)user_p;
@@ -108,24 +170,34 @@ size_t ProcessDataToFile(void *buffer, size_t size, size_t nmemb, void *user_p)
     return return_size;
 }
 
-bool HttpGetHelp(const std::string &strUrl, const std::string &strHeader, const std::wstring &wstrSaveFile, std::string &strSaveData, const std::string &strCookie)
+bool HttpGetHelp(
+    const std::string &strUrl,
+    const std::string &strHeader,
+    const std::wstring &wstrSaveFile,
+    std::string &strSaveData,
+    const std::string &strCookie
+)
 {
     CURL *easy_handle = NULL;
     CURLcode return_code;
     FILE *fp = NULL;
     bool bRet = false;
-	std::string caFile;
-	char szExeDir[MAX_PATH] = { 0 };
-	GetModuleFileNameA(NULL, szExeDir, sizeof(szExeDir) / sizeof(szExeDir[0]));
-	char *p = strrchr(szExeDir, '\\');
-	if (NULL != p)
-	{
-		*p = 0;
-	}
 
-	caFile = std::string(szExeDir) + "\\ssl\\cacert.pem";
     do
     {
+        std::string caFile;
+        char szExeDir[MAX_PATH] = { 0 };
+        GetModuleFileNameA(NULL, szExeDir, sizeof(szExeDir) / sizeof(szExeDir[0]));
+        char *p = strrchr(szExeDir, '\\');
+        if (NULL != p)
+        {
+            *p = 0;
+        }
+
+        caFile = std::string(szExeDir) + "\\ssl\\cacert.pem";
+
+        bool bHttps = 0 == _strnicmp(strUrl.c_str(), "https://", strlen("https://"));
+
         // 获取easy handle
         easy_handle = curl_easy_init();
         if (NULL == easy_handle)
@@ -141,17 +213,17 @@ bool HttpGetHelp(const std::string &strUrl, const std::string &strHeader, const 
                 break;
             }
 
-            curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &ProcessDataToFile);
-            curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, fp);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &ProcessDataToFile);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, fp);
         }
         else
         {
-            curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &ProcessDataToString);
-            curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, &strSaveData);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &ProcessDataToString);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, &strSaveData);
         }
 
-		// 设置easy handle属性
-		curl_slist *http_headers = NULL;
+        // 设置easy handle属性
+        curl_slist *http_headers = NULL;
         std::list<std::string> heads;
         SplitLines(strHeader, "\r\n", heads);
 
@@ -160,25 +232,37 @@ bool HttpGetHelp(const std::string &strUrl, const std::string &strHeader, const 
             http_headers = curl_slist_append(http_headers, head.c_str());
         }
 
-		if (NULL == http_headers)
-		{
-			break;
-		}
+        if (NULL == http_headers)
+        {
+            break;
+        }
 
-		curl_easy_setopt(easy_handle, CURLOPT_HTTPHEADER, http_headers);
+        return_code = curl_easy_setopt(easy_handle, CURLOPT_HTTPHEADER, http_headers);
 
-		curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYPEER, 1L);
-		curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYHOST, 1L);
-		curl_easy_setopt(easy_handle, CURLOPT_CAINFO, caFile.c_str()); 
-		if (!strCookie.empty())
-		{
-			curl_easy_setopt(easy_handle, CURLOPT_COOKIE, strCookie.c_str());
-		}
+        if (bHttps)
+        {
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYPEER, 1L);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYHOST, 2L);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_CAINFO, caFile.c_str());
+        }
+        else
+        {
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYPEER, 0L);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYHOST, 0L);
+        }
 
-		// add Dengxg 递归重定向 -- 暂时不用
-		//curl_easy_setopt(easy_handle, CURLOPT_FOLLOWLOCATION, 1);
-			
-        curl_easy_setopt(easy_handle, CURLOPT_URL, strUrl.c_str());
+        if (!strCookie.empty())
+        {
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_COOKIE, strCookie.c_str());
+        }
+
+        // add Dengxg 递归重定向 -- 暂时不用
+        curl_easy_setopt(easy_handle, CURLOPT_FOLLOWLOCATION, 1);
+
+		// 设置30秒超时
+		curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 30);
+
+        return_code = curl_easy_setopt(easy_handle, CURLOPT_URL, strUrl.c_str());
 
         // 执行数据请求
         return_code = curl_easy_perform(easy_handle);
@@ -205,26 +289,35 @@ bool HttpGetHelp(const std::string &strUrl, const std::string &strHeader, const 
     return bRet;
 }
 
-bool HttpPostHelp(const std::string &strUrl, const std::string &strHeader, const std::string &strPostData, const std::wstring &wstrSaveFile, std::string &strSaveData, const std::string &strCookie)
+bool HttpPostHelp(
+    const std::string &strUrl,
+    const std::string &strHeader,
+    const std::string &strPostData,
+    const std::wstring &wstrSaveFile,
+    std::string &strSaveData,
+    const std::string &strCookie
+)
 {
     CURL *easy_handle = NULL;
     CURLcode return_code;
     FILE *fp = NULL;
     bool bRet = false;
 
-	std::string caFile;
-	char szExeDir[MAX_PATH] = { 0 };
-	GetModuleFileNameA(NULL, szExeDir, sizeof(szExeDir) / sizeof(szExeDir[0]));
-	char *p = strrchr(szExeDir, '\\');
-	if (NULL != p)
-	{
-		*p = 0;
-	}
-
-	caFile = std::string(szExeDir) + "\\ssl\\cacert.pem";
-
     do
     {
+        std::string caFile;
+        char szExeDir[MAX_PATH] = { 0 };
+        GetModuleFileNameA(NULL, szExeDir, sizeof(szExeDir) / sizeof(szExeDir[0]));
+        char *p = strrchr(szExeDir, '\\');
+        if (NULL != p)
+        {
+            *p = 0;
+        }
+
+        caFile = std::string(szExeDir) + "\\ssl\\cacert.pem";
+
+        bool bHttps = 0 == _strnicmp(strUrl.c_str(), "https://", strlen("https://"));
+
         // 获取easy handle
         easy_handle = curl_easy_init();
         if (NULL == easy_handle)
@@ -240,13 +333,13 @@ bool HttpPostHelp(const std::string &strUrl, const std::string &strHeader, const
                 break;
             }
 
-            curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &ProcessDataToFile);
-            curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, fp);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &ProcessDataToFile);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, fp);
         }
         else
         {
-            curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &ProcessDataToString);
-            curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, &strSaveData);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &ProcessDataToString);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, &strSaveData);
         }
 
         // 设置easy handle属性
@@ -264,18 +357,27 @@ bool HttpPostHelp(const std::string &strUrl, const std::string &strHeader, const
             break;
         }
 
-        curl_easy_setopt(easy_handle, CURLOPT_HTTPHEADER, http_headers);
+        return_code = curl_easy_setopt(easy_handle, CURLOPT_HTTPHEADER, http_headers);
 
-		curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYPEER, 1L);
-		curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYHOST, 1L);
-		curl_easy_setopt(easy_handle, CURLOPT_CAINFO, caFile.c_str());
-		if (!strCookie.empty())
-		{
-			curl_easy_setopt(easy_handle, CURLOPT_COOKIE, strCookie.c_str());
-		}
+        if (bHttps)
+        {
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYPEER, 1L);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYHOST, 2L);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_CAINFO, caFile.c_str());
+        }
+        else
+        {
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYPEER, 0L);
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_SSL_VERIFYHOST, 0L);
+        }
 
-        curl_easy_setopt(easy_handle, CURLOPT_URL, strUrl.c_str());
-        curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, strPostData.c_str());
+        if (!strCookie.empty())
+        {
+            return_code = curl_easy_setopt(easy_handle, CURLOPT_COOKIE, strCookie.c_str());
+        }
+
+        return_code = curl_easy_setopt(easy_handle, CURLOPT_URL, strUrl.c_str());
+        return_code = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, strPostData.c_str());
 
         // 执行数据请求
         return_code = curl_easy_perform(easy_handle);
