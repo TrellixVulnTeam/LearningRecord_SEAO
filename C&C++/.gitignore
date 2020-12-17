@@ -48,6 +48,7 @@ ipch
 !/Output/Debug/libcurl.pdb
 !/Output/Debug/curl.*
 !/Output/Debug/zlib*
+!/Output/Debug/zdll*
 !/Output/Debug/CORE_DB_*
 /Output/Release/*
 !/Output/Release
@@ -74,4 +75,5 @@ ipch
 !/Output/Release/libcurl.pdb
 !/Output/Release/curl.*
 !/Output/Release/zlib*
+!/Output/Release/zdll*
 !/Output/Release/CORE_RL_*
