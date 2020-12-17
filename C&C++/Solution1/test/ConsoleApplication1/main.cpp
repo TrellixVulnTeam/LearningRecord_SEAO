@@ -1,8 +1,8 @@
 // rapidjson
-#include "rapidjson\rapidjson.h"
-#include "rapidjson\document.h"
-#include "rapidjson\writer.h"
-#include "rapidjson\stringbuffer.h"
+#include "rapidjson\include\rapidjson\rapidjson.h"
+#include "rapidjson\include\rapidjson\document.h"
+#include "rapidjson\include\rapidjson\writer.h"
+#include "rapidjson\include\rapidjson\stringbuffer.h"
 
 #include <windows.h>
 #include <tchar.h>
@@ -36,12 +36,8 @@
 #include "StringConvertor\StringConvertor.h"
 #pragma comment(lib, "StringConvertor")
 
-// imageconverter
-#include "ImageConverter/ImageConverter.h"
-#pragma comment(lib, "ImageConverter")
-
 // pugixml
-#include "pugixml\pugixml.hpp"
+#include "pugixml\src\pugixml.hpp"
 #pragma comment(lib, "pugixml")
 
 // rapidxml
@@ -661,19 +657,19 @@ void Pcre2Demo() {
     }
 }
 
-int ParseProp(const std::wstring& wstrFile, std::map<std::string, std::string>& values) {
-    values.clear();
-    google::protobuf::compiler::CommandLineInterface cli;
-    cli.AllowPlugins("protoc-");
-    return cli.Run(wstrFile, values);
-}
-
-int ParseProp(const char* szData, int iSize, std::map<std::string, std::string>& values) {
-    values.clear();
-    google::protobuf::compiler::CommandLineInterface cli;
-    cli.AllowPlugins("protoc-");
-    return cli.Run(szData, iSize, values);
-}
+//int ParseProp(const std::wstring& wstrFile, std::map<std::string, std::string>& values) {
+//    values.clear();
+//    google::protobuf::compiler::CommandLineInterface cli;
+//    cli.AllowPlugins("protoc-");
+//    return cli.Run(wstrFile, values);
+//}
+//
+//int ParseProp(const char* szData, int iSize, std::map<std::string, std::string>& values) {
+//    values.clear();
+//    google::protobuf::compiler::CommandLineInterface cli;
+//    cli.AllowPlugins("protoc-");
+//    return cli.Run(szData, iSize, values);
+//}
 
 void ProtobufDemo() {
     std::map<std::string, std::string> values;
