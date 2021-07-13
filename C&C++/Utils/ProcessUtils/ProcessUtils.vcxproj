@@ -144,9 +144,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="ProcessUtils.h" />
     <ClInclude Include="pscmd.h" />
     <ClInclude Include="stdafx.h" />
