@@ -23,22 +23,16 @@
 
 #define _LIBICONV_VERSION 0x0109    /* version number: (major<<8) + minor */
 
-//#ifdef LIBICONV_STATIC
-//#define LIBICONV_DLL_EXPORTED
-//#else /* LIBICONV_STATIC */
-//#ifdef BUILDING_LIBICONV
-//#define LIBICONV_DLL_EXPORTED __declspec(dllexport)
-//#else
-//#define LIBICONV_DLL_EXPORTED __declspec(dllimport)
-//#endif
-//#endif /* LIBICONV_STATIC */
 
-
-#ifdef LIBICONV_EXPORTS
-#define LIBICONV_DLL_EXPORTED __declspec(dllexport)
-#else
-#define LIBICONV_DLL_EXPORTED __declspec(dllimport)
-#endif
+#ifdef LIBICONV_STATIC
+    #define LIBICONV_DLL_EXPORTED
+#else /* LIBICONV_STATIC */
+    #ifdef LIBICONV_EXPORTS
+        #define LIBICONV_DLL_EXPORTED __declspec(dllexport)
+    #else
+        #define LIBICONV_DLL_EXPORTED __declspec(dllimport)
+    #endif
+#endif /* LIBICONV_STATIC */
 
 extern LIBICONV_DLL_EXPORTED int _libiconv_version;       /* Likewise */
 

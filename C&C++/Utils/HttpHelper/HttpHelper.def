@@ -1,7 +1,0 @@
-LIBRARY "HttpHelper"
-EXPORTS
-HttpGet @1
-HttpGetToFile @2
-HttpPost @3
-HttpPostToFile @4
-CheckNetFree @5

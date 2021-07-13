@@ -23,6 +23,3 @@
 #include "httplib.h"
 #pragma comment(lib, "libeay32")
 #pragma comment(lib, "ssleay32")
-
-#include <HttpHelper/HttpHelper.h>
-#pragma comment(lib, "HttpHelper")

@@ -43,9 +43,6 @@
 [submodule "C&C++\\ThirdPartyLibrarys\\cpp-httplib"]
 	path = C&C++\\ThirdPartyLibrarys\\cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib.git
-[submodule "C&C++\\ThirdPartyLibrarys\\GSL"]
-	path = C&C++\\ThirdPartyLibrarys\\GSL
-	url = https://github.com/microsoft/GSL.git
 [submodule "C&C++\\ThirdPartyLibrarys\\icu"]
 	path = C&C++\\ThirdPartyLibrarys\\icu
 	url = https://github.com/unicode-org/icu.git
@@ -55,9 +52,6 @@
 [submodule "C&C++\\ThirdPartyLibrarys\\FFmpeg"]
 	path = C&C++\\ThirdPartyLibrarys\\FFmpeg
 	url = https://github.com/ShiftMediaProject/FFmpeg.git
-[submodule "C&C++\\ThirdPartyLibrarys\\base64-c"]
-	path = C&C++\\ThirdPartyLibrarys\\base64-c
-	url = https://github.com/littlstar/b64.c.git
 [submodule "C&C++\\ThirdPartyLibrarys\\zlib"]
 	path = C&C++\\ThirdPartyLibrarys\\zlib
 	url = https://github.com/madler/zlib.git

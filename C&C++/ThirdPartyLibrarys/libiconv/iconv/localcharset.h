@@ -20,22 +20,15 @@
 #ifndef _LOCALCHARSET_H
 #define _LOCALCHARSET_H
 
-//#ifdef LIBCHARSET_STATIC
-//#define LIBCHARSET_DLL_EXPORTED
-//#else/*LIBCHARSET_STATIC*/
-//#ifdef BUILDING_LIBCHARSET
-//#define LIBCHARSET_DLL_EXPORTED __declspec(dllexport)
-//#else
-//#define LIBCHARSET_DLL_EXPORTED __declspec(dllimport)
-//#endif
-//#endif/*LIBCHARSET_STATIC*/
-
-
-#ifdef LIBICONV_EXPORTS
-#define LIBCHARSET_DLL_EXPORTED __declspec(dllexport)
-#else
-#define LIBCHARSET_DLL_EXPORTED __declspec(dllimport)
-#endif
+#ifdef LIBICONV_STATIC
+    #define LIBCHARSET_DLL_EXPORTED
+#else /* LIBICONV_STATIC */
+    #ifdef LIBICONV_EXPORTS
+        #define LIBCHARSET_DLL_EXPORTED __declspec(dllexport)
+    #else
+        #define LIBCHARSET_DLL_EXPORTED __declspec(dllimport)
+    #endif
+#endif /* LIBICONV_STATIC */
 
 
 #ifdef __cplusplus

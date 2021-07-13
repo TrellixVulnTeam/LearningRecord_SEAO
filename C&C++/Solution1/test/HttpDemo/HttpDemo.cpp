@@ -4,15 +4,14 @@
 #include "stdafx.h"
 
 
-int main()
-{
+int main() {
     // IMPORTANT: 1st parameter must be a hostname or an IP adress string.
     {
         httplib::Client cli("down.sandai.net");
 
-        FILE *fp = nullptr;
+        FILE* fp = nullptr;
         _wfopen_s(&fp, L"1.exe", L"wb");
-        httplib::ContentReceiver receiver = [&fp](const char *data, size_t data_length)->bool {
+        httplib::ContentReceiver receiver = [&fp](const char* data, size_t data_length)->bool {
             if (fp) {
                 fwrite(data, 1, data_length, fp);
             }
@@ -30,9 +29,9 @@ int main()
     {
         httplib::SSLClient cli("images2015.cnblogs.com");
 
-        FILE *fp = nullptr;
+        FILE* fp = nullptr;
         _wfopen_s(&fp, L"1.png", L"wb");
-        httplib::ContentReceiver receiver = [&fp](const char *data, size_t data_length)->bool {
+        httplib::ContentReceiver receiver = [&fp](const char* data, size_t data_length)->bool {
             if (fp) {
                 fwrite(data, 1, data_length, fp);
             }
