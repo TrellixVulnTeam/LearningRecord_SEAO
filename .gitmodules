@@ -160,3 +160,27 @@
 [submodule "C&C++/ThirdPartyLibrarys/asio"]
 	path = C&C++/ThirdPartyLibrarys/asio
 	url = https://github.com/chriskohlhoff/asio.git
+[submodule "C&C++/ThirdPartyLibrarys/spdlog"]
+	path = C&C++/ThirdPartyLibrarys/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "C&C++/ThirdPartyLibrarys/libressl"]
+	path = C&C++/ThirdPartyLibrarys/libressl
+	url = https://github.com/libressl-portable/portable.git
+[submodule "C&C++/ThirdPartyLibrarys/openssh"]
+	path = C&C++/ThirdPartyLibrarys/openssh
+	url = https://github.com/openssh/openssh-portable.git
+[submodule "C&C++/ThirdPartyLibrarys/openssh-win32"]
+	path = C&C++/ThirdPartyLibrarys/openssh-win32
+	url = https://github.com/PowerShell/openssh-portable.git
+[submodule "C&C++/ThirdPartyLibrarys/libssh"]
+	path = C&C++/ThirdPartyLibrarys/libssh
+	url = https://github.com/substack/libssh.git
+[submodule "C&C++/ThirdPartyLibrarys/dropbear-ssh"]
+	path = C&C++/ThirdPartyLibrarys/dropbear-ssh
+	url = https://github.com/mkj/dropbear.git
+[submodule "C&C++/ThirdPartyLibrarys/rsync"]
+	path = C&C++/ThirdPartyLibrarys/rsync
+	url = https://github.com/WayneD/rsync.git
+[submodule "C&C++/ThirdPartyLibrarys/putty"]
+	path = C&C++/ThirdPartyLibrarys/putty
+	url = https://github.com/github/putty.git
