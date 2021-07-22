@@ -49,9 +49,6 @@
 [submodule "C&C++/ThirdPartyLibrarys/uthash"]
 	path = C&C++/ThirdPartyLibrarys/uthash
 	url = https://github.com/troydhanson/uthash.git
-[submodule "C&C++/ThirdPartyLibrarys/FFmpeg"]
-	path = C&C++/ThirdPartyLibrarys/FFmpeg
-	url = https://github.com/ShiftMediaProject/FFmpeg.git
 [submodule "C&C++/ThirdPartyLibrarys/zlib"]
 	path = C&C++/ThirdPartyLibrarys/zlib
 	url = https://github.com/madler/zlib.git
@@ -133,9 +130,6 @@
 [submodule "C&C++/ThirdPartyLibrarys/libssh2"]
 	path = C&C++/ThirdPartyLibrarys/libssh2
 	url = https://github.com/libssh2/libssh2.git
-[submodule "C&C++/ThirdPartyLibrarys/ImageMagick"]
-	path = C&C++/ThirdPartyLibrarys/ImageMagick
-	url = https://github.com/ImageMagick/ImageMagick.git
 [submodule "C&C++/ThirdPartyLibrarys/googletest"]
 	path = C&C++/ThirdPartyLibrarys/googletest
 	url = https://github.com/google/googletest.git
@@ -184,3 +178,15 @@
 [submodule "C&C++/ThirdPartyLibrarys/putty"]
 	path = C&C++/ThirdPartyLibrarys/putty
 	url = https://github.com/github/putty.git
+[submodule "C&C++/ThirdPartyLibrarys/ImageMagick-Windows"]
+	path = C&C++/ThirdPartyLibrarys/ImageMagick-Windows
+	url = https://github.com/ImageMagick/ImageMagick-Windows.git
+[submodule "C&C++/ThirdPartyLibrarys/glibc"]
+	path = C&C++/ThirdPartyLibrarys/glibc
+	url = https://sourceware.org/git/glibc.git
+[submodule "C&C++/ThirdPartyLibrarys/gmime"]
+	path = C&C++/ThirdPartyLibrarys/gmime
+	url = https://github.com/jstedfast/gmime.git
+[submodule "C&C++/ThirdPartyLibrarys/FFmpeg"]
+	path = C&C++/ThirdPartyLibrarys/FFmpeg
+	url = https://github.com/FFmpeg/FFmpeg.git
