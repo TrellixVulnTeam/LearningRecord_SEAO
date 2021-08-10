@@ -172,3 +172,15 @@
 [submodule "C&C++/ThirdPartyLibrarys/redis"]
 	path = C&C++/ThirdPartyLibrarys/redis
 	url = https://github.com/redis/redis.git
+[submodule "C&C++/ThirdPartyLibrarys/crypto/openssl"]
+	path = C&C++/ThirdPartyLibrarys/crypto/openssl
+	url = https://github.com/openssl/openssl.git
+[submodule "C&C++/ThirdPartyLibrarys/crypto/cryptopp"]
+	path = C&C++/ThirdPartyLibrarys/crypto/cryptopp
+	url = https://github.com/weidai11/cryptopp.git
+[submodule "C&C++/ThirdPartyLibrarys/crypto/botan"]
+	path = C&C++/ThirdPartyLibrarys/crypto/botan
+	url = https://github.com/randombit/botan.git
+[submodule "C&C++/ThirdPartyLibrarys/crypto/libtomcrypt"]
+	path = C&C++/ThirdPartyLibrarys/crypto/libtomcrypt
+	url = https://github.com/libtom/libtomcrypt.git
