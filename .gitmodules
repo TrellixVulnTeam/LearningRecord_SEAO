@@ -1,0 +1,174 @@
+[submodule "C&C++/ThirdPartyLibrarys/compression/bit7z"]
+	path = C&C++/ThirdPartyLibrarys/compression/bit7z
+	url = https://github.com/rikyoz/bit7z.git
+[submodule "C&C++/ThirdPartyLibrarys/compression/zlib"]
+	path = C&C++/ThirdPartyLibrarys/compression/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "C&C++/ThirdPartyLibrarys/compression/libzip"]
+	path = C&C++/ThirdPartyLibrarys/compression/libzip
+	url = https://github.com/nih-at/libzip.git
+[submodule "C&C++/ThirdPartyLibrarys/apple/libcnary"]
+	path = C&C++/ThirdPartyLibrarys/apple/libcnary
+	url = https://github.com/Chronic-Dev/libcnary.git
+[submodule "C&C++/ThirdPartyLibrarys/apple/libusbmuxd"]
+	path = C&C++/ThirdPartyLibrarys/apple/libusbmuxd
+	url = https://github.com/libimobiledevice/libusbmuxd.git
+[submodule "C&C++/ThirdPartyLibrarys/apple/libplist"]
+	path = C&C++/ThirdPartyLibrarys/apple/libplist
+	url = https://github.com/libimobiledevice/libplist.git
+[submodule "C&C++/ThirdPartyLibrarys/apple/libimobiledevice"]
+	path = C&C++/ThirdPartyLibrarys/apple/libimobiledevice
+	url = https://github.com/libimobiledevice/libimobiledevice.git
+[submodule "C&C++/ThirdPartyLibrarys/xml/pugixml"]
+	path = C&C++/ThirdPartyLibrarys/xml/pugixml
+	url = https://github.com/zeux/pugixml.git
+[submodule "C&C++/ThirdPartyLibrarys/xml/tinyxml2"]
+	path = C&C++/ThirdPartyLibrarys/xml/tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git
+[submodule "C&C++/ThirdPartyLibrarys/json/cJSON"]
+	path = C&C++/ThirdPartyLibrarys/json/cJSON
+	url = https://github.com/DaveGamble/cJSON.git
+[submodule "C&C++/ThirdPartyLibrarys/json/rapidjson"]
+	path = C&C++/ThirdPartyLibrarys/json/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
+[submodule "C&C++/ThirdPartyLibrarys/json/json"]
+	path = C&C++/ThirdPartyLibrarys/json/json
+	url = https://github.com/nlohmann/json.git
+[submodule "C&C++/ThirdPartyLibrarys/MMKV"]
+	path = C&C++/ThirdPartyLibrarys/MMKV
+	url = https://github.com/Tencent/MMKV.git
+[submodule "C&C++/ThirdPartyLibrarys/protobuf"]
+	path = C&C++/ThirdPartyLibrarys/protobuf
+	url = https://github.com/protocolbuffers/protobuf.git
+[submodule "C&C++/ThirdPartyLibrarys/character-encoding/icu"]
+	path = C&C++/ThirdPartyLibrarys/character-encoding/icu
+	url = https://github.com/unicode-org/icu.git
+[submodule "C&C++/ThirdPartyLibrarys/character-encoding/libiconv"]
+	path = C&C++/ThirdPartyLibrarys/character-encoding/libiconv
+	url = https://github.com/songwenhao/libiconv.git
+[submodule "C&C++/ThirdPartyLibrarys/multimedia/FFmpeg"]
+	path = C&C++/ThirdPartyLibrarys/multimedia/FFmpeg
+	url = https://github.com/FFmpeg/FFmpeg.git
+[submodule "C&C++/ThirdPartyLibrarys/multimedia/ImageMagick"]
+	path = C&C++/ThirdPartyLibrarys/multimedia/ImageMagick
+	url = https://github.com/ImageMagick/ImageMagick.git
+[submodule "C&C++/ThirdPartyLibrarys/database/sqlite"]
+	path = C&C++/ThirdPartyLibrarys/database/sqlite
+	url = https://github.com/mackyle/sqlite.git
+[submodule "C&C++/ThirdPartyLibrarys/database/sqlcipher"]
+	path = C&C++/ThirdPartyLibrarys/database/sqlcipher
+	url = https://github.com/sqlcipher/sqlcipher.git
+[submodule "C&C++/ThirdPartyLibrarys/network/cpp-httplib"]
+	path = C&C++/ThirdPartyLibrarys/network/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib.git
+[submodule "C&C++/ThirdPartyLibrarys/network/curl"]
+	path = C&C++/ThirdPartyLibrarys/network/curl
+	url = https://github.com/curl/curl.git
+[submodule "C&C++/ThirdPartyLibrarys/network/grpc"]
+	path = C&C++/ThirdPartyLibrarys/network/grpc
+	url = https://github.com/grpc/grpc.git
+[submodule "C&C++/ThirdPartyLibrarys/network/libwebsockets"]
+	path = C&C++/ThirdPartyLibrarys/network/libwebsockets
+	url = https://github.com/warmcat/libwebsockets.git
+[submodule "C&C++/ThirdPartyLibrarys/network/websocketpp"]
+	path = C&C++/ThirdPartyLibrarys/network/websocketpp
+	url = https://github.com/zaphoyd/websocketpp.git
+[submodule "C&C++/ThirdPartyLibrarys/network/uSockets"]
+	path = C&C++/ThirdPartyLibrarys/network/uSockets
+	url = https://github.com/uNetworking/uSockets.git
+[submodule "C&C++/ThirdPartyLibrarys/network/uWebSockets"]
+	path = C&C++/ThirdPartyLibrarys/network/uWebSockets
+	url = https://github.com/uNetworking/uWebSockets.git
+[submodule "C&C++/ThirdPartyLibrarys/network/libhv"]
+	path = C&C++/ThirdPartyLibrarys/network/libhv
+	url = https://github.com/ithewei/libhv.git
+[submodule "C&C++/ThirdPartyLibrarys/network/libuv"]
+	path = C&C++/ThirdPartyLibrarys/network/libuv
+	url = https://github.com/libuv/libuv.git
+[submodule "C&C++/ThirdPartyLibrarys/network/libev"]
+	path = C&C++/ThirdPartyLibrarys/network/libev
+	url = https://github.com/enki/libev.git
+[submodule "C&C++/ThirdPartyLibrarys/network/libevent"]
+	path = C&C++/ThirdPartyLibrarys/network/libevent
+	url = https://github.com/libevent/libevent.git
+[submodule "C&C++/ThirdPartyLibrarys/network/nginx]"]
+	path = C&C++/ThirdPartyLibrarys/network/nginx]
+	url = https://github.com/nginx/nginx.git
+[submodule "C&C++/ThirdPartyLibrarys/network/mu_event"]
+	path = C&C++/ThirdPartyLibrarys/network/mu_event
+	url = https://github.com/shonm520/mu_event.git
+[submodule "C&C++/ThirdPartyLibrarys/network/muduo"]
+	path = C&C++/ThirdPartyLibrarys/network/muduo
+	url = https://github.com/chenshuo/muduo.git
+[submodule "C&C++/ThirdPartyLibrarys/network/poco"]
+	path = C&C++/ThirdPartyLibrarys/network/poco
+	url = https://github.com/pocoproject/poco.git
+[submodule "C&C++/ThirdPartyLibrarys/network/seastar"]
+	path = C&C++/ThirdPartyLibrarys/network/seastar
+	url = https://github.com/scylladb/seastar.git
+[submodule "C&C++/ThirdPartyLibrarys/network/wolfssl"]
+	path = C&C++/ThirdPartyLibrarys/network/wolfssl
+	url = https://github.com/wolfSSL/wolfssl.git
+[submodule "C&C++/ThirdPartyLibrarys/network/mbedtls"]
+	path = C&C++/ThirdPartyLibrarys/network/mbedtls
+	url = https://github.com/ARMmbed/mbedtls.git
+[submodule "C&C++/ThirdPartyLibrarys/network/libressl"]
+	path = C&C++/ThirdPartyLibrarys/network/libressl
+	url = https://github.com/libressl-portable/portable.git
+[submodule "C&C++/ThirdPartyLibrarys/network/libssh2"]
+	path = C&C++/ThirdPartyLibrarys/network/libssh2
+	url = https://github.com/libssh2/libssh2.git
+[submodule "C&C++/ThirdPartyLibrarys/network/openssh"]
+	path = C&C++/ThirdPartyLibrarys/network/openssh
+	url = https://github.com/openssh/openssh-portable.git
+[submodule "C&C++/ThirdPartyLibrarys/network/dropbear-ssh"]
+	path = C&C++/ThirdPartyLibrarys/network/dropbear-ssh
+	url = https://github.com/mkj/dropbear.git
+[submodule "C&C++/ThirdPartyLibrarys/network/rsync"]
+	path = C&C++/ThirdPartyLibrarys/network/rsync
+	url = https://github.com/WayneD/rsync.git
+[submodule "C&C++/ThirdPartyLibrarys/network/putty"]
+	path = C&C++/ThirdPartyLibrarys/network/putty
+	url = https://github.com/github/putty.git
+[submodule "C&C++/ThirdPartyLibrarys/network/asio"]
+	path = C&C++/ThirdPartyLibrarys/network/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "C&C++/ThirdPartyLibrarys/windows/pthread-win32"]
+	path = C&C++/ThirdPartyLibrarys/windows/pthread-win32
+	url = https://github.com/GerHobbelt/pthread-win32.git
+[submodule "C&C++/ThirdPartyLibrarys/windows/openssh-win32"]
+	path = C&C++/ThirdPartyLibrarys/windows/openssh-win32
+	url = https://github.com/PowerShell/openssh-portable.git
+[submodule "C&C++/ThirdPartyLibrarys/windows/ImageMagick-Windows"]
+	path = C&C++/ThirdPartyLibrarys/windows/ImageMagick-Windows
+	url = https://github.com/ImageMagick/ImageMagick-Windows.git
+[submodule "C&C++/ThirdPartyLibrarys/windows/grepWin"]
+	path = C&C++/ThirdPartyLibrarys/windows/grepWin
+	url = https://github.com/stefankueng/grepWin.git
+[submodule "C&C++/ThirdPartyLibrarys/windows/tortoisesvn"]
+	path = C&C++/ThirdPartyLibrarys/windows/tortoisesvn
+	url = https://github.com/TortoiseGit/tortoisesvn.git
+[submodule "C&C++/ThirdPartyLibrarys/windows/TortoiseGit"]
+	path = C&C++/ThirdPartyLibrarys/windows/TortoiseGit
+	url = https://github.com/TortoiseGit/TortoiseGit.git
+[submodule "C&C++/ThirdPartyLibrarys/windows/winscp"]
+	path = C&C++/ThirdPartyLibrarys/windows/winscp
+	url = https://github.com/winscp/winscp.git
+[submodule "C&C++/ThirdPartyLibrarys/test/googletest"]
+	path = C&C++/ThirdPartyLibrarys/test/googletest
+	url = https://github.com/google/googletest.git
+[submodule "C&C++/ThirdPartyLibrarys/mail/gmime"]
+	path = C&C++/ThirdPartyLibrarys/mail/gmime
+	url = https://github.com/jstedfast/gmime.git
+[submodule "C&C++/ThirdPartyLibrarys/tools/uthash"]
+	path = C&C++/ThirdPartyLibrarys/tools/uthash
+	url = https://github.com/troydhanson/uthash.git
+[submodule "C&C++/ThirdPartyLibrarys/log/spdlog"]
+	path = C&C++/ThirdPartyLibrarys/log/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "C&C++/ThirdPartyLibrarys/memcached"]
+	path = C&C++/ThirdPartyLibrarys/memcached
+	url = https://github.com/memcached/memcached.git
+[submodule "C&C++/ThirdPartyLibrarys/redis"]
+	path = C&C++/ThirdPartyLibrarys/redis
+	url = https://github.com/redis/redis.git
