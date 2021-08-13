@@ -45,10 +45,27 @@ namespace FileUtils {
         const std::wstring &wstrFile
     );
 
+    enum class Filter {
+        DIR = 1,
+        FILE = 2,
+        ALL = 3
+    };
+
+    inline bool operator&(const Filter& lhs, const Filter& rhs) {
+        return ((int)lhs & (int)rhs) != 0;
+    }
+
     // 获取文件夹下第一层内容
     FILEUTILS_API std::list<std::wstring> DirEntryList(
-        const std::wstring &wstrDir,
-        const std::wstring &wstrFilter = L"*.*"
+        const std::wstring& wstrDir,
+        const std::wstring& wstrFilter = L"*.*",
+        Filter filter = Filter::ALL
+    );
+
+    FILEUTILS_API std::list<WIN32_FIND_DATAW> DirEntryInfoList(
+        const std::wstring& wstrDir,
+        const std::wstring& wstrFilter = L"*.*",
+        Filter filter = Filter::ALL
     );
 
 }

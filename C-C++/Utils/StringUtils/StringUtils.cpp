@@ -1,4 +1,4 @@
-#include <libiconv\iconv\iconv.h>
+#include <iconv\iconv.h>
 #include "StringUtils.h"
 
 #pragma comment(lib, "libiconv")

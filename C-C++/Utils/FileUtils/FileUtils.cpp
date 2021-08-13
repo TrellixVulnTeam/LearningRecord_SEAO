@@ -325,14 +325,15 @@ namespace FileUtils {
 
         return true;
     }
-
+    
     std::list<std::wstring> DirEntryList(
-        const std::wstring &wstrDir,
-        const std::wstring &wstrFilter
+        const std::wstring& wstrDir,
+        const std::wstring& wstrFilter,
+        Filter filter
     ) {
         WIN32_FIND_DATAW findFileData;
         memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
-        
+
         std::wstring wstrFindPath = wstrDir;
         if (wstrFindPath.back() != L'\\') {
             wstrFindPath.append(L"\\");
@@ -353,7 +354,15 @@ namespace FileUtils {
                     continue;
                 }
 
-                entryList.push_back(wstrFileName);
+                if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                    if (filter & Filter::DIR) {
+                        entryList.push_back(std::move(wstrFileName));
+                    }
+                } else {
+                    if (filter & Filter::FILE) {
+                        entryList.push_back(std::move(wstrFileName));
+                    }
+                }
 
             } while (FindNextFileW(fileHandle, &findFileData));
 
@@ -363,4 +372,52 @@ namespace FileUtils {
 
         return entryList;
     }
+
+    std::list<WIN32_FIND_DATAW> DirEntryInfoList(
+        const std::wstring& wstrDir,
+        const std::wstring& wstrFilter,
+        Filter filter
+    ) {
+        WIN32_FIND_DATAW findFileData;
+        memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
+
+        std::wstring wstrFindPath = wstrDir;
+        if (wstrFindPath.back() != L'\\') {
+            wstrFindPath.append(L"\\");
+        }
+
+        std::wstring wstrFindStr = wstrFindPath + wstrFilter;
+        std::list<WIN32_FIND_DATAW> entryInfoList;
+        std::wstring wstrFileName;
+
+        HANDLE fileHandle = FindFirstFileW(wstrFindStr.c_str(), &findFileData);
+        if (INVALID_HANDLE_VALUE != fileHandle) {
+            do {
+                wstrFileName.clear();
+
+                wstrFileName = findFileData.cFileName;
+
+                if (L"." == wstrFileName || L".." == wstrFileName) {
+                    continue;
+                }
+
+                if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                    if (filter & Filter::DIR) {
+                        entryInfoList.push_back(findFileData);
+                    }
+                } else {
+                    if (filter & Filter::FILE) {
+                        entryInfoList.push_back(findFileData);
+                    }
+                }
+
+            } while (FindNextFileW(fileHandle, &findFileData));
+
+            FindClose(fileHandle);
+            fileHandle = INVALID_HANDLE_VALUE;
+        }
+
+        return entryInfoList;
+    }
+
 }

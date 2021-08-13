@@ -41,13 +41,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -72,16 +72,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,7 +94,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;EMLUTILS_EXPORTS;LIBICONV_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.;.\gmime;.\glib;.\glib\gio;.\glib\gmodule;$(SolutionDir)..\Utils;$(SolutionDir)..\ThirdPartyLibrarys\libiconv\iconv</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;.\gmime;.\glib;.\glib\gio;.\glib\gmodule;$(SolutionDir)..\Utils;$(SolutionDir)..\ThirdPartyLibrarys\character-encoding\libiconv\iconv</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <CompileAs>Default</CompileAs>
     </ClCompile>
@@ -125,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <CompileAs>Default</CompileAs>
-      <AdditionalIncludeDirectories>.;.\gmime;.\glib;.\glib\gio;.\glib\gmodule;$(SolutionDir)..\Utils;$(SolutionDir)..\ThirdPartyLibrarys\libiconv\iconv</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;.\gmime;.\glib;.\glib\gio;.\glib\gmodule;$(SolutionDir)..\Utils;$(SolutionDir)..\ThirdPartyLibrarys\character-encoding\libiconv\iconv</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
