@@ -49,3 +49,23 @@ xcopy %cd%\Win32\Release\bin ..\..\..\Output\Win32\Release /s /e /y
 xcopy %cd%\Win32\Release\lib ..\..\..\Output\Win32\Release /s /e /y
 nmake clean
 rmdir /s /q Win32
+
+cd ..\C-C++\ThirdPartyLibrarys\compression\zlib
+nmake -f win32/Makefile.msc CFG=debug
+mkdir ..\..\..\Includes\zlib
+xcopy %cd%\zlib.h ..\..\..\Includes\zlib /y
+xcopy %cd%\zconf.h ..\..\..\Includes\zlib /y
+xcopy %cd%\zutil.h ..\..\..\Includes\zlib /y
+xcopy %cd%\zlib.lib ..\..\..\Output\Win32\Debug /y
+xcopy %cd%\zlib.pdb ..\..\..\Output\Win32\Debug /y
+xcopy %cd%\zdll.lib ..\..\..\Output\Win32\Debug /y
+xcopy %cd%\zlib1.dll ..\..\..\Output\Win32\Debug /y
+xcopy %cd%\zlib1.pdb ..\..\..\Output\Win32\Debug /y
+nmake -f win32/Makefile.msc clean
+nmake -f win32/Makefile.msc
+xcopy %cd%\zlib.lib ..\..\..\Output\Win32\Release /y
+xcopy %cd%\zlib.pdb ..\..\..\Output\Win32\Release /y
+xcopy %cd%\zdll.lib ..\..\..\Output\Win32\Release /y
+xcopy %cd%\zlib1.dll ..\..\..\Output\Win32\Release /y
+xcopy %cd%\zlib1.pdb ..\..\..\Output\Win32\Release /y
+nmake -f win32/Makefile.msc clean
