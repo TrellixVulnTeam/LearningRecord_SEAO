@@ -126,3 +126,6 @@ git submodule deinit -f "C-C++/ThirdPartyLibrarys/tools/googletest"
 git rm --cached "C-C++/ThirdPartyLibrarys/tools/googletest"
 git submodule deinit -f "C-C++/ThirdPartyLibrarys/tools/uthash"
 git rm --cached "C-C++/ThirdPartyLibrarys/tools/uthash"
+rmdir /s /q C-C++\ThirdPartyLibrarys
+del .gitmodules
+rmdir /s /q .git\modules\C-C++
