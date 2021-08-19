@@ -172,9 +172,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/crypto/openssl"]
 	path = C-C++/ThirdPartyLibrarys/crypto/openssl
 	url = https://github.com/openssl/openssl.git
-[submodule "C-C++/ThirdPartyLibrarys/tools/spdlog"]
-	path = C-C++/ThirdPartyLibrarys/tools/spdlog
-	url = https://github.com/gabime/spdlog.git
 [submodule "C-C++/ThirdPartyLibrarys/tools/glog"]
 	path = C-C++/ThirdPartyLibrarys/tools/glog
 	url = https://github.com/google/glog.git
@@ -190,3 +187,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/serialization/MMKV"]
 	path = C-C++/ThirdPartyLibrarys/serialization/MMKV
 	url = https://github.com/Tencent/MMKV.git
+[submodule "C-C++/ThirdPartyLibrarys/tools/spdlog"]
+	path = C-C++/ThirdPartyLibrarys/tools/spdlog
+	url = https://github.com/gabime/spdlog.git

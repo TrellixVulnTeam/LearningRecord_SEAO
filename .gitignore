@@ -349,6 +349,12 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+!tools/
+tools/*
+!tools/7z.*
+!tools/wget.exe
+!tools/python27/
+!tools/python38/
 !/C-C++/Utils/EmlUtils/libs/
 !/C-C++/Utils/EmlUtils/libs/*
 !/C-C++/Utils/ImageUtils/libs/
