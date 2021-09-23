@@ -2,8 +2,6 @@
 
 cd tools
 
-SET PATH=%cd%\strawberry\perl\bin;%cd%\nasm;%cd%\jom;%cd%\cmake\bin;%cd%\yasm;%PATH%
-
 ::cmake
 wget.exe https://github.com/Kitware/CMake/releases/download/v3.21.1/cmake-3.21.1-windows-x86_64.zip -O ./cmake-3.21.1-windows-x86_64.zip
 7z.exe x cmake-3.21.1-windows-x86_64.zip -o.
@@ -30,6 +28,8 @@ wget.exe http://download.qt.io/official_releases/jom/jom.zip -O ./jom.zip
 
 ::MSYS2
 ::wget.exe https://github.com/msys2/msys2-installer/releases/download/2021-07-25/msys2-x86_64-20210725.exe -O ./msys2-x86_64-20210725.exe
+
+SET PATH=%cd%\strawberry\perl\bin;%cd%\nasm;%cd%\jom;%cd%\cmake\bin;%cd%\yasm;%PATH%
 
 cd ..\C-C++\ThirdPartyLibrarys\crypto\openssl
 git checkout OpenSSL_1_1_1k
