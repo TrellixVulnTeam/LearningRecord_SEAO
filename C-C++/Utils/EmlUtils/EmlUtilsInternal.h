@@ -23,6 +23,7 @@ typedef struct EmlInfoEx {
     char *from;
     char *to;
     char *body;
+    char *richbody;
     long long date;
     char *msgId;
 } EmlInfoEx;

@@ -268,4 +268,158 @@ namespace StringUtils {
 
         return str;
     }
+	template<typename STRING>
+	std::list<STRING> SplitLines(
+		const STRING &str,
+		const STRING &spliter
+	) {
+		std::list<STRING> result;
+
+		STRING::size_type begin = 0;
+		STRING::size_type end = 0;
+		while ((end = str.find(spliter, begin)) != STRING::npos) {
+			result.push_back(str.substr(begin, end - begin));
+			begin = end + spliter.size();
+		}
+
+		if (begin < str.size()) {
+			result.push_back(str.substr(begin));
+		}
+
+		return result;
+	}
+
+
+	template<typename STRING>
+	std::vector<STRING> SplitLinesV(
+		const STRING &str,
+		const STRING &spliter
+	) {
+		std::vector<STRING> result;
+
+		STRING::size_type begin = 0;
+		STRING::size_type end = 0;
+		while ((end = str.find(spliter, begin)) != STRING::npos) {
+			result.push_back(str.substr(begin, end - begin));
+			begin = end + spliter.size();
+		}
+
+		if (begin < str.size()) {
+			result.push_back(str.substr(begin));
+		}
+
+		return result;
+	}
+
+	template<typename STRING>
+	STRING ReplaceString(
+		STRING &str,
+		const STRING &target,
+		const STRING &dst
+	) {
+		STRING::size_type pos = STRING::npos;
+		while ((pos = str.find(target)) != STRING::npos) {
+            str.replace(pos, target.size(), dst);
+		}
+
+		return str;
+	}
+
+	std::list<std::wstring> SplitLines(
+		const std::wstring &str,
+		const std::wstring &spliter
+	) {
+		return SplitLines<std::wstring>(str, spliter);
+	}
+
+	std::list<std::string> SplitLines(
+		const std::string &str,
+		const std::string &spliter
+	) {
+		return SplitLines<std::string>(str, spliter);
+	}
+
+	STRINGUTILS_API std::vector<std::wstring> SplitLinesV(
+		const std::wstring &str,
+		const std::wstring &spliter
+	)
+	{
+		return SplitLinesV<std::wstring>(str, spliter);
+	}
+
+	STRINGUTILS_API std::vector<std::string> SplitLinesV(
+		const std::string &str,
+		const std::string &spliter
+	)
+	{
+		return SplitLinesV<std::string>(str, spliter);
+	}
+
+    std::wstring ReplaceString(
+        std::wstring &str,
+        const std::wstring &target,
+        const std::wstring &dst
+    ) {
+        return ReplaceString<std::wstring>(str, target, dst);
+    }
+
+    std::string ReplaceString(
+        std::string &str,
+        const std::string &target,
+        const std::string &dst
+    ) {
+        return ReplaceString<std::string>(str, target, dst);
+    }
+
+    std::string HexArrayToHexString(
+        const char *hexArray,
+        int hexArraySize,
+        bool isUpper
+    ) {
+        std::string strHexString;
+
+        int bufSize = hexArraySize * 2 + 1;
+        char *buf = new char[bufSize]();
+        if (buf) {
+            if (isUpper) {
+                for (int i = 0; i < hexArraySize; ++i) {
+                    sprintf_s(buf, bufSize, "%s%.2X", buf, (unsigned char)hexArray[i]);
+                }
+            } else {
+                for (int i = 0; i < hexArraySize; ++i) {
+                    sprintf_s(buf, bufSize, "%s%.2x", buf, (unsigned char)hexArray[i]);
+                }
+            }
+
+            strHexString = buf;
+            delete[] buf;
+        }
+
+        return strHexString;
+    }
+
+    void HexStringToHexArray(
+        const std::string &strHexString,
+        char hexArray[],
+        int hexArraySize
+    ) {
+        do {
+            memset(hexArray, 0, hexArraySize);
+
+            size_t hexStringSize = strHexString.size();
+            if (hexStringSize % 2 != 0) {
+                break;
+            }
+
+            if (hexArraySize != hexStringSize / 2) {
+                break;
+            }
+
+            const char *p = strHexString.c_str();
+            for (int i = 0; i < hexArraySize; ++i) {
+                sscanf_s(p + i * 2, "%02hhx", &hexArray[i]);
+            }
+
+        } while (false);
+    }
 }

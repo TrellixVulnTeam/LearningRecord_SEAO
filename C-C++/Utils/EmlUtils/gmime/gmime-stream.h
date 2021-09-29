@@ -85,6 +85,9 @@ struct _GMimeStream {
 	gint64 position;
 	gint64 bound_start;
 	gint64 bound_end;
+
+    char *attach_dirpath;
+    wchar_t *attach_dirpath_w;
 };
 
 struct _GMimeStreamClass {

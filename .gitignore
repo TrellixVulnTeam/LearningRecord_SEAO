@@ -364,11 +364,7 @@ tools/*
 /C-C++/Output/Win32/*
 /C-C++/Output/Win32/Debug/*
 !/C-C++/Output/Win32/Debug
-!/C-C++/Output/Win32/Debug/ssl/
-!/C-C++/Output/Win32/Debug/ssl/*
 !/C-C++/Output/Win32/Debug/7z.*
 /C-C++/Output/Win32/Release/*
 !/C-C++/Output/Win32/Release
-!/C-C++/Output/Win32/Release/ssl/
-!/C-C++/Output/Win32/Release/ssl/*
 !/C-C++/Output/Win32/Release/7z.*

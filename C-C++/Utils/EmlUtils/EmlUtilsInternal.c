@@ -1,5 +1,9 @@
 #include "EmlUtilsInternal.h"
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <io.h>
+
 char *FindCharset(
     const char *buffer
 );
@@ -105,6 +109,11 @@ EmlInfoEx ParseEmlFileEx(
             const char *header_content = NULL;
             char *convert_header_content = NULL;
 
+            const char *subject = g_mime_message_get_subject(message);
+            if (subject) {
+                emlInfoEx.subject = _strdup(subject);
+            }
+
             while (index < count) {
                 GMimeHeader *header = g_mime_header_list_get_header_at(object->headers, index);
                 if (!header || !header->name || !header->raw_value) {
@@ -126,7 +135,9 @@ EmlInfoEx ParseEmlFileEx(
                             if (_stricmp(header->name, "From") == 0) {
                                 emlInfoEx.from = _strdup(header_content);
                             } else if (_stricmp(header->name, "Subject") == 0) {
-                                emlInfoEx.subject = _strdup(header_content);
+                                if (!emlInfoEx.subject) {
+                                    emlInfoEx.subject = _strdup(header_content);
+                                }
                             } else if (_stricmp(header->name, "To") == 0) {
                                 emlInfoEx.to = _strdup(header_content);
                             }
@@ -144,18 +155,43 @@ EmlInfoEx ParseEmlFileEx(
                 index++;
             }
 
-            if (!emlInfoEx.subject) {
-                const char *subject = g_mime_message_get_subject(message);
-                if (subject) {
-                    emlInfoEx.subject = _strdup(subject);
-                }
+            wchar_t *attach_dirPath = NULL;
+            gsize attach_dirPath_len = 1024;
+            attach_dirPath = g_malloc(attach_dirPath_len * sizeof(wchar_t));
+            if (attach_dirPath) {
+                memset(attach_dirPath, 0, attach_dirPath_len * sizeof(wchar_t));
             }
 
-            char *body = g_mime_object_to_string((GMimeObject *)message, NULL);
+            HANDLE fileHandle = (HANDLE)_get_osfhandle(_fileno(fp));
+
+            GetFinalPathNameByHandleW(fileHandle, attach_dirPath, attach_dirPath_len, FILE_NAME_NORMALIZED);
+
+            wchar_t *begin = wcsrchr(attach_dirPath, L'.');
+            if (begin) {
+                *(begin) = L'\0';
+            }
+
+            swprintf_s(attach_dirPath, attach_dirPath_len, L"%s-attachFiles\\", attach_dirPath);
+
+            GMimeFormatOptions *options = g_mime_format_options_new();
+            g_mime_format_options_set_parse_richtext(options, FALSE);
+            char *body = g_mime_object_to_string_with_attachfile(NULL, attach_dirPath, (GMimeObject *)message, options);
             if (body) {
                 emlInfoEx.body = _strdup(body);
                 g_free(body);
                 body = NULL;
+            }
+
+            g_mime_format_options_set_parse_richtext(options, TRUE);
+            char *richbody = g_mime_object_to_string_with_attachfile(NULL, attach_dirPath, (GMimeObject *)message, options);
+            if (richbody) {
+                emlInfoEx.richbody = _strdup(richbody);
+                g_free(richbody);
+                richbody = NULL;
+            }
+
+            if (attach_dirPath) {
+                g_free(attach_dirPath);
             }
 
             GDateTime *date = g_mime_message_get_date(message);

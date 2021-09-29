@@ -134,7 +134,8 @@ GMimeHeaderList *g_mime_object_get_header_list (GMimeObject *object);
 char *g_mime_object_get_headers (GMimeObject *object, GMimeFormatOptions *options);
 
 ssize_t g_mime_object_write_to_stream (GMimeObject *object, GMimeFormatOptions *options, GMimeStream *stream);
-char *g_mime_object_to_string (GMimeObject *object, GMimeFormatOptions *options);
+char *g_mime_object_to_string(GMimeObject *object, GMimeFormatOptions *options);
+char *g_mime_object_to_string_with_attachfile(const char *attach_dirpath, const wchar_t *attach_dirpath_w, GMimeObject *object, GMimeFormatOptions *options);
 
 void g_mime_object_encode (GMimeObject *object, GMimeEncodingConstraint constraint);
 

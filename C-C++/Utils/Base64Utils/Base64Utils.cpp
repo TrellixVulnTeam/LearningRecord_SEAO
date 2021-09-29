@@ -7,14 +7,27 @@
 namespace Base64Utils {
 
     std::string Base64EncodeString(
-        const std::string& strSrc
+        const std::string &strSrc
     ) {
-        EVP_ENCODE_CTX* ectx = nullptr;
-        unsigned char* buffer = nullptr;
+        return Base64EncodeString((const unsigned char*)strSrc.c_str(), strSrc.size());
+    }
+
+    std::string Base64DecodeString(
+        const std::string &strSrc
+    ) {
+        return Base64DecodeString((const unsigned char*)strSrc.c_str(), strSrc.size());
+    }
+
+    std::string Base64EncodeString(
+        const unsigned char *in,
+        int inSize
+    ) {
+        EVP_ENCODE_CTX *ectx = nullptr;
+        unsigned char *buffer = nullptr;
         std::string strEncode;
 
         do {
-            int size = strSrc.size() * 2;
+            int size = inSize * 2;
             size = size > 64 ? size : 64;
 
             buffer = new unsigned char[size]();
@@ -32,7 +45,7 @@ namespace Base64Utils {
             int outlen = 0;
             int encodeSize = 0;
 
-            if (!EVP_EncodeUpdate(ectx, buffer, &outlen, (const unsigned char*)strSrc.c_str(), strSrc.size())) {
+            if (!EVP_EncodeUpdate(ectx, buffer, &outlen, in, inSize)) {
                 break;
             }
 
@@ -56,14 +69,15 @@ namespace Base64Utils {
     }
 
     std::string Base64DecodeString(
-        const std::string& strSrc
+        const unsigned char *in,
+        int inSize
     ) {
-        EVP_ENCODE_CTX* ectx = nullptr;
-        unsigned char* buffer = nullptr;
+        EVP_ENCODE_CTX *ectx = nullptr;
+        unsigned char *buffer = nullptr;
         std::string strDecode;
 
         do {
-            int size = strSrc.size() * 2;
+            int size = inSize * 2;
             size = size > 64 ? size : 64;
 
             buffer = new unsigned char[size]();
@@ -81,7 +95,7 @@ namespace Base64Utils {
             int outlen = 0;
             int encodeSize = 0;
 
-            if (EVP_DecodeUpdate(ectx, buffer, &outlen, (const unsigned char*)strSrc.c_str(), strSrc.size()) == -1) {
+            if (EVP_DecodeUpdate(ectx, buffer, &outlen, in, inSize) == -1) {
                 break;
             }
 
@@ -108,13 +122,13 @@ namespace Base64Utils {
         return strDecode;
     }
 
-    unsigned char* Base64EncodeData(
-        const unsigned char* in,
+    unsigned char * Base64EncodeData(
+        const unsigned char *in,
         int inSize,
-        int& outSize
+        int &outSize
     ) {
-        EVP_ENCODE_CTX* ectx = nullptr;
-        unsigned char* buffer = nullptr;
+        EVP_ENCODE_CTX *ectx = nullptr;
+        unsigned char *buffer = nullptr;
 
         do {
             outSize = inSize * 2;
@@ -154,13 +168,13 @@ namespace Base64Utils {
         return buffer;
     }
 
-    unsigned char* Base64DecodeData(
-        const unsigned char* in,
+    unsigned char * Base64DecodeData(
+        const unsigned char *in,
         int inSize,
-        int& outSize
+        int &outSize
     ) {
-        EVP_ENCODE_CTX* ectx = nullptr;
-        unsigned char* buffer = nullptr;
+        EVP_ENCODE_CTX *ectx = nullptr;
+        unsigned char *buffer = nullptr;
 
         do {
             outSize = inSize * 2;
@@ -202,7 +216,7 @@ namespace Base64Utils {
         return buffer;
     }
 
-    void FreeData(void* p) {
+    void FreeData(void *p) {
         if (p) {
             free(p);
         }

@@ -209,7 +209,6 @@ namespace ProcessUtils {
 			sa.lpSecurityDescriptor = NULL;
 			sa.bInheritHandle = TRUE;
 
-			// 创建匿名管道用于获取 adb 输出
 			if (!CreatePipe(&hRead, &hWrite, &sa, 10240))
 			{
 				break;
@@ -234,16 +233,12 @@ namespace ProcessUtils {
 				break;
 			}
 
-			// adb备份时直接使用cmd命令行会出现未备份完进程就退出的情况
 			StringCchPrintfW(lpCmdLine, 1024 * 1024, L"cmd /c \"%s\"", lpCmd);
 			if (!CreateProcessW(NULL, lpCmdLine, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &siStartInfo, &piProcInfo))
 			{
 				break;
 			}
 
-			/*
-			**规避某些命令adb client进程无法退出问题
-			*/
 			int iTimes = 0;
 
 			while (true)
@@ -296,7 +291,6 @@ namespace ProcessUtils {
 				}
 				else
 				{
-					//自动点击不等待
 					break;
 				}
 			}
@@ -339,16 +333,16 @@ namespace ProcessUtils {
 
 
 	std::string GetProcessCmdLineByCmd(
-		DWORD dwPID
+		DWORD pid
 	) {
 		std::string strCmdLine;
-		if (dwPID > 0)
+		if (pid > 0)
 		{
 			WCHAR wzSysDir[MAX_PATH] = { 0 };
 			WCHAR wzCmd[MAX_PATH] = { 0 };
 
 			GetSystemDirectoryW(wzSysDir, MAX_PATH);
-			StringCbPrintfW(wzCmd, sizeof(wzCmd), L"%s\\wbem\\wmic process %d ", wzSysDir, dwPID);
+			StringCbPrintfW(wzCmd, sizeof(wzCmd), L"%s\\wbem\\wmic process %d ", wzSysDir, pid);
 			ExcuteCommand(wzCmd, strCmdLine, nullptr, true);
 			
 		}
@@ -389,6 +383,33 @@ namespace ProcessUtils {
         } while (false);
 
         return isExist;
+    }
+
+    const DWORD MS_VC_EXCEPTION = 0x406D1388;
+#pragma pack(push,8)
+    typedef struct tagTHREADNAME_INFO {
+        DWORD dwType; // Must be 0x1000.
+        LPCSTR szName; // Pointer to name (in user addr space).
+        DWORD dwThreadID; // Thread ID (-1=caller thread).
+        DWORD dwFlags; // Reserved for future use, must be zero.
+    } THREADNAME_INFO;
+#pragma pack(pop)
+    void SetThreadName(
+        DWORD tid,
+        const char *threadName
+    ) {
+        THREADNAME_INFO info;
+        info.dwType = 0x1000;
+        info.szName = threadName;
+        info.dwThreadID = tid;
+        info.dwFlags = 0;
+#pragma warning(push)
+#pragma warning(disable: 6320 6322)
+        __try {
+            RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER) {}
+#pragma warning(pop)
     }
 
 }

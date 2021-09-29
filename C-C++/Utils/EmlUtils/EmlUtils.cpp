@@ -48,8 +48,16 @@ namespace EmlUtils {
                 emlInfo.wstrSubject = StringUtils::Utf8ToUtf16(emlInfoEx.subject);
             }
 
+            if (emlInfo.wstrSubject.empty()) {
+                emlInfo.wstrSubject = L"无主题";
+            }
+
             if (emlInfoEx.body) {
                 emlInfo.wstrContent = StringUtils::Utf8ToUtf16(emlInfoEx.body);
+            }
+
+            if (emlInfoEx.richbody) {
+                emlInfo.wstrRichContent = StringUtils::Utf8ToUtf16(emlInfoEx.richbody);
             }
 
             emlInfo.mailSendTime = emlInfoEx.date;

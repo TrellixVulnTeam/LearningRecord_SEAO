@@ -18,6 +18,16 @@ namespace Base64Utils
         const std::string &strSrc
     );
 
+    BASE64UTILS_API std::string Base64EncodeString(
+        const unsigned char *in,
+        int inSize
+    );
+
+    BASE64UTILS_API std::string Base64DecodeString(
+        const unsigned char *in,
+        int inSize
+    );
+
     BASE64UTILS_API unsigned char * Base64EncodeData(
         const unsigned char *in,
         int inSize,

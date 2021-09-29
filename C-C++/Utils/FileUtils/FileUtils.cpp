@@ -1,5 +1,6 @@
 #define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
 #include <windows.h>
+#include <io.h>
 #include "FileUtils.h"
 
 namespace FileUtils {
@@ -420,4 +421,112 @@ namespace FileUtils {
         return entryInfoList;
     }
 
+	std::wstring GetExeDirPath()
+	{
+		wchar_t dirPath[MAX_PATH] = { 0 };
+
+		GetModuleFileNameW(NULL, dirPath, MAX_PATH);
+		wchar_t *p = wcsrchr(dirPath, L'\\');
+		if (p)
+		{
+			*p = L'\0';
+		}
+
+		return std::wstring(dirPath);
+	}
+
+	// 此函数读取文件全部内容, 注意使用场景
+	char * ReadFileContent(
+		const std::wstring &wstrFilePath,
+        int *fileSize
+	) {
+		FILE *fp = nullptr;
+		char *buffer = nullptr;
+
+		do {
+            if (fileSize) {
+                *fileSize = 0;
+            }
+
+			_wfopen_s(&fp, wstrFilePath.c_str(), L"rb");
+			if (!fp) {
+				break;
+			}
+
+            int fileSize_ = 0;
+			if (fseek(fp, 0, SEEK_END) != 0) {
+				break;
+			}
+
+            fileSize_ = ftell(fp);
+            if (fileSize) {
+                *fileSize = fileSize_;
+            }
+
+			if (fseek(fp, 0, SEEK_SET) != 0) {
+				break;
+			}
+
+			if (fileSize_ <= 0) {
+				break;
+			}
+
+			buffer = new char[fileSize_ + 1];
+			if (!buffer) {
+				break;
+			}
+
+			buffer[fileSize_] = 0;
+			if (fread(buffer, 1, fileSize_, fp) != fileSize_) {
+				break;
+			}
+
+		} while (false);
+
+		if (fp) {
+			fclose(fp);
+		}
+
+		return buffer;
+	}
+
+    bool SaveContentToFile(
+        const std::wstring &wstrFilePath,
+        const char *data,
+        int dataSize
+    ) {
+        FILE *fp = nullptr;
+        bool isSuccess = false;
+
+        do {
+            if (!data || dataSize <= 0) {
+                break;
+            }
+
+            DeleteFileW(wstrFilePath.c_str());
+
+            _wfopen_s(&fp, wstrFilePath.c_str(), L"wb");
+            if (!fp) {
+                break;
+            }
+
+            int writeSize = fwrite(data, 1, dataSize, fp);
+            if (writeSize != dataSize) {
+                break;
+            }
+
+            int iFileID = _fileno(fp);
+            _commit(iFileID);
+
+            isSuccess = true;
+
+        } while (false);
+
+        if (fp) {
+            fclose(fp);
+        }
+
+        return isSuccess;
+    }
+	
 }

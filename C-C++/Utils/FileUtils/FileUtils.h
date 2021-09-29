@@ -68,4 +68,18 @@ namespace FileUtils {
         Filter filter = Filter::ALL
     );
 
+	FILEUTILS_API std::wstring GetExeDirPath();
+
+	// 此函数读取文件全部内容, 注意使用场景
+    FILEUTILS_API char * ReadFileContent(
+        const std::wstring &wstrFilePath,
+        int *fileSize = nullptr
+	);
+
+    // 保存数据至新文件
+    FILEUTILS_API bool SaveContentToFile(
+        const std::wstring &wstrFilePath,
+        const char *data,
+        int dataSize
+    );
 }
