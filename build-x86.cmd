@@ -38,7 +38,7 @@ SET PATH=%cd%\strawberry\perl\bin;%cd%\nasm;%cd%\jom;%cd%\cmake\bin;%cd%\yasm;%P
 ::openssl
 cd ..\C-C++\ThirdPartyLibrarys\crypto\openssl
 git checkout OpenSSL_1_1_1k
-perl Configure VC-WIN32 --prefix=%cd%\Win32\Debug --debug no-asm no-zlib no-tests CFLAGS=
+perl Configure VC-WIN32 --prefix=%cd%\Win32\Debug --debug no-asm no-zlib no-tests
 nmake
 nmake install
 mkdir ..\..\..\Includes\OpenSSL_1_1_1k
