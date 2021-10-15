@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef PROCESSUTILS_EXPORTS
 #define PROCESSUTILS_API __declspec(dllexport)
@@ -13,32 +13,22 @@
 namespace ProcessUtils {
 
     /**
-    * »ñÈ¡½ø³ÌID
+    * è·å–è¿›ç¨‹ID
     *
-    * @param wstrProcessName [in] ½ø³ÌÃû
-    * @return ½ø³ÌID
-    */
-    PROCESSUTILS_API DWORD GetProcessPid(
-        const std::wstring &wstrProcessName
-    );
-
-    /**
-    * »ñÈ¡½ø³ÌID
-    *
-    * @param wstrProcessName [in] ½ø³ÌÃû
-    * @param wstrCmdLineStr [in] ½ø³ÌÃüÁîĞĞ²ÎÊı
-    * @return ½ø³ÌID
+    * @param wstrProcessName [in] è¿›ç¨‹å
+    * @param wstrCmdLineStr [in] è¿›ç¨‹å‘½ä»¤è¡Œå‚æ•°
+    * @return è¿›ç¨‹ID
     */
     PROCESSUTILS_API DWORD GetProcessPid(
         const std::wstring &wstrProcessName,
-        const std::wstring &wstrCmdLineStr
+        const std::wstring &wstrCmdLineStr = L""
     );
 
     /**
-    * É±ËÀ½ø³Ì
+    * æ€æ­»è¿›ç¨‹
     *
-    * @param wstrProcessName [in] ½ø³ÌÃû
-    * @param wstrCmdLineStr [in] ½ø³ÌÃüÁîĞĞ²ÎÊı
+    * @param wstrProcessName [in] è¿›ç¨‹å
+    * @param wstrCmdLineStr [in] è¿›ç¨‹å‘½ä»¤è¡Œå‚æ•°
     * @return true on success, false on failure
     */
     PROCESSUTILS_API bool KillProcess(
@@ -47,30 +37,20 @@ namespace ProcessUtils {
     );
 
     /**
-    * »ñÈ¡½ø³ÌÃüÁîĞĞ²ÎÊı
+    * è·å–è¿›ç¨‹å‘½ä»¤è¡Œå‚æ•°
     *
-    * @param wstrProcessName [in] ½ø³ÌID
-    * @return ½ø³ÌÃüÁîĞĞ²ÎÊı
+    * @param wstrProcessName [in] è¿›ç¨‹ID
+    * @return è¿›ç¨‹å‘½ä»¤è¡Œå‚æ•°
     */
     PROCESSUTILS_API std::wstring GetProcessCmdLine(
         DWORD pid
     );
 
     /**
-    * »ñÈ¡½ø³ÌÃüÁîĞĞ²ÎÊı
+    * æ£€æŸ¥è¿›ç¨‹ä¸­æ¨¡å—æ˜¯å¦å­˜åœ¨
     *
-    * @param wstrProcessName [in] ½ø³ÌID
-    * @return ½ø³ÌÃüÁîĞĞ²ÎÊı
-    */
-	PROCESSUTILS_API std::string GetProcessCmdLineByCmd(
-		DWORD pid
-	);
-
-    /**
-    * ¼ì²é½ø³ÌÖĞÄ£¿éÊÇ·ñ´æÔÚ
-    *
-    * @param wstrProcessName [in] ½ø³ÌID
-    * @param wstrModuleName [in] Ä£¿éÃû
+    * @param wstrProcessName [in] è¿›ç¨‹ID
+    * @param wstrModuleName [in] æ¨¡å—å
     * @return true on exist, false on not
     */
 	PROCESSUTILS_API bool CheckProcessModuleExist(
@@ -79,10 +59,10 @@ namespace ProcessUtils {
 	);
 
     /**
-    * ÉèÖÃÏß³ÌÃû³Æ
+    * è®¾ç½®çº¿ç¨‹åç§°
     *
-    * @param tid [in] Ïß³ÌID -1Ê±±íÊ¾µ±Ç°Ïß³Ì
-    * @param threadName [in] Ïß³ÌÃû³Æ
+    * @param tid [in] çº¿ç¨‹ID -1æ—¶è¡¨ç¤ºå½“å‰çº¿ç¨‹
+    * @param threadName [in] çº¿ç¨‹åç§°
     */
     PROCESSUTILS_API void SetThreadName(
         DWORD tid,

@@ -1,4 +1,4 @@
-//
+﻿//
 // QuotedPrintableEncoder.cpp
 //
 // Library: Net

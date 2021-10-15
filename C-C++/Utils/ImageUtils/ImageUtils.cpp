@@ -1,7 +1,12 @@
-// ImageUtils.cpp : ¶¨Òå DLL Ó¦ÓÃ³ÌĞòµÄµ¼³öº¯Êı¡£
-//
+ï»¿#define WIN32_LEAN_AND_MEAN             // ä» Windows å¤´ä¸­æ’é™¤æå°‘ä½¿ç”¨çš„èµ„æ–™
+#include <windows.h>
 
-#include "stdafx.h"
+#define STATIC_MAGICK
+#include <Magick++/Magick++.h>
+
+#include <StringUtils/StringUtils.h>
+#pragma comment(lib, "StringUtils")
+
 #include "ImageUtils.h"
 
 namespace ImageUtils {

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef IMAGEUTILS_EXPORTS
     #define IMAGEUTILS_API __declspec(dllexport)
@@ -11,13 +11,13 @@
 namespace ImageUtils {
 
     /*
-    Í¼Æ¬ÎÄ¼ş¸ñÊ½×ª»»
+    å›¾ç‰‡æ–‡ä»¶æ ¼å¼è½¬æ¢
 
-    @params     wstrSrcFilePath Ô´ÎÄ¼şÂ·¾¶
-                wstrDstFilePath Ä¿±êÎÄ¼şÂ·¾¶
-                ¸ù¾İÄ¿±êÎÄ¼şºó×ºÃû¾ö¶¨Ä¿±êÎÄ¼şÍ¼Æ¬¸ñÊ½
+    @params     wstrSrcFilePath æºæ–‡ä»¶è·¯å¾„
+                wstrDstFilePath ç›®æ ‡æ–‡ä»¶è·¯å¾„
+                æ ¹æ®ç›®æ ‡æ–‡ä»¶åç¼€åå†³å®šç›®æ ‡æ–‡ä»¶å›¾ç‰‡æ ¼å¼
 
-    @return     bool ³É¹¦»òÊ§°Ü
+    @return     bool æˆåŠŸæˆ–å¤±è´¥
     */
     IMAGEUTILS_API bool ConvertFile(
         const std::wstring &wstrSrcFilePath,

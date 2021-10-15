@@ -1,4 +1,4 @@
-//
+﻿//
 // Ascii.cpp
 //
 // Library: Foundation

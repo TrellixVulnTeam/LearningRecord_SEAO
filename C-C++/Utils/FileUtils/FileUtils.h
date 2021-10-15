@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 #ifdef FILEUTILS_EXPORTS
-    #define FILEUTILS_API __declspec(dllexport)
+#define FILEUTILS_API __declspec(dllexport)
 #else
-    #define FILEUTILS_API __declspec(dllimport)
+#define FILEUTILS_API __declspec(dllimport)
 #endif
 
 #include <string>
@@ -11,38 +11,35 @@
 
 namespace FileUtils {
 
-    // µİ¹é´´½¨ÎÄ¼ş¼Ğ
+    // é€’å½’åˆ›å»ºæ–‡ä»¶å¤¹
     FILEUTILS_API void CreateDir(
-        const std::wstring &wstrDir,
-        const int *stopFlag = NULL
+        const std::wstring& wstrDirPath,
+        const int* stopFlag = nullptr
     );
 
-    // µİ¹éÒÆ¶¯ÎÄ¼ş¼Ğ
+    // é€’å½’ç§»åŠ¨æ–‡ä»¶å¤¹
     FILEUTILS_API void MoveDir(
-        const std::wstring &wstrSrcDir,
-        const std::wstring &wstrDstDir,
-        const int *stopFlag = NULL
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag = nullptr
     );
 
-    // µİ¹é¸´ÖÆÎÄ¼ş¼Ğ
+    // é€’å½’å¤åˆ¶æ–‡ä»¶å¤¹
     FILEUTILS_API void CopyDir(
-        const std::wstring &wstrSrcDir,
-        const std::wstring &wstrDstDir,
-        const int *stopFlag = NULL
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag = nullptr
     );
 
-    // µİ¹éÉ¾³ıÎÄ¼ş¼Ğ
-    // ½öÖ§³ÖÈ«Â·¾¶É¾³ı
-    // eg. E:\1
-    // eg. \\?\E:\1
+    // é€’å½’åˆ é™¤æ–‡ä»¶å¤¹
     FILEUTILS_API void DeleteDir(
-        const std::wstring &wstrDir,
-        const int *stopFlag = NULL
+        const std::wstring& wstrDirPath,
+        const int* stopFlag = nullptr
     );
 
-    // ÅĞ¶ÏÎÄ¼ş¡¢ÎÄ¼ş¼ĞÊÇ·ñ´æÔÚ
+    // åˆ¤æ–­æ–‡ä»¶ã€æ–‡ä»¶å¤¹æ˜¯å¦å­˜åœ¨
     FILEUTILS_API bool PathIsExist(
-        const std::wstring &wstrFile
+        const std::wstring& wstrPath
     );
 
     enum class Filter {
@@ -55,31 +52,31 @@ namespace FileUtils {
         return ((int)lhs & (int)rhs) != 0;
     }
 
-    // »ñÈ¡ÎÄ¼ş¼ĞÏÂµÚÒ»²ãÄÚÈİ
+    // è·å–æ–‡ä»¶å¤¹ä¸‹ç¬¬ä¸€å±‚å†…å®¹
     FILEUTILS_API std::list<std::wstring> DirEntryList(
-        const std::wstring& wstrDir,
+        const std::wstring& wstrDirPath,
         const std::wstring& wstrFilter = L"*.*",
         Filter filter = Filter::ALL
     );
 
     FILEUTILS_API std::list<WIN32_FIND_DATAW> DirEntryInfoList(
-        const std::wstring& wstrDir,
+        const std::wstring& wstrDirPath,
         const std::wstring& wstrFilter = L"*.*",
         Filter filter = Filter::ALL
     );
 
-	FILEUTILS_API std::wstring GetExeDirPath();
+    FILEUTILS_API std::wstring GetExeDirPath();
 
-	// ´Ëº¯Êı¶ÁÈ¡ÎÄ¼şÈ«²¿ÄÚÈİ, ×¢ÒâÊ¹ÓÃ³¡¾°
-    FILEUTILS_API char * ReadFileContent(
-        const std::wstring &wstrFilePath,
-        int *fileSize = nullptr
-	);
+    // æ­¤å‡½æ•°è¯»å–æ–‡ä»¶å…¨éƒ¨å†…å®¹, æ³¨æ„ä½¿ç”¨åœºæ™¯
+    FILEUTILS_API char* ReadFileContent(
+        const std::wstring& wstrFilePath,
+        int* fileSize = nullptr
+    );
 
-    // ±£´æÊı¾İÖÁĞÂÎÄ¼ş
+    // ä¿å­˜æ•°æ®è‡³æ–°æ–‡ä»¶
     FILEUTILS_API bool SaveContentToFile(
-        const std::wstring &wstrFilePath,
-        const char *data,
+        const std::wstring& wstrFilePath,
+        const char* data,
         int dataSize
     );
 }

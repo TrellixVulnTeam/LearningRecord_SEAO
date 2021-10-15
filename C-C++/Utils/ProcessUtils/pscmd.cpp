@@ -1,4 +1,4 @@
-/*
+﻿/*
 	Pscmd
 	--------
 	License     	Apache 2.0 License
@@ -25,7 +25,8 @@
 	2018/5/17 22:08
 */
 
-#include "stdafx.h"
+#define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
+#include <windows.h>
 #include <winternl.h>
 #include "pscmd.h"
 
@@ -38,12 +39,12 @@ Typedef_ZwQueryInformationProcess pNTAPI_ZwQueryInformationProcess =
 (Typedef_ZwQueryInformationProcess)GetProcAddress(GetModuleHandle(L"ntdll.dll"), "ZwQueryInformationProcess");
 
 /*
-	��ȡָ�������������ַ�����ʧ�ܷ��� FALSE��Unicode Version��
+	获取指定进程命令行字符串，失败返回 FALSE（Unicode Version）
 	--------
-	HANDLE hProcess							���ȡ���������ַ����Ľ��̾�����þ��Ӧ���� PROCESS_QUERY_INFORMATION �� PROCESS_VM_READ ����Ȩ��
-	LPCWSTR lpcBuffer							ָ������������ַ����Ŀ��ַ�������ָ�룬������Ӧʹ�� memset ��ʼ��Ϊ zero���ò�������Ϊ NULL
-	SIZE_T nSize										���� lpcBuffer ָ��Ŀ��ַ���������Ч��С��Bytes�����ò�������Ϊ NULL
-	SIZE_T* lpNumberOfBytesCopied	ʵ�ʸ��Ƶ� lpcBuffer ָ��Ŀ��ַ��������е��ֽ�����Bytes������ lpcBuffer Ϊ NULL �� nSize ̫С���ò������������軺�����Ľ����С��Bytes�����ò�������Ϊ NULL
+	HANDLE hProcess							需获取其命令行字符串的进程句柄，该句柄应具有 PROCESS_QUERY_INFORMATION 和 PROCESS_VM_READ 访问权限
+	LPCWSTR lpcBuffer							指向接收命令行字符串的宽字符缓冲区指针，缓冲区应使用 memset 初始化为 zero，该参数可以为 NULL
+	SIZE_T nSize										参数 lpcBuffer 指向的宽字符缓冲区有效大小（Bytes），该参数可以为 NULL
+	SIZE_T* lpNumberOfBytesCopied	实际复制到 lpcBuffer 指向的宽字符缓冲区中的字节数（Bytes），如 lpcBuffer 为 NULL 或 nSize 太小，该参数将返回所需缓冲区的建议大小（Bytes），该参数可以为 NULL
 */
 bool GetProcessCommandLineW(HANDLE hProcess, LPCWSTR lpcBuffer, SIZE_T nSize, SIZE_T* lpNumberOfBytesCopied)
 {

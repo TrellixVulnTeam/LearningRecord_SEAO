@@ -1,4 +1,4 @@
-#define WIN32_LEAN_AND_MEAN             // �� Windows ͷ���ų�����ʹ�õ�����
+﻿#define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
 #include <windows.h>
 #include <io.h>
 #include "FileUtils.h"
@@ -6,313 +6,385 @@
 namespace FileUtils {
 
     void CreateDir(
-        const std::wstring &wstrDir,
-        const int *stopFlag
+        const std::wstring& wstrDirPath,
+        const int* stopFlag
     ) {
-        if (wstrDir.empty()) {
-            return;
-        }
-
-        std::wstring wstrTmpDir = wstrDir;
-        for (std::wstring::iterator iter = wstrTmpDir.begin();
-            iter != wstrTmpDir.end();
-            ++iter) {
-            if (L'/' == *iter) {
-                *iter = L'\\';
-            }
-        }
-
-        BOOL bRet = FALSE;
-        DWORD dwError = 0;
-
-        size_t pos = wstrTmpDir.find(L'\\');
-        while (std::wstring::npos != pos) {
-            if (stopFlag && *stopFlag != 0) {
+        do {
+            if (wstrDirPath.empty()) {
                 break;
             }
 
-            std::wstring subStr = wstrTmpDir.substr(0, pos);
-            bRet = CreateDirectoryW(subStr.c_str(), NULL);
-            if (!bRet) {
-                dwError = GetLastError();
+            std::wstring wstrTmpDirPath = wstrDirPath;
+            if (wstrTmpDirPath.find(LR"(\\?\)") != 0) {
+                wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
             }
 
-            pos = wstrTmpDir.find(L'\\', pos + 1);
-        }
+            if (PathIsExist(wstrTmpDirPath)) {
+                break;
+            }
 
-        bRet = CreateDirectoryW(wstrTmpDir.c_str(), NULL);
-        if (!bRet) {
-            dwError = GetLastError();
-        }
+            // 文件路径长度必须>=8 如：\\?\C:\1 
+            if (wstrTmpDirPath.size() < 8 || wstrTmpDirPath[5] != L':') {
+                break;
+            }
 
-        return;
+            BOOL ret = FALSE;
+            DWORD errCode = 0;
+
+            std::wstring::size_type pos = wstrTmpDirPath.find(L'\\', 4);
+            while (std::wstring::npos != pos) {
+                if (stopFlag && *stopFlag != 0) {
+                    break;
+                }
+
+                std::wstring wstrSubDirPath = wstrTmpDirPath.substr(0, pos);
+                ret = CreateDirectoryW(wstrSubDirPath.c_str(), NULL);
+                if (!ret) {
+                    errCode = GetLastError();
+                }
+
+                pos = wstrTmpDirPath.find(L'\\', pos + 1);
+            }
+
+            ret = CreateDirectoryW(wstrTmpDirPath.c_str(), NULL);
+            if (!ret) {
+                errCode = GetLastError();
+            }
+        } while (false);
+    }
+
+    void MoveDirEx(
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag
+    ) {
+        do {
+            BOOL ret = FALSE;
+            DWORD errCode = 0;
+            std::wstring wstrTmpSrcDirPath, wstrTmpDstDirPath;
+            std::wstring wstrFileName;
+            std::wstring wstrFindStr = wstrSrcDirPath + L"*.*";
+            HANDLE fileHandle = INVALID_HANDLE_VALUE;
+            WIN32_FIND_DATAW findFileData;
+            memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
+
+            do {
+                fileHandle = ::FindFirstFileW(wstrFindStr.c_str(), &findFileData);
+                if (INVALID_HANDLE_VALUE == fileHandle) {
+                    break;
+                }
+
+                if (!PathIsExist(wstrDstDirPath)) {
+                    CreateDir(wstrDstDirPath, stopFlag);
+
+                    if (!PathIsExist(wstrDstDirPath)) {
+                        break;
+                    }
+                }
+
+                do {
+                    if (stopFlag && *stopFlag != 0) {
+                        break;
+                    }
+
+                    wstrFileName = findFileData.cFileName;
+                    if (L"." == wstrFileName || L".." == wstrFileName) {
+                        continue;
+                    }
+
+                    wstrTmpSrcDirPath = wstrSrcDirPath + wstrFileName;
+                    wstrTmpDstDirPath = wstrDstDirPath + wstrFileName;
+
+                    if ((findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                        wstrTmpSrcDirPath.append(L"\\");
+                        wstrTmpDstDirPath.append(L"\\");
+                        MoveDirEx(wstrTmpSrcDirPath, wstrTmpDstDirPath, stopFlag);
+                    } else {
+                        ret = DeleteFileW(wstrTmpDstDirPath.c_str());
+                        if (!ret) {
+                            errCode = GetLastError();
+                        }
+
+                        ret = MoveFileW(wstrTmpSrcDirPath.c_str(), wstrTmpDstDirPath.c_str());
+                        if (!ret) {
+                            errCode = GetLastError();
+                        }
+                    }
+
+                } while (FindNextFileW(fileHandle, &findFileData));
+
+                FindClose(fileHandle);
+                fileHandle = INVALID_HANDLE_VALUE;
+
+            } while (false);
+
+            if (INVALID_HANDLE_VALUE != fileHandle) {
+                FindClose(fileHandle);
+            }
+
+            ret = RemoveDirectoryW(wstrSrcDirPath.c_str());
+            if (!ret) {
+                errCode = GetLastError();
+            }
+        } while (false);
     }
 
     void MoveDir(
-        const std::wstring &wstrSrcDir,
-        const std::wstring &wstrDstDir,
-        const int *stopFlag
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag
     ) {
-        // MoveFile֧��ͬ�����ƶ��ļ��У������ʱ��ʧ��
-        if (MoveFileW(wstrSrcDir.c_str(), wstrDstDir.c_str())) {
-            return;
-        }
-
-        if (wstrSrcDir.empty() || wstrDstDir.empty()) {
-            return;
-        }
-
-        WIN32_FIND_DATAW findFileData = { 0 };
-        std::wstring wstrFindStr(wstrSrcDir);
-        std::wstring wstrRealSrcDir(wstrSrcDir);
-        std::wstring wstrRealDstDir(wstrDstDir);
-
-        if (L'\\' != *wstrRealSrcDir.rbegin()) {
-            wstrRealSrcDir.append(L"\\");
-            wstrFindStr.append(L"\\");
-        }
-
-        if (L'\\' != *wstrRealDstDir.rbegin()) {
-            wstrRealDstDir.append(L"\\");
-        }
-
-        wstrFindStr.append(L"*.*");
-
-        BOOL bRet = FALSE;
-        DWORD dwError = 0;
-        std::wstring wstrSrcDir2;
-        std::wstring wstrDstDir2;
-        std::wstring wstrFileName;
-        HANDLE fileHandle = INVALID_HANDLE_VALUE;
-
         do {
-            fileHandle = ::FindFirstFileW(wstrFindStr.c_str(), &findFileData);
-            if (INVALID_HANDLE_VALUE == fileHandle) {
+            if (wstrSrcDirPath.empty()
+                || wstrDstDirPath.empty()) {
                 break;
             }
 
-            if (!PathIsExist(wstrDstDir)) {
-                CreateDir(wstrDstDir, stopFlag);
-
-                if (!PathIsExist(wstrDstDir.c_str())) {
-                    break;
-                }
+            std::wstring wstrTmpSrcDirPath(wstrSrcDirPath);
+            if (wstrTmpSrcDirPath.find(LR"(\\?\)") != 0) {
+                wstrTmpSrcDirPath = LR"(\\?\)" + wstrTmpSrcDirPath;
             }
 
+            if (L'\\' != wstrTmpSrcDirPath.back()) {
+                wstrTmpSrcDirPath.append(L"\\");
+            }
+
+            if (!PathIsExist(wstrSrcDirPath)) {
+                break;
+            }
+
+            // 文件路径长度必须>=9 如：\\?\C:\1\ 
+            if (wstrTmpSrcDirPath.size() < 9 || wstrTmpSrcDirPath[5] != L':') {
+                break;
+            }
+
+            std::wstring wstrTmpDstDirPath(wstrDstDirPath);
+            if (wstrTmpDstDirPath.find(LR"(\\?\)") != 0) {
+                wstrTmpDstDirPath = LR"(\\?\)" + wstrTmpDstDirPath;
+            }
+
+            if (L'\\' != wstrTmpDstDirPath.back()) {
+                wstrTmpDstDirPath.append(L"\\");
+            }
+
+            // 文件路径长度必须>=7 如：\\?\C:\ 
+            if (wstrTmpDstDirPath.size() < 7 || wstrTmpDstDirPath[5] != L':') {
+                break;
+            }
+
+            // MoveFile支持同分区移动文件夹，跨分区时会失败
+            if (MoveFileW(wstrTmpSrcDirPath.c_str(), wstrTmpDstDirPath.c_str())) {
+                break;
+            }
+
+            MoveDirEx(wstrTmpSrcDirPath, wstrTmpDstDirPath, stopFlag);
+
+        } while (false);
+    }
+
+    void CopyDirEx(
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag
+    ) {
+        do {
+            BOOL ret = FALSE;
+            DWORD errCode = 0;
+            std::wstring wstrTmpSrcDirPath, wstrTmpDstDirPath;
+            std::wstring wstrFileName;
+            std::wstring wstrFindStr = wstrSrcDirPath + L"*.*";
+            HANDLE fileHandle = INVALID_HANDLE_VALUE;
+            WIN32_FIND_DATAW findFileData;
+            memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
+
             do {
-                if (stopFlag && *stopFlag != 0) {
+                fileHandle = ::FindFirstFileW(wstrFindStr.c_str(), &findFileData);
+                if (INVALID_HANDLE_VALUE == fileHandle) {
                     break;
                 }
 
-                wstrFileName = findFileData.cFileName;
-                if (L"." == wstrFileName || L".." == wstrFileName) {
-                    continue;
-                }
+                if (!PathIsExist(wstrDstDirPath.c_str())) {
+                    CreateDir(wstrDstDirPath, stopFlag);
 
-                wstrSrcDir2 = wstrRealSrcDir + wstrFileName;
-                wstrDstDir2 = wstrRealDstDir + wstrFileName;
-
-                if ((findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-                    MoveDir(wstrSrcDir2, wstrDstDir2, stopFlag);
-                }
-                else {
-                    bRet = DeleteFileW(wstrDstDir2.c_str());
-                    if (!bRet) {
-                        dwError = GetLastError();
-                    }
-
-                    bRet = MoveFileW(wstrSrcDir2.c_str(), wstrDstDir2.c_str());
-                    if (!bRet) {
-                        dwError = GetLastError();
+                    if (!PathIsExist(wstrDstDirPath.c_str())) {
+                        break;
                     }
                 }
 
-            } while (FindNextFileW(fileHandle, &findFileData));
+                do {
+                    if (stopFlag && *stopFlag != 0) {
+                        break;
+                    }
 
-            FindClose(fileHandle);
-            fileHandle = INVALID_HANDLE_VALUE;
+                    wstrFileName = findFileData.cFileName;
+                    if (L"." == wstrFileName || L".." == wstrFileName) {
+                        continue;
+                    }
 
+                    wstrTmpSrcDirPath = wstrSrcDirPath + wstrFileName;
+                    wstrTmpDstDirPath = wstrDstDirPath + wstrFileName;
+
+                    if ((findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                        wstrTmpSrcDirPath.append(L"\\");
+                        wstrTmpDstDirPath.append(L"\\");
+                        CopyDirEx(wstrTmpSrcDirPath, wstrTmpDstDirPath, stopFlag);
+                    } else {
+                        ret = CopyFileW(wstrTmpSrcDirPath.c_str(), wstrTmpDstDirPath.c_str(), FALSE);
+                        if (!ret) {
+                            errCode = GetLastError();
+                        }
+                    }
+
+                } while (FindNextFileW(fileHandle, &findFileData));
+
+            } while (false);
+
+            if (INVALID_HANDLE_VALUE != fileHandle) {
+                FindClose(fileHandle);
+            }
         } while (false);
-
-        if (INVALID_HANDLE_VALUE != fileHandle) {
-            FindClose(fileHandle);
-        }
-
-        bRet = RemoveDirectoryW(wstrSrcDir.c_str());
-        if (!bRet) {
-            dwError = GetLastError();
-        }
-
-        return;
     }
 
     void CopyDir(
-        const std::wstring &wstrSrcDir,
-        const std::wstring &wstrDstDir,
-        const int *stopFlag
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag
     ) {
-        if (wstrSrcDir.empty() || wstrDstDir.empty()) {
-            return;
-        }
-
-        WIN32_FIND_DATAW findFileData = { 0 };
-        std::wstring wstrFindStr(wstrSrcDir);
-
-        std::wstring wstrRealSrcDir(wstrSrcDir);
-        std::wstring wstrRealDstDir(wstrDstDir);
-
-        if (L'\\' != *wstrRealSrcDir.rbegin()) {
-            wstrRealSrcDir.append(L"\\");
-            wstrFindStr.append(L"\\");
-        }
-
-        if (L'\\' != *wstrRealDstDir.rbegin()) {
-            wstrRealDstDir.append(L"\\");
-        }
-
-        wstrFindStr.append(L"*.*");
-
-        BOOL bRet = FALSE;
-        DWORD dwError = 0;
-        std::wstring wstrSrcDir2;
-        std::wstring wstrDstDir2;
-        std::wstring wstrFileName;
-        HANDLE fileHandle = INVALID_HANDLE_VALUE;
-
         do {
-            fileHandle = ::FindFirstFileW(wstrFindStr.c_str(), &findFileData);
-            if (INVALID_HANDLE_VALUE == fileHandle) {
+            if (wstrSrcDirPath.empty()
+                || wstrDstDirPath.empty()) {
                 break;
             }
 
-            if (!PathIsExist(wstrDstDir.c_str())) {
-                CreateDir(wstrDstDir, stopFlag);
-
-                if (!PathIsExist(wstrDstDir.c_str())) {
-                    break;
-                }
+            std::wstring wstrTmpSrcDirPath(wstrSrcDirPath);
+            if (wstrTmpSrcDirPath.find(LR"(\\?\)") != 0) {
+                wstrTmpSrcDirPath = LR"(\\?\)" + wstrTmpSrcDirPath;
             }
 
-            do {
-                if (stopFlag && *stopFlag != 0) {
-                    break;
-                }
+            if (L'\\' != wstrTmpSrcDirPath.back()) {
+                wstrTmpSrcDirPath.append(L"\\");
+            }
 
-                wstrFileName = findFileData.cFileName;
-                if (L"." == wstrFileName || L".." == wstrFileName) {
-                    continue;
-                }
+            if (!PathIsExist(wstrSrcDirPath)) {
+                break;
+            }
 
-                wstrSrcDir2 = wstrRealSrcDir + wstrFileName;
-                wstrDstDir2 = wstrRealDstDir + wstrFileName;
+            // 文件路径长度必须>=9 如：\\?\C:\1\ 
+            if (wstrTmpSrcDirPath.size() < 9 || wstrTmpSrcDirPath[5] != L':') {
+                break;
+            }
 
-                if ((findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-                    CopyDir(wstrSrcDir2, wstrDstDir2, stopFlag);
-                }
-                else {
-                    bRet = CopyFileW(wstrSrcDir2.c_str(), wstrDstDir2.c_str(), FALSE);
-                    if (!bRet) {
-                        dwError = GetLastError();
-                    }
-                }
+            std::wstring wstrTmpDstDirPath(wstrDstDirPath);
+            if (wstrTmpDstDirPath.find(LR"(\\?\)") != 0) {
+                wstrTmpDstDirPath = LR"(\\?\)" + wstrTmpDstDirPath;
+            }
 
-            } while (FindNextFileW(fileHandle, &findFileData));
+            if (L'\\' != wstrTmpDstDirPath.back()) {
+                wstrTmpDstDirPath.append(L"\\");
+            }
 
-            FindClose(fileHandle);
-            fileHandle = INVALID_HANDLE_VALUE;
+            // 文件路径长度必须>=7 如：\\?\C:\ 
+            if (wstrTmpDstDirPath.size() < 7 || wstrTmpDstDirPath[5] != L':') {
+                break;
+            }
+
+            CopyDirEx(wstrTmpSrcDirPath, wstrTmpDstDirPath, stopFlag);
 
         } while (false);
+    }
 
-        if (INVALID_HANDLE_VALUE != fileHandle) {
-            FindClose(fileHandle);
-        }
+    void DeleteDirEx(
+        const std::wstring& wstrDirPath,
+        const int* stopFlag
+    ) {
+        do {
+            BOOL ret = FALSE;
+            DWORD errCode = 0;
+            std::wstring wstrFileName;
+            std::wstring wstrTmpDirPath;
+            std::wstring wstrFindStr = wstrDirPath + L"*.*";
+            WIN32_FIND_DATAW findFileData;
+            memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
 
-        return;
+            HANDLE fileHandle = ::FindFirstFileW(wstrFindStr.c_str(), &findFileData);
+            if (INVALID_HANDLE_VALUE != fileHandle) {
+                do {
+                    if (stopFlag && *stopFlag != 0) {
+                        break;
+                    }
+
+                    wstrFileName = findFileData.cFileName;
+                    if (L"." == wstrFileName || L".." == wstrFileName) {
+                        continue;
+                    }
+
+                    wstrTmpDirPath = wstrDirPath + wstrFileName;
+
+                    if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                        wstrTmpDirPath.append(L"\\");
+                        DeleteDirEx(wstrTmpDirPath, stopFlag);
+                    } else {
+                        int iTimes = 3;
+                        do {
+                            if (DeleteFileW(wstrTmpDirPath.c_str())) {
+                                break;
+                            }
+                            // 文件被另一个进程占用
+                            if (ERROR_SHARING_VIOLATION == GetLastError()) {
+                                Sleep(200);
+                                iTimes--;
+                            } else {
+                                break;
+                            }
+                        } while (iTimes > 0);
+                    }
+
+                } while (FindNextFileW(fileHandle, &findFileData));
+
+                FindClose(fileHandle);
+            }
+
+            ret = RemoveDirectoryW(wstrDirPath.c_str());
+            if (!ret) {
+                errCode = GetLastError();
+            }
+        } while (false);
     }
 
     void DeleteDir(
-        const std::wstring &wstrDir,
-        const int *stopFlag
+        const std::wstring& wstrDirPath,
+        const int* stopFlag
     ) {
-        if (wstrDir.size() < 4) {
-            return;
-        }
-
-        if (wstrDir.compare(0, 4, LR"(\\?\)") == 0) {
-            if (wstrDir.size() < 8 || wstrDir[5] != L':') {
-                return;
+        do {
+            if (wstrDirPath.empty()) {
+                break;
             }
-        }
-        else {
-            if (wstrDir[1] != L':') {
-                return;
+
+            std::wstring wstrTmpDirPath = wstrDirPath;
+            if (wstrTmpDirPath.find(LR"(\\?\)") != 0) {
+                wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
             }
-        }
 
-        WIN32_FIND_DATAW findFileData = { 0 };
-        std::wstring wstrFindStr(wstrDir);
+            if (L'\\' != wstrTmpDirPath.back()) {
+                wstrTmpDirPath.append(L"\\");
+            }
 
-        std::wstring wstrRealDir(wstrDir);
-        if (L'\\' != *wstrRealDir.rbegin()) {
-            wstrRealDir.append(L"\\");
-            wstrFindStr.append(L"\\");
-        }
+            if (!PathIsExist(wstrDirPath)) {
+                break;
+            }
 
-        wstrFindStr.append(L"*.*");
+            // 文件路径长度必须>=9 如：\\?\C:\1\ 
+            if (wstrTmpDirPath.size() < 9 || wstrTmpDirPath[5] != L':') {
+                break;
+            }
 
-        BOOL bRet = FALSE;
-        DWORD dwError = 0;
-        std::wstring wstrFileName;
-        std::wstring wstrDir2;
-        HANDLE fileHandle = ::FindFirstFileW(wstrFindStr.c_str(), &findFileData);
-        if (INVALID_HANDLE_VALUE != fileHandle) {
-            do {
-                if (stopFlag && *stopFlag != 0) {
-                    break;
-                }
+            DeleteDirEx(wstrTmpDirPath, stopFlag);
 
-                wstrFileName = findFileData.cFileName;
-                if (L"." == wstrFileName || L".." == wstrFileName) {
-                    continue;
-                }
-
-                wstrDir2 = wstrRealDir + wstrFileName;
-
-                if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    DeleteDir(wstrDir2, stopFlag);
-                }
-                else {
-                    int iTimes = 3;
-                    do {
-                        if (DeleteFileW(wstrDir2.c_str())) {
-                            break;
-                        }
-                        // �ļ�����һ������ռ��
-                        if (ERROR_SHARING_VIOLATION == GetLastError()) {
-                            Sleep(200);
-                            iTimes--;
-                        }
-                        else {
-                            break;
-                        }
-                    } while (iTimes > 0);
-                }
-
-            } while (FindNextFileW(fileHandle, &findFileData));
-
-            FindClose(fileHandle);
-        }
-
-        bRet = RemoveDirectoryW(wstrDir.c_str());
-        if (!bRet) {
-            dwError = GetLastError();
-        }
-
-        return;
+        } while (false);
     }
 
     bool PathIsExist(
-        const std::wstring &wstrPath
+        const std::wstring& wstrPath
     ) {
         DWORD dwResult = GetFileAttributesW(wstrPath.c_str());
         if (dwResult == -1) {
@@ -326,176 +398,199 @@ namespace FileUtils {
 
         return true;
     }
-    
+
     std::list<std::wstring> DirEntryList(
-        const std::wstring& wstrDir,
+        const std::wstring& wstrDirPath,
         const std::wstring& wstrFilter,
         Filter filter
     ) {
-        WIN32_FIND_DATAW findFileData;
-        memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
-
-        std::wstring wstrFindPath = wstrDir;
-        if (wstrFindPath.back() != L'\\') {
-            wstrFindPath.append(L"\\");
-        }
-
-        std::wstring wstrFindStr = wstrFindPath + wstrFilter;
         std::list<std::wstring> entryList;
-        std::wstring wstrFileName;
 
-        HANDLE fileHandle = FindFirstFileW(wstrFindStr.c_str(), &findFileData);
-        if (INVALID_HANDLE_VALUE != fileHandle) {
-            do {
-                wstrFileName.clear();
+        do {
+            if (wstrDirPath.empty()) {
+                break;
+            }
 
-                wstrFileName = findFileData.cFileName;
+            std::wstring wstrTmpDirPath = wstrDirPath;
+            if (wstrTmpDirPath.find(LR"(\\?\)") != 0) {
+                wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
+            }
 
-                if (L"." == wstrFileName || L".." == wstrFileName) {
-                    continue;
-                }
+            if (wstrTmpDirPath.back() != L'\\') {
+                wstrTmpDirPath.append(L"\\");
+            }
 
-                if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    if (filter & Filter::DIR) {
-                        entryList.push_back(std::move(wstrFileName));
+            // 文件路径长度必须>=9 如：\\?\C:\1\ 
+            if (wstrTmpDirPath.size() < 9 || wstrTmpDirPath[5] != L':') {
+                break;
+            }
+
+            std::wstring wstrFindStr = wstrTmpDirPath + wstrFilter;
+            std::wstring wstrFileName;
+            WIN32_FIND_DATAW findFileData;
+            memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
+
+            HANDLE fileHandle = FindFirstFileW(wstrFindStr.c_str(), &findFileData);
+            if (INVALID_HANDLE_VALUE != fileHandle) {
+                do {
+                    wstrFileName = findFileData.cFileName;
+
+                    if (L"." == wstrFileName || L".." == wstrFileName) {
+                        continue;
                     }
-                } else {
-                    if (filter & Filter::FILE) {
-                        entryList.push_back(std::move(wstrFileName));
+
+                    if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                        if (filter & Filter::DIR) {
+                            entryList.push_back(std::move(wstrFileName));
+                        }
+                    } else {
+                        if (filter & Filter::FILE) {
+                            entryList.push_back(std::move(wstrFileName));
+                        }
                     }
-                }
 
-            } while (FindNextFileW(fileHandle, &findFileData));
+                } while (FindNextFileW(fileHandle, &findFileData));
 
-            FindClose(fileHandle);
-            fileHandle = INVALID_HANDLE_VALUE;
-        }
+                FindClose(fileHandle);
+                fileHandle = INVALID_HANDLE_VALUE;
+            }
+        } while (false);
 
         return entryList;
     }
 
     std::list<WIN32_FIND_DATAW> DirEntryInfoList(
-        const std::wstring& wstrDir,
+        const std::wstring& wstrDirPath,
         const std::wstring& wstrFilter,
         Filter filter
     ) {
-        WIN32_FIND_DATAW findFileData;
-        memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
-
-        std::wstring wstrFindPath = wstrDir;
-        if (wstrFindPath.back() != L'\\') {
-            wstrFindPath.append(L"\\");
-        }
-
-        std::wstring wstrFindStr = wstrFindPath + wstrFilter;
         std::list<WIN32_FIND_DATAW> entryInfoList;
-        std::wstring wstrFileName;
 
-        HANDLE fileHandle = FindFirstFileW(wstrFindStr.c_str(), &findFileData);
-        if (INVALID_HANDLE_VALUE != fileHandle) {
-            do {
-                wstrFileName.clear();
+        do {
+            if (wstrDirPath.empty()) {
+                break;
+            }
 
-                wstrFileName = findFileData.cFileName;
+            std::wstring wstrTmpDirPath = wstrDirPath;
+            if (wstrTmpDirPath.find(LR"(\\?\)") != 0) {
+                wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
+            }
 
-                if (L"." == wstrFileName || L".." == wstrFileName) {
-                    continue;
-                }
+            if (wstrTmpDirPath.back() != L'\\') {
+                wstrTmpDirPath.append(L"\\");
+            }
 
-                if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    if (filter & Filter::DIR) {
-                        entryInfoList.push_back(findFileData);
+            // 文件路径长度必须>=9 如：\\?\C:\1\ 
+            if (wstrTmpDirPath.size() < 9 || wstrTmpDirPath[5] != L':') {
+                break;
+            }
+
+            std::wstring wstrFindStr = wstrTmpDirPath + wstrFilter;
+            std::wstring wstrFileName;
+            WIN32_FIND_DATAW findFileData;
+            memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
+
+            HANDLE fileHandle = FindFirstFileW(wstrFindStr.c_str(), &findFileData);
+            if (INVALID_HANDLE_VALUE != fileHandle) {
+                do {
+                    wstrFileName = findFileData.cFileName;
+
+                    if (L"." == wstrFileName || L".." == wstrFileName) {
+                        continue;
                     }
-                } else {
-                    if (filter & Filter::FILE) {
-                        entryInfoList.push_back(findFileData);
+
+                    if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                        if (filter & Filter::DIR) {
+                            entryInfoList.push_back(findFileData);
+                        }
+                    } else {
+                        if (filter & Filter::FILE) {
+                            entryInfoList.push_back(findFileData);
+                        }
                     }
-                }
 
-            } while (FindNextFileW(fileHandle, &findFileData));
+                } while (FindNextFileW(fileHandle, &findFileData));
 
-            FindClose(fileHandle);
-            fileHandle = INVALID_HANDLE_VALUE;
-        }
+                FindClose(fileHandle);
+                fileHandle = INVALID_HANDLE_VALUE;
+            }
+        } while (false);
 
         return entryInfoList;
     }
 
-	std::wstring GetExeDirPath()
-	{
-		wchar_t dirPath[MAX_PATH] = { 0 };
+    std::wstring GetExeDirPath() {
+        wchar_t dirPath[MAX_PATH] = { 0 };
 
-		GetModuleFileNameW(NULL, dirPath, MAX_PATH);
-		wchar_t *p = wcsrchr(dirPath, L'\\');
-		if (p)
-		{
-			*p = L'\0';
-		}
+        GetModuleFileNameW(NULL, dirPath, MAX_PATH);
+        wchar_t* p = wcsrchr(dirPath, L'\\');
+        if (p) {
+            *p = L'\0';
+        }
 
-		return std::wstring(dirPath);
-	}
+        return std::wstring(dirPath);
+    }
 
-	// �˺�����ȡ�ļ�ȫ������, ע��ʹ�ó���
-	char * ReadFileContent(
-		const std::wstring &wstrFilePath,
-        int *fileSize
-	) {
-		FILE *fp = nullptr;
-		char *buffer = nullptr;
+    char* ReadFileContent(
+        const std::wstring& wstrFilePath,
+        int* fileSize
+    ) {
+        FILE* fp = nullptr;
+        char* buffer = nullptr;
 
-		do {
+        do {
             if (fileSize) {
                 *fileSize = 0;
             }
 
-			_wfopen_s(&fp, wstrFilePath.c_str(), L"rb");
-			if (!fp) {
-				break;
-			}
+            _wfopen_s(&fp, wstrFilePath.c_str(), L"rb");
+            if (!fp) {
+                break;
+            }
 
             int fileSize_ = 0;
-			if (fseek(fp, 0, SEEK_END) != 0) {
-				break;
-			}
+            if (fseek(fp, 0, SEEK_END) != 0) {
+                break;
+            }
 
             fileSize_ = ftell(fp);
             if (fileSize) {
                 *fileSize = fileSize_;
             }
 
-			if (fseek(fp, 0, SEEK_SET) != 0) {
-				break;
-			}
+            if (fseek(fp, 0, SEEK_SET) != 0) {
+                break;
+            }
 
-			if (fileSize_ <= 0) {
-				break;
-			}
+            if (fileSize_ <= 0) {
+                break;
+            }
 
-			buffer = new char[fileSize_ + 1];
-			if (!buffer) {
-				break;
-			}
+            buffer = new char[fileSize_ + 1];
+            if (!buffer) {
+                break;
+            }
 
-			buffer[fileSize_] = 0;
-			if (fread(buffer, 1, fileSize_, fp) != fileSize_) {
-				break;
-			}
+            buffer[fileSize_] = 0;
+            if (fread(buffer, 1, fileSize_, fp) != fileSize_) {
+                break;
+            }
 
-		} while (false);
+        } while (false);
 
-		if (fp) {
-			fclose(fp);
-		}
+        if (fp) {
+            fclose(fp);
+        }
 
-		return buffer;
-	}
+        return buffer;
+    }
 
     bool SaveContentToFile(
-        const std::wstring &wstrFilePath,
-        const char *data,
+        const std::wstring& wstrFilePath,
+        const char* data,
         int dataSize
     ) {
-        FILE *fp = nullptr;
+        FILE* fp = nullptr;
         bool isSuccess = false;
 
         do {
@@ -515,8 +610,8 @@ namespace FileUtils {
                 break;
             }
 
-            int iFileID = _fileno(fp);
-            _commit(iFileID);
+            int fileID = _fileno(fp);
+            _commit(fileID);
 
             isSuccess = true;
 
@@ -528,5 +623,5 @@ namespace FileUtils {
 
         return isSuccess;
     }
-	
+
 }

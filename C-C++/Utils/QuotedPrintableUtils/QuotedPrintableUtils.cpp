@@ -1,7 +1,4 @@
-// QuotedPrintableUtils.cpp : ¶¨Òå DLL Ó¦ÓÃ³ÌÐòµÄµ¼³öº¯Êý¡£
-//
-
-#include "stdafx.h"
+ï»¿#include <sstream>
 #include "QuotedPrintableUtils.h"
 #include "Poco/QuotedPrintableEncoder.h"
 #include "Poco/QuotedPrintableDecoder.h"
@@ -60,11 +57,11 @@ namespace QuotedPrintableUtils {
 
         while (i < srcSize) {
             if (strncmp((const char*)src, "=\r\n", 3) == 0) {
-                // Èí»Ø³µ£¬Ìø¹ý
+                // è½¯å›žè½¦ï¼Œè·³è¿‡
                 src += 3;
                 i += 3;
             } else if (strncmp((const char*)src, "=\n=", 3) == 0) {
-                //=\nAAÕâÖÖÇé¿öÔÝÃ»¿¼ÂÇ
+                //=\nAAè¿™ç§æƒ…å†µæš‚æ²¡è€ƒè™‘
                 src += 2;
                 i += 2;
             } else if (strncmp((const char*)src, "==", 2) == 0) {
@@ -72,14 +69,14 @@ namespace QuotedPrintableUtils {
                 i += 1;
             } else {
                 if (*src == '=') {
-                    // ÊÇ±àÂë×Ö½Ú
+                    // æ˜¯ç¼–ç å­—èŠ‚
                     sscanf_s((const char*)src, "=%02hhX", dst);
                     dst++;
 
                     src += 3;
                     i += 3;
                 } else {
-                    // ·Ç±àÂë×Ö½Ú
+                    // éžç¼–ç å­—èŠ‚
                     *dst++ = *src++;
                     i++;
                 }
@@ -88,7 +85,7 @@ namespace QuotedPrintableUtils {
             }
         }
 
-        // Êä³ö¼Ó¸ö½áÊø·û
+        // è¾“å‡ºåŠ ä¸ªç»“æŸç¬¦
         *dst = '\0';
 
         strDst.assign((char*)dst_real, dstSize);

@@ -1,4 +1,4 @@
-//
+﻿//
 // Bugcheck.cpp
 //
 // Library: Foundation

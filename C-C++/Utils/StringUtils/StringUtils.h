@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef STRINGUTILS_EXPORTS
     #define STRINGUTILS_API __declspec(dllexport)
@@ -27,6 +27,7 @@ namespace StringUtils {
     STRINGUTILS_API std::string Utf16ToUtf8(const std::wstring &str);
 
     STRINGUTILS_API std::wstring Utf8ToUtf16(const std::string &str);
+
     STRINGUTILS_API std::list<std::wstring> SplitLines(
         const std::wstring &str,
         const std::wstring &spliter

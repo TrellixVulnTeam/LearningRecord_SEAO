@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef BASE64UTILS_EXPORTS
 #define BASE64UTILS_API __declspec(dllexport)

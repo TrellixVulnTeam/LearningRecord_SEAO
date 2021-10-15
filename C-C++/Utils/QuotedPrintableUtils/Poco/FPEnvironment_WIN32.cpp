@@ -1,4 +1,4 @@
-//
+﻿//
 // FPEnvironment_WIN32.cpp
 //
 // Library: Foundation
