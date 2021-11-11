@@ -3,7 +3,8 @@
 #ifndef USE_ICONV
     /* 
         see https://docs.microsoft.com/en-us/windows/win32/intl/international-components-for-unicode--icu- 
-        and https://en.wikipedia.org/wiki/Windows_10 Windows 10 Version 1903 is NTDDI_WIN10_19H1
+        and https://en.wikipedia.org/wiki/Windows_10
+		Windows 10 Version 1903 is NTDDI_WIN10_19H1
     */
     #if (NTDDI_VERSION < NTDDI_WIN10_19H1) 
         #define USE_ICONV

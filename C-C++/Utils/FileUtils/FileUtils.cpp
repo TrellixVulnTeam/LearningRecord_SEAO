@@ -1,6 +1,7 @@
 ﻿#define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
 #include <windows.h>
 #include <io.h>
+#include <algorithm>
 #include "FileUtils.h"
 
 namespace FileUtils {
@@ -15,9 +16,17 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpDirPath = wstrDirPath;
-            if (wstrTmpDirPath.find(LR"(\\?\)") != 0) {
-                wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
+            if (wstrTmpDirPath.find(LR"(\\?\)") == 0) {
+                wstrTmpDirPath.erase(0, 4);
             }
+
+            // 移除连续 \ eg. E:\\1
+            wstrTmpDirPath.erase(std::unique(wstrTmpDirPath.begin(), wstrTmpDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
+                return lhs == rhs && lhs == L'\\';
+            }), wstrTmpDirPath.end());
+
+            // 拼接路径前缀
+            wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
 
             if (PathIsExist(wstrTmpDirPath)) {
                 break;
@@ -141,15 +150,23 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpSrcDirPath(wstrSrcDirPath);
-            if (wstrTmpSrcDirPath.find(LR"(\\?\)") != 0) {
-                wstrTmpSrcDirPath = LR"(\\?\)" + wstrTmpSrcDirPath;
+            if (wstrTmpSrcDirPath.find(LR"(\\?\)") == 0) {
+                wstrTmpSrcDirPath.erase(0, 4);
             }
 
             if (L'\\' != wstrTmpSrcDirPath.back()) {
                 wstrTmpSrcDirPath.append(L"\\");
             }
 
-            if (!PathIsExist(wstrSrcDirPath)) {
+            // 移除连续 \ eg. E:\\1
+            wstrTmpSrcDirPath.erase(std::unique(wstrTmpSrcDirPath.begin(), wstrTmpSrcDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
+                return lhs == rhs && lhs == L'\\';
+            }), wstrTmpSrcDirPath.end());
+
+            // 拼接路径前缀
+            wstrTmpSrcDirPath = LR"(\\?\)" + wstrTmpSrcDirPath;
+
+            if (!PathIsExist(wstrTmpSrcDirPath)) {
                 break;
             }
 
@@ -159,13 +176,21 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpDstDirPath(wstrDstDirPath);
-            if (wstrTmpDstDirPath.find(LR"(\\?\)") != 0) {
-                wstrTmpDstDirPath = LR"(\\?\)" + wstrTmpDstDirPath;
+            if (wstrTmpDstDirPath.find(LR"(\\?\)") == 0) {
+                wstrTmpDstDirPath.erase(0, 4);
             }
 
             if (L'\\' != wstrTmpDstDirPath.back()) {
                 wstrTmpDstDirPath.append(L"\\");
             }
+
+            // 移除连续 \ eg. E:\\1
+            wstrTmpDstDirPath.erase(std::unique(wstrTmpDstDirPath.begin(), wstrTmpDstDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
+                return lhs == rhs && lhs == L'\\';
+            }), wstrTmpDstDirPath.end());
+
+            // 拼接路径前缀
+            wstrTmpDstDirPath = LR"(\\?\)" + wstrTmpDstDirPath;
 
             // 文件路径长度必须>=7 如：\\?\C:\ 
             if (wstrTmpDstDirPath.size() < 7 || wstrTmpDstDirPath[5] != L':') {
@@ -257,15 +282,23 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpSrcDirPath(wstrSrcDirPath);
-            if (wstrTmpSrcDirPath.find(LR"(\\?\)") != 0) {
-                wstrTmpSrcDirPath = LR"(\\?\)" + wstrTmpSrcDirPath;
+            if (wstrTmpSrcDirPath.find(LR"(\\?\)") == 0) {
+                wstrTmpSrcDirPath.erase(0, 4);
             }
 
             if (L'\\' != wstrTmpSrcDirPath.back()) {
                 wstrTmpSrcDirPath.append(L"\\");
             }
 
-            if (!PathIsExist(wstrSrcDirPath)) {
+            // 移除连续 \ eg. E:\\1
+            wstrTmpSrcDirPath.erase(std::unique(wstrTmpSrcDirPath.begin(), wstrTmpSrcDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
+                return lhs == rhs && lhs == L'\\';
+            }), wstrTmpSrcDirPath.end());
+
+            // 拼接路径前缀
+            wstrTmpSrcDirPath = LR"(\\?\)" + wstrTmpSrcDirPath;
+
+            if (!PathIsExist(wstrTmpSrcDirPath)) {
                 break;
             }
 
@@ -275,13 +308,21 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpDstDirPath(wstrDstDirPath);
-            if (wstrTmpDstDirPath.find(LR"(\\?\)") != 0) {
-                wstrTmpDstDirPath = LR"(\\?\)" + wstrTmpDstDirPath;
+            if (wstrTmpDstDirPath.find(LR"(\\?\)") == 0) {
+                wstrTmpDstDirPath.erase(0, 4);
             }
 
             if (L'\\' != wstrTmpDstDirPath.back()) {
                 wstrTmpDstDirPath.append(L"\\");
             }
+
+            // 移除连续 \ eg. E:\\1
+            wstrTmpDstDirPath.erase(std::unique(wstrTmpDstDirPath.begin(), wstrTmpDstDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
+                return lhs == rhs && lhs == L'\\';
+            }), wstrTmpDstDirPath.end());
+
+            // 拼接路径前缀
+            wstrTmpDstDirPath = LR"(\\?\)" + wstrTmpDstDirPath;
 
             // 文件路径长度必须>=7 如：\\?\C:\ 
             if (wstrTmpDstDirPath.size() < 7 || wstrTmpDstDirPath[5] != L':') {
@@ -361,15 +402,23 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpDirPath = wstrDirPath;
-            if (wstrTmpDirPath.find(LR"(\\?\)") != 0) {
-                wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
+            if (wstrTmpDirPath.find(LR"(\\?\)") == 0) {
+                wstrTmpDirPath.erase(0, 4);
             }
 
             if (L'\\' != wstrTmpDirPath.back()) {
                 wstrTmpDirPath.append(L"\\");
             }
 
-            if (!PathIsExist(wstrDirPath)) {
+            // 移除连续 \ eg. E:\\1
+            wstrTmpDirPath.erase(std::unique(wstrTmpDirPath.begin(), wstrTmpDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
+                return lhs == rhs && lhs == L'\\';
+            }), wstrTmpDirPath.end());
+
+            // 拼接路径前缀
+            wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
+
+            if (!PathIsExist(wstrTmpDirPath)) {
                 break;
             }
 
@@ -412,13 +461,21 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpDirPath = wstrDirPath;
-            if (wstrTmpDirPath.find(LR"(\\?\)") != 0) {
-                wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
+            if (wstrTmpDirPath.find(LR"(\\?\)") == 0) {
+                wstrTmpDirPath.erase(0, 4);
             }
 
             if (wstrTmpDirPath.back() != L'\\') {
                 wstrTmpDirPath.append(L"\\");
             }
+
+            // 移除连续 \ eg. E:\\1
+            wstrTmpDirPath.erase(std::unique(wstrTmpDirPath.begin(), wstrTmpDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
+                return lhs == rhs && lhs == L'\\';
+            }), wstrTmpDirPath.end());
+
+            // 拼接路径前缀
+            wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
 
             // 文件路径长度必须>=9 如：\\?\C:\1\ 
             if (wstrTmpDirPath.size() < 9 || wstrTmpDirPath[5] != L':') {
@@ -472,13 +529,21 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpDirPath = wstrDirPath;
-            if (wstrTmpDirPath.find(LR"(\\?\)") != 0) {
-                wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
+            if (wstrTmpDirPath.find(LR"(\\?\)") == 0) {
+                wstrTmpDirPath.erase(0, 4);
             }
 
             if (wstrTmpDirPath.back() != L'\\') {
                 wstrTmpDirPath.append(L"\\");
             }
+
+            // 移除连续 \ eg. E:\\1
+            wstrTmpDirPath.erase(std::unique(wstrTmpDirPath.begin(), wstrTmpDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
+                return lhs == rhs && lhs == L'\\';
+            }), wstrTmpDirPath.end());
+
+            // 拼接路径前缀
+            wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
 
             // 文件路径长度必须>=9 如：\\?\C:\1\ 
             if (wstrTmpDirPath.size() < 9 || wstrTmpDirPath[5] != L':') {
