@@ -1,9 +1,9 @@
 #pragma once
 
 #ifdef WINMUTEXWRAPPER_EXPORTS
-#define WINMUTEXWRAPPER_API __declspec(dllexport)
+    #define WINMUTEXWRAPPER_API __declspec(dllexport)
 #else
-#define WINMUTEXWRAPPER_API __declspec(dllimport)
+    #define WINMUTEXWRAPPER_API __declspec(dllimport)
 #endif
 
 #include <string>
@@ -16,6 +16,9 @@ public:
     WinMutexWrapper(
         const std::wstring &wstrMutexName
     );
+
+    WinMutexWrapper(const WinMutexWrapper &) = delete;
+    WinMutexWrapper & operator=(const WinMutexWrapper &) = delete;
 
     ~WinMutexWrapper();
 

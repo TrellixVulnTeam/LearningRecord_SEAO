@@ -31,13 +31,13 @@ namespace Base64Utils
     BASE64UTILS_API unsigned char * Base64EncodeData(
         const unsigned char *in,
         int inSize,
-        int &outSize
+        int *outSize = nullptr
     );
 
     BASE64UTILS_API unsigned char * Base64DecodeData(
         const unsigned char *in,
         int inSize,
-        int &outSize
+        int *outSize = nullptr
     );
 
     BASE64UTILS_API void FreeData(void *p);

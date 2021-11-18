@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #ifdef PROCESSUTILS_EXPORTS
-#define PROCESSUTILS_API __declspec(dllexport)
+    #define PROCESSUTILS_API __declspec(dllexport)
 #else
-#define PROCESSUTILS_API __declspec(dllimport)
+    #define PROCESSUTILS_API __declspec(dllimport)
 #endif
 
 #include <minwindef.h>

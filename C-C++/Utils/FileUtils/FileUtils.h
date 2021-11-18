@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #ifdef FILEUTILS_EXPORTS
-#define FILEUTILS_API __declspec(dllexport)
+    #define FILEUTILS_API __declspec(dllexport)
 #else
-#define FILEUTILS_API __declspec(dllimport)
+    #define FILEUTILS_API __declspec(dllimport)
 #endif
 
 #include <string>

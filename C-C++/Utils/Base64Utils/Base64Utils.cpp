@@ -125,16 +125,17 @@ namespace Base64Utils {
     unsigned char * Base64EncodeData(
         const unsigned char *in,
         int inSize,
-        int &outSize
+        int *outSize
     ) {
         EVP_ENCODE_CTX *ectx = nullptr;
         unsigned char *buffer = nullptr;
 
         do {
-            outSize = inSize * 2;
-            outSize = outSize > 64 ? outSize : 64;
+            int tmpOutSize = 0;
+            tmpOutSize = inSize * 2;
+            tmpOutSize = tmpOutSize > 64 ? tmpOutSize : 64;
 
-            buffer = new unsigned char[outSize]();
+            buffer = new unsigned char[tmpOutSize]();
             if (!buffer) {
                 break;
             }
@@ -147,17 +148,21 @@ namespace Base64Utils {
             EVP_EncodeInit(ectx);
 
             int outlen = 0;
-            outSize = 0;
+            tmpOutSize = 0;
 
             if (EVP_EncodeUpdate(ectx, buffer, &outlen, in, inSize) == -1) {
                 break;
             }
 
-            outSize = outlen;
+            tmpOutSize = outlen;
 
             EVP_EncodeFinal(ectx, buffer + outlen, &outlen);
 
-            outSize += outlen;
+            tmpOutSize += outlen;
+
+            if (outSize) {
+                *outSize = tmpOutSize;
+            }
 
         } while (false);
 
@@ -171,16 +176,17 @@ namespace Base64Utils {
     unsigned char * Base64DecodeData(
         const unsigned char *in,
         int inSize,
-        int &outSize
+        int *outSize
     ) {
         EVP_ENCODE_CTX *ectx = nullptr;
         unsigned char *buffer = nullptr;
 
         do {
-            outSize = inSize * 2;
-            outSize = outSize > 64 ? outSize : 64;
+            int tmpOutSize = 0;
+            tmpOutSize = inSize * 2;
+            tmpOutSize = tmpOutSize > 64 ? tmpOutSize : 64;
 
-            buffer = new unsigned char[outSize]();
+            buffer = new unsigned char[tmpOutSize]();
             if (!buffer) {
                 break;
             }
@@ -193,19 +199,23 @@ namespace Base64Utils {
             EVP_DecodeInit(ectx);
 
             int outlen = 0;
-            outSize = 0;
+            tmpOutSize = 0;
 
             if (EVP_DecodeUpdate(ectx, buffer, &outlen, in, inSize) == -1) {
                 break;
             }
 
-            outSize = outlen;
+            tmpOutSize = outlen;
 
             if (EVP_DecodeFinal(ectx, buffer + outlen, &outlen) == -1) {
                 break;
             }
 
-            outSize += outlen;
+            tmpOutSize += outlen;
+
+            if (outSize) {
+                *outSize = tmpOutSize;
+            }
 
         } while (false);
 
