@@ -1,4 +1,5 @@
-﻿#include <sstream>
+﻿#include "pch.h"
+#include <sstream>
 #include "QuotedPrintableUtils.h"
 #include "Poco/QuotedPrintableEncoder.h"
 #include "Poco/QuotedPrintableDecoder.h"

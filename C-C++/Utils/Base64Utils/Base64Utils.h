@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #ifdef BASE64UTILS_EXPORTS
-#define BASE64UTILS_API __declspec(dllexport)
+    #define BASE64UTILS_API __declspec(dllexport)
 #else
-#define BASE64UTILS_API __declspec(dllimport)
+    #define BASE64UTILS_API __declspec(dllimport)
 #endif
 
 #include <string>

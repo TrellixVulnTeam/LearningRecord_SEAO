@@ -128,12 +128,6 @@ xcopy ..\builds\libcurl-vc16-x86-debug-dll-ssl-dll-zlib-dll-ipv6-sspi\bin\curl.p
 xcopy ..\builds\libcurl-vc16-x86-debug-dll-ssl-dll-zlib-dll-ipv6-sspi\bin\libcurl_debug.dll ..\..\..\..\Output\Win32\Debug /y
 xcopy ..\builds\libcurl-vc16-x86-debug-dll-ssl-dll-zlib-dll-ipv6-sspi\lib\libcurl_debug.lib ..\..\..\..\Output\Win32\Debug /y
 xcopy ..\builds\libcurl-vc16-x86-debug-dll-ssl-dll-zlib-dll-ipv6-sspi\lib\libcurl_debug.pdb ..\..\..\..\Output\Win32\Debug /y
-set CUR_PATH=%cd%
-cd ..\..\..\..\Output\Win32\Debug
-ren libcurl_debug.dll libcurl.dll
-ren libcurl_debug.lib libcurl.lib
-ren libcurl_debug.pdb libcurl.pdb
-cd %CUR_PATH%
 
 xcopy ..\builds\libcurl-vc16-x86-debug-dll-ssl-dll-zlib-dll-ipv6-sspi\include ..\..\..\..\Includes /s /e /y
 

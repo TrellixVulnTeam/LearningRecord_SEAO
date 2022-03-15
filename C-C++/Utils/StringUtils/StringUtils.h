@@ -18,13 +18,13 @@ namespace StringUtils {
 
     STRINGUTILS_API std::wstring GBKToUtf16(const std::string &str);
 
-    STRINGUTILS_API std::string Utf16ToGBK(const std::wstring &str);
+    STRINGUTILS_API std::string Utf16ToGBK(const std::wstring &wstr);
 
     STRINGUTILS_API std::string GBKToUtf8(const std::string &str);
 
     STRINGUTILS_API std::string Utf8ToGBK(const std::string &str);
 
-    STRINGUTILS_API std::string Utf16ToUtf8(const std::wstring &str);
+    STRINGUTILS_API std::string Utf16ToUtf8(const std::wstring &wstr);
 
     STRINGUTILS_API std::wstring Utf8ToUtf16(const std::string &str);
 
@@ -73,4 +73,75 @@ namespace StringUtils {
         char hexArray[],
         int hexArraySize
     );
+
+    // {0x51, 0x7B} -> L"517B"
+    STRINGUTILS_API std::wstring HexArrayToHexString(
+        const wchar_t *hexArray,
+        int hexArraySize,
+        bool isUpper = true
+    );
+
+    // L"517B" -> {0x51, 0x7B}
+    STRINGUTILS_API void HexStringToHexArray(
+        const std::wstring &wstrHexString,
+        wchar_t hexArray[],
+        int hexArraySize
+    );
+
+    STRINGUTILS_API std::string GetMD5String(
+        const std::string &strSrc
+    );
+
+    STRINGUTILS_API std::string GetMD5String(
+        const std::wstring &wstrSrc
+    );
+
+    STRINGUTILS_API std::wstring GetMD5WString(
+        const std::string &strSrc
+    );
+
+    STRINGUTILS_API std::wstring GetMD5WString(
+        const std::wstring &wstrSrc
+    );
+
+    STRINGUTILS_API unsigned short Get16BitsNum(
+        const unsigned char *data,
+        bool isBigEndian = false
+    );
+
+    STRINGUTILS_API unsigned int Get24BitsNum(
+        const unsigned char *data,
+        bool isBigEndian = false
+    );
+
+    STRINGUTILS_API unsigned int Get32BitsNum(
+        const unsigned char *data,
+        bool isBigEndian = false
+    );
+
+    STRINGUTILS_API unsigned long long Get40BitsNum(
+        const unsigned char *data,
+        bool isBigEndian = false
+    );
+
+    STRINGUTILS_API unsigned long long Get48BitsNum(
+        const unsigned char *data,
+        bool isBigEndian = false
+    );
+
+    STRINGUTILS_API unsigned long long Get56BitsNum(
+        const unsigned char *data,
+        bool isBigEndian = false
+    );
+
+    STRINGUTILS_API unsigned long long Get64BitsNum(
+        const unsigned char *data,
+        bool isBigEndian = false
+    );
+
+    STRINGUTILS_API double GetDoubleNum(
+        const unsigned char *data,
+        bool isBigEndian = false
+    );
+
 }

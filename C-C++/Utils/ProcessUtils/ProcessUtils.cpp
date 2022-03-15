@@ -1,5 +1,4 @@
-﻿#define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
-#include <windows.h>
+﻿#include "pch.h"
 #include <vector>
 #include <Tlhelp32.h>
 #include <strsafe.h>
@@ -280,11 +279,11 @@ namespace ProcessUtils {
             WCHAR wzSysDir[MAX_PATH] = { 0 };
             WCHAR wzCmd[1024] = { 0 };
 
-            GetSystemDirectoryW(wzSysDir, MAX_PATH);
-            StringCbPrintfW(wzCmd, sizeof(wzCmd), L"%s\\wbem\\wmic process %d ", wzSysDir, pid);
-            ExcuteCommandForResult(wzCmd, strCmdLine, nullptr);
-
-        }
+			GetSystemDirectoryW(wzSysDir, MAX_PATH);
+			StringCbPrintfW(wzCmd, sizeof(wzCmd), L"%s\\wbem\\wmic process %d ", wzSysDir, pid);
+			ExcuteCommand(wzCmd, strCmdLine);
+			
+		}
 
         return GbkToUtf16(strCmdLine);
     }
@@ -348,6 +347,124 @@ namespace ProcessUtils {
             RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
         } __except (EXCEPTION_EXECUTE_HANDLER) {}
 #pragma warning(pop)
+    }
+
+    bool ExcuteCommand(
+        const std::wstring &wstrCmd,
+        std::string &strResult,
+        const int *stopFlag,
+        DWORD maxWaitTime
+    ) {
+        bool isSuccess = false;
+        HANDLE hRead = NULL;
+        HANDLE hWrite = NULL;
+        wchar_t* cmdString = NULL;
+
+        do {
+            strResult.clear();
+
+            SECURITY_ATTRIBUTES sa = { 0 };
+            sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+            sa.lpSecurityDescriptor = NULL;
+            sa.bInheritHandle = TRUE;
+
+            // 创建匿名管道用于获取输出
+            if (!CreatePipe(&hRead, &hWrite, &sa, 10240)) {
+                break;
+            }
+
+            PROCESS_INFORMATION piProcInfo = { 0 };
+            STARTUPINFOW siStartInfo = { 0 };
+
+            ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
+            ZeroMemory(&siStartInfo, sizeof(STARTUPINFOW));
+
+            siStartInfo.cb = sizeof(STARTUPINFOW);
+            siStartInfo.hStdOutput = hWrite;
+            /*siStartInfo.hStdInput = hRead;*/
+            siStartInfo.hStdError = hWrite;
+            siStartInfo.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+            siStartInfo.wShowWindow = SW_HIDE;
+
+            size_t bufferSize = 1024 * 1024;
+            cmdString = new wchar_t[bufferSize]();
+            if (NULL == cmdString) {
+                break;
+            }
+
+            StringCchPrintfW(cmdString, bufferSize, L"cmd /c \"%s\"", wstrCmd.c_str());
+            if (!CreateProcessW(NULL, cmdString, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &siStartInfo, &piProcInfo)) {
+                break;
+            }
+
+            isSuccess = true;
+
+            DWORD dwRead = 0;
+            DWORD dwExitCode = STILL_ACTIVE;
+            DWORD dwBegin = GetTickCount();
+            DWORD dwEnd = 0;
+
+            while (true) {
+                if (NULL != stopFlag && *stopFlag != 0) {
+                    break;
+                }
+
+                dwEnd = GetTickCount();
+                if ((dwEnd - dwBegin) > maxWaitTime) {
+                    isSuccess = false;
+                    TerminateProcess(piProcInfo.hProcess, 0);
+                    break;
+                }
+
+                dwRead = 0;
+                PeekNamedPipe(hRead, NULL, 0, NULL, &dwRead, NULL);
+                if (dwRead > 0) {
+                    char* buffer = new char[dwRead + 1]();
+                    if (buffer) {
+                        if (ReadFile(hRead, buffer, dwRead, &dwRead, NULL)) {
+                            strResult += buffer;
+                        }
+                        delete[] buffer;
+                    }
+                }
+
+                DWORD dExitRet = GetExitCodeProcess(piProcInfo.hProcess, &dwExitCode);
+                if (STILL_ACTIVE != dwExitCode) {
+                    //如果之前没有读到数据再尝试最后一次
+                    if (strResult.empty()) {
+                        PeekNamedPipe(hRead, NULL, 0, NULL, &dwRead, NULL);
+                        if (dwRead > 0) {
+                            char* buffer = new char[dwRead + 1]();
+                            if (buffer) {
+                                if (ReadFile(hRead, buffer, dwRead, &dwRead, NULL)) {
+                                    strResult += buffer;
+                                }
+                                delete[] buffer;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+
+            CloseHandle(piProcInfo.hProcess);
+            CloseHandle(piProcInfo.hThread);
+
+        } while (false);
+
+        if (NULL != cmdString) {
+            delete[] cmdString;
+        }
+
+        if (NULL != hRead) {
+            CloseHandle(hRead);
+        }
+
+        if (NULL != hWrite) {
+            CloseHandle(hWrite);
+        }
+
+        return isSuccess;
     }
 
 }

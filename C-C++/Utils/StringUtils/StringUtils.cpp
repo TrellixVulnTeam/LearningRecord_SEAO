@@ -1,4 +1,5 @@
-﻿#include "StringUtils.h"
+﻿#include "pch.h"
+#include "StringUtils.h"
 
 #ifndef USE_ICONV
     /* 
@@ -19,6 +20,9 @@
     #include <icu.h>
     #pragma comment(lib, "icu")
 #endif
+
+#include <openssl/md5.h>
+#pragma comment(lib, "libcrypto")
 
 namespace StringUtils {
 
@@ -55,7 +59,7 @@ namespace StringUtils {
             _get_errno(&err);
 
             *toStrTmp = '\0';
-            str.assign((STRING::value_type*)(toStr));
+            str.assign((typename STRING::value_type*)(toStr));
 
             while ((size_t)-1 == ret && E2BIG == err) {
                 memset(lpBuffer, 0, bufferSize);
@@ -67,7 +71,7 @@ namespace StringUtils {
                 _get_errno(&err);
 
                 *toStrTmp = '\0';
-                str.append((STRING::value_type*)(toStr));
+                str.append((typename STRING::value_type*)(toStr));
             }
 
             iconv(cd, NULL, NULL, &toStrTmp, &toStrBytesleft);
@@ -211,7 +215,7 @@ namespace StringUtils {
             error = U_ZERO_ERROR;
             ucnv_convert(toConverterName, fromConverterName, buf, targetLen, src, srcLen, &error);
 
-            target.assign((STRING::value_type*)buf);
+            target.assign((typename STRING::value_type*)buf);
 
             delete[] buf;
 
@@ -317,8 +321,8 @@ namespace StringUtils {
 	) {
 		std::list<STRING> result;
 
-		STRING::size_type begin = 0;
-		STRING::size_type end = 0;
+        typename STRING::size_type begin = 0;
+        typename STRING::size_type end = 0;
 		while ((end = str.find(spliter, begin)) != STRING::npos) {
 			result.push_back(str.substr(begin, end - begin));
 			begin = end + spliter.size();
@@ -339,8 +343,8 @@ namespace StringUtils {
 	) {
 		std::vector<STRING> result;
 
-		STRING::size_type begin = 0;
-		STRING::size_type end = 0;
+        typename STRING::size_type begin = 0;
+        typename STRING::size_type end = 0;
 		while ((end = str.find(spliter, begin)) != STRING::npos) {
 			result.push_back(str.substr(begin, end - begin));
 			begin = end + spliter.size();
@@ -359,8 +363,8 @@ namespace StringUtils {
 		const STRING &target,
 		const STRING &dst
 	) {
-        STRING::size_type pos = STRING::npos;
-        STRING::size_type off = 0;
+        typename STRING::size_type pos = STRING::npos;
+        typename STRING::size_type off = 0;
 		while ((pos = str.find(target, off)) != STRING::npos) {
             str.replace(pos, target.size(), dst);
             off = pos + dst.size();
@@ -425,14 +429,10 @@ namespace StringUtils {
         int bufSize = hexArraySize * 2 + 1;
         char *buf = new char[bufSize]();
         if (buf) {
-            if (isUpper) {
-                for (int i = 0; i < hexArraySize; ++i) {
-                    sprintf_s(buf, bufSize, "%s%.2X", buf, (unsigned char)hexArray[i]);
-                }
-            } else {
-                for (int i = 0; i < hexArraySize; ++i) {
-                    sprintf_s(buf, bufSize, "%s%.2x", buf, (unsigned char)hexArray[i]);
-                }
+            const char *format = isUpper ? "%s%.2X" : "%s%.2x";
+
+            for (int i = 0; i < hexArraySize; ++i) {
+                sprintf_s(buf, bufSize, format, buf, (unsigned char)hexArray[i]);
             }
 
             strHexString = buf;
@@ -450,20 +450,210 @@ namespace StringUtils {
         do {
             memset(hexArray, 0, hexArraySize);
 
-            size_t hexStringSize = strHexString.size();
+            int hexStringSize = strHexString.size();
             if (hexStringSize % 2 != 0) {
                 break;
             }
 
-            if (hexArraySize != hexStringSize / 2) {
+            if (hexArraySize < hexStringSize / 2) {
                 break;
             }
 
             const char *p = strHexString.c_str();
-            for (int i = 0; i < hexArraySize; ++i) {
+            for (int i = 0; i < hexStringSize / 2; ++i) {
                 sscanf_s(p + i * 2, "%02hhx", &hexArray[i]);
             }
 
         } while (false);
     }
+
+    std::wstring HexArrayToHexString(
+        const wchar_t *hexArray,
+        int hexArraySize,
+        bool isUpper
+    ) {
+        std::wstring wstrHexString;
+
+        int bufSize = hexArraySize * 4 + 1;
+        wchar_t *buf = new wchar_t[bufSize]();
+        if (buf) {
+            const wchar_t *format = isUpper ? L"%s%.2X" : L"%s%.2x";
+
+            for (int i = 0; i < hexArraySize; ++i) {
+                swprintf_s(buf, bufSize, format, buf, hexArray[i]);
+
+                // 高位字节为0的情况
+                if (hexArray[i] >> 8 == 0) {
+                    int len = wcslen(buf);
+                    buf[len] = buf[len - 2];
+                    buf[len + 1] = buf[len - 1];
+                    buf[len + 2] = L'\0';
+                    buf[len - 2] = L'0';
+                    buf[len - 1] = L'0';
+                }
+            }
+
+            wstrHexString = buf;
+            delete[] buf;
+        }
+
+        return wstrHexString;
+    }
+
+    // "517B" -> {0x51, 0x7B}
+    void HexStringToHexArray(
+        const std::wstring &wstrHexString,
+        wchar_t hexArray[],
+        int hexArraySize
+    ) {
+        do {
+            memset(hexArray, 0, hexArraySize);
+
+            int hexStringSize = wstrHexString.size();
+            if (hexStringSize % 4 != 0) {
+                break;
+            }
+
+            if (hexArraySize < hexStringSize / 4) {
+                break;
+            }
+
+            const wchar_t *p = wstrHexString.c_str();
+            for (int i = 0; i < hexStringSize / 4; ++i) {
+                swscanf_s(p + i * 4, L"%04hx", &hexArray[i]);
+            }
+
+        } while (false);
+    }
+
+    std::string GetMD5String(
+        const std::string &strSrc
+    ) {
+        unsigned char md5[16] = { 0 };
+
+        MD5_CTX ctx = { 0 };
+        MD5_Init(&ctx);
+        MD5_Update(&ctx, strSrc.c_str(), strSrc.size());
+        MD5_Final(md5, &ctx);
+
+        char hex[128] = { 0 };
+        for (int i = 0; i < 16; ++i) {
+            sprintf_s(hex, sizeof(hex) / sizeof(hex[0]), "%s%.2x", hex, md5[i]);
+        }
+
+        return hex;
+    }
+
+    std::string GetMD5String(
+        const std::wstring &wstrSrc
+    ) {
+        return GetMD5String(StringUtils::Utf16ToUtf8(wstrSrc));
+    }
+
+    std::wstring GetMD5WString(
+        const std::string &strSrc
+    ) {
+        return StringUtils::Utf8ToUtf16(GetMD5String(strSrc));
+    }
+
+    std::wstring GetMD5WString(
+        const std::wstring &wstrSrc
+    ) {
+        return StringUtils::Utf8ToUtf16(GetMD5String(wstrSrc));
+    }
+
+    template<typename NUM_TYPE>
+    NUM_TYPE GetBitsNum(
+        const unsigned char *data,
+        int bits,
+        bool isBigEndian
+    ) {
+        NUM_TYPE num = 0;
+
+        if (isBigEndian) {
+            for (int i = bits - 1; i >= 0; --i) {
+                num += (NUM_TYPE)data[i] << ((bits - i - 1) * 8);
+            }
+        } else {
+            for (int i = 0; i < bits; ++i) {
+                num += (NUM_TYPE)data[i] << (i * 8);
+            }
+        }
+
+        return num;
+    }
+
+    unsigned short Get16BitsNum(
+        const unsigned char *data,
+        bool isBigEndian
+    ) {
+        return GetBitsNum<unsigned short>(data, 2, isBigEndian);
+    }
+
+    unsigned int Get24BitsNum(
+        const unsigned char *data,
+        bool isBigEndian
+    ) {
+        return GetBitsNum<unsigned int>(data, 3, isBigEndian);
+    }
+
+    unsigned int Get32BitsNum(
+        const unsigned char *data,
+        bool isBigEndian
+    ) {
+        return GetBitsNum<unsigned int>(data, 4, isBigEndian);
+    }
+
+    unsigned long long Get40BitsNum(
+        const unsigned char *data,
+        bool isBigEndian
+    ) {
+        return GetBitsNum<unsigned long long>(data, 5, isBigEndian);
+    }
+
+    unsigned long long Get48BitsNum(
+        const unsigned char *data,
+        bool isBigEndian
+    ) {
+        return GetBitsNum<unsigned long long>(data, 6, isBigEndian);
+    }
+
+    unsigned long long Get56BitsNum(
+        const unsigned char *data,
+        bool isBigEndian
+    ) {
+        return GetBitsNum<unsigned long long>(data, 7, isBigEndian);
+    }
+
+    unsigned long long Get64BitsNum(
+        const unsigned char *data,
+        bool isBigEndian
+    ) {
+        return GetBitsNum<unsigned long long>(data, 8, isBigEndian);
+    }
+
+    double GetDoubleNum(
+        const unsigned char *data,
+        bool isBigEndian
+    ) {
+        unsigned char buffer[8] = { 0 };
+
+        if (isBigEndian) {
+            buffer[7] = data[0];
+            buffer[6] = data[1];
+            buffer[5] = data[2];
+            buffer[4] = data[3];
+            buffer[3] = data[4];
+            buffer[2] = data[5];
+            buffer[1] = data[6];
+            buffer[0] = data[7];
+        } else {
+            for (int i = 0; i < 8; i++) {
+                buffer[i] = data[i];
+            }
+        }
+
+        return *((double*)buffer);
+    }
+
 }

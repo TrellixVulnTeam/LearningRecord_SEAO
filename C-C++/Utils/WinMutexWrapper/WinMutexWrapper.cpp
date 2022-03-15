@@ -1,19 +1,18 @@
-// WinMutexWrapper.cpp : 定义 DLL 应用程序的导出函数。
-//
-
-#include "stdafx.h"
+#include "pch.h"
 #include "WinMutexWrapper.h"
 #include "WinMutexWrapperInternal.h"
 
 WinMutexWrapper::WinMutexWrapper(
     const std::wstring &wstrMutexName
 )
-    : m_impl(std::make_unique<WinMutexWrapperInternal>(wstrMutexName)) {
+    : m_impl(new WinMutexWrapperInternal(wstrMutexName)) {
     lock();
 }
 
 WinMutexWrapper::~WinMutexWrapper() {
     unlock();
+
+    delete m_impl;
 }
 
 void WinMutexWrapper::lock() {

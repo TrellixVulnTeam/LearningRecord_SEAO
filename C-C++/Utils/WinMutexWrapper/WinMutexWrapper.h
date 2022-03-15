@@ -27,6 +27,6 @@ public:
     void unlock();
 
 private:
-    std::unique_ptr<WinMutexWrapperInternal> m_impl;
+    WinMutexWrapperInternal *m_impl;
     std::atomic<bool> m_lockStatus;
 };

@@ -68,4 +68,20 @@ namespace ProcessUtils {
         DWORD tid,
         const char *threadName
     );
+
+    /**
+    * 执行cmd命令，获取输出结果
+    *
+    * @param wstrCmd [in] cmd命令
+    * @param strResult [out] 输出结果
+    * @param stopFlag [in] 停止标记指针, 默认空
+    * @param maxWaitTime [in] 最大等待事件(毫秒),默认无限等待
+    * @return true on success, false on not
+    */
+    PROCESSUTILS_API bool ExcuteCommand(
+        const std::wstring &wstrCmd,
+        std::string &strResult,
+        const int *stopFlag = nullptr,
+        DWORD maxWaitTime = INFINITE
+    );
 };
