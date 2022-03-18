@@ -7,18 +7,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/compression/libzip"]
 	path = C-C++/ThirdPartyLibrarys/compression/libzip
 	url = https://github.com/nih-at/libzip.git
-[submodule "C-C++/ThirdPartyLibrarys/apple/libcnary"]
-	path = C-C++/ThirdPartyLibrarys/apple/libcnary
-	url = https://github.com/Chronic-Dev/libcnary.git
-[submodule "C-C++/ThirdPartyLibrarys/apple/libusbmuxd"]
-	path = C-C++/ThirdPartyLibrarys/apple/libusbmuxd
-	url = https://github.com/libimobiledevice/libusbmuxd.git
-[submodule "C-C++/ThirdPartyLibrarys/apple/libplist"]
-	path = C-C++/ThirdPartyLibrarys/apple/libplist
-	url = https://github.com/libimobiledevice/libplist.git
-[submodule "C-C++/ThirdPartyLibrarys/apple/libimobiledevice"]
-	path = C-C++/ThirdPartyLibrarys/apple/libimobiledevice
-	url = https://github.com/libimobiledevice/libimobiledevice.git
 [submodule "C-C++/ThirdPartyLibrarys/xml/pugixml"]
 	path = C-C++/ThirdPartyLibrarys/xml/pugixml
 	url = https://github.com/zeux/pugixml.git
@@ -190,3 +178,15 @@
 [submodule "C-C++/ThirdPartyLibrarys/tools/spdlog"]
 	path = C-C++/ThirdPartyLibrarys/tools/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "C-C++/ThirdPartyLibrarys/apple/libusbmuxd"]
+	path = C-C++/ThirdPartyLibrarys/apple/libusbmuxd
+	url = https://github.com/songwenhao/libusbmuxd.git
+[submodule "C-C++/ThirdPartyLibrarys/apple/libplist"]
+	path = C-C++/ThirdPartyLibrarys/apple/libplist
+	url = https://github.com/songwenhao/libplist.git
+[submodule "C-C++/ThirdPartyLibrarys/apple/libimobiledevice"]
+	path = C-C++/ThirdPartyLibrarys/apple/libimobiledevice
+	url = https://github.com/songwenhao/libimobiledevice.git
+[submodule "C-C++/ThirdPartyLibrarys/apple/libimobiledevice-glue"]
+	path = C-C++/ThirdPartyLibrarys/apple/libimobiledevice-glue
+	url = https://github.com/songwenhao/libimobiledevice-glue.git
