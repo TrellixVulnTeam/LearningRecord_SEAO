@@ -1,7 +1,7 @@
 # LearningRecord
 
 ## ! Important !
-Before proceeding with the following steps, you must have installed Visual Studio 2019 in your computer!
+**Before proceeding with the following steps, you must have installed Visual Studio 2019 in your computer!**
 
 ## Clone codes
 git clone --recursive https://github.com/songwenhao/LearningRecord
@@ -13,10 +13,10 @@ git clone --recursive https://github.com/songwenhao/LearningRecord
 ### x64
 ![image](https://user-images.githubusercontent.com/11570113/159846126-c89339fa-9cf9-484b-aa90-30c6c885f641.png)
 
-### And change path to current path.
+**And change path to current path.**
 
 ## Prepare for build
-Run build-x86.cmd or build-x64.cmd.
+First run **prepare-build.cmd** to get build tools, then run **build-x86.cmd** or **build-x64.cmd**.
 
 ## Open vs solution file and build projects
-Open "C-C++/LearningRecord_C-C++.sln".
+Open **C-C++/LearningRecord_C-C++.sln**.
