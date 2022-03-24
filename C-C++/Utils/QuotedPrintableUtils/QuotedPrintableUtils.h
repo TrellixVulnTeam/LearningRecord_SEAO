@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifdef QUOTEDPRINTABLEUTILS_EXPORTS
     #define QUOTEDPRINTABLEUTILS_API __declspec(dllexport)

@@ -25,4 +25,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\libplist\libcnary\include\node.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libplist\libcnary\include\node_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libplist\libcnary\include\object.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifdef CURLWRAPPER_EXPORTS
     #define CURLWRAPPER_API __declspec(dllexport)
@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <memory>
 
 class CurlWrapperImpl;
 class CURLWRAPPER_API CurlWrapper {
@@ -147,6 +146,8 @@ public:
     Response HttpGet(const Request &request);
 
     Response HttpPost(const Request &request);
+
+    static bool CheckNetworkConnect();
 
 private:
     CurlWrapperImpl *m_impl;

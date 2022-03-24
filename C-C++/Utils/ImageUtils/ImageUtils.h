@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifdef IMAGEUTILS_EXPORTS
     #define IMAGEUTILS_API __declspec(dllexport)

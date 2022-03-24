@@ -1,4 +1,4 @@
-// TemplateDemo.cpp : ¶¨Òå¿ØÖÆÌ¨Ó¦ÓÃ³ÌĞòµÄÈë¿Úµã¡£
+// TemplateDemo.cpp : å®šä¹‰æ§åˆ¶å°åº”ç”¨ç¨‹åºçš„å…¥å£ç‚¹ã€‚
 //
 
 #include <string>
@@ -19,7 +19,7 @@ int main() {
     nonref("hello");
 
     {
-        // C++ 17 ½á¹¹»¯°ó¶¨ {
+        // C++ 17 ç»“æ„åŒ–ç»‘å®š {
         struct employee {
             unsigned id;
             std::string name;
@@ -37,11 +37,11 @@ int main() {
                 << "Role: " << role
                 << "Salary: " << salary << '\n';
         }
-        // C++ 17 ½á¹¹»¯°ó¶¨ }
+        // C++ 17 ç»“æ„åŒ–ç»‘å®š }
     }
 
     {
-        // C++ 17 Ê¹ÓÃÕÛµş±í´ïÊ½ {
+        // C++ 17 ä½¿ç”¨æŠ˜å è¡¨è¾¾å¼ {
         int the_sum{ sum(1, 2, 3, 4, 5) }; // value: 15
 
         std::string a{ "Hello " };
@@ -63,11 +63,11 @@ int main() {
 
         std::vector<int> v{ 1, 2, 3 };
         insert_all(v, 4, 5, 6);
-        // C++ 17 Ê¹ÓÃÕÛµş±í´ïÊ½ }
+        // C++ 17 ä½¿ç”¨æŠ˜å è¡¨è¾¾å¼ }
     }
 
     {
-        // C++ 17 ½«±äÁ¿×÷ÓÃÓòÏŞÖÆÔÚifºÍswitchÇøÓòÄÚ {
+        // C++ 17 å°†å˜é‡ä½œç”¨åŸŸé™åˆ¶åœ¨ifå’ŒswitchåŒºåŸŸå†… {
         int num = 5;
         switch (int flag = 5 / 2; flag > 0) {
         case 1: break;
@@ -88,11 +88,11 @@ int main() {
         }
         // shared_pointer is not accessible any longer
         */
-        // C++ 17 ½«±äÁ¿×÷ÓÃÓòÏŞÖÆÔÚifºÍswitchÇøÓòÄÚ }
+        // C++ 17 å°†å˜é‡ä½œç”¨åŸŸé™åˆ¶åœ¨ifå’ŒswitchåŒºåŸŸå†… }
     }
 
     {
-        // C++ 17 std::unordered_mapÖĞÊ¹ÓÃ×Ô¶¨ÒåÀàĞÍ {
+        // C++ 17 std::unordered_mapä¸­ä½¿ç”¨è‡ªå®šä¹‰ç±»å‹ {
         std::unordered_map<coord, int, my_hash_type<coord>> m{
             { {0, 0}, 1},
             { {0, 1}, 2},
@@ -103,22 +103,22 @@ int main() {
                 << "): " << value << "} ";
         }
         std::cout << '\n';
-        // C++ 17 std::unordered_mapÖĞÊ¹ÓÃ×Ô¶¨ÒåÀàĞÍ }
+        // C++ 17 std::unordered_mapä¸­ä½¿ç”¨è‡ªå®šä¹‰ç±»å‹ }
     }
 
     {
-        // ·´Ïòµü´úÆ÷
+        // åå‘è¿­ä»£å™¨
         std::list<int> l{ 1, 2, 3, 4, 5 };
         std::copy(l.rbegin(), l.rend(), std::ostream_iterator<int>{std::cout, ", "});
         std::cout << '\n';
 
-        // ¶ÔÓÚÃ»ÓĞ¶¨Òå·´Ïòµü´úÆ÷µÄÈİÆ÷£¬¿ÉÒÔÊ¹ÓÃmake_reverse_iterator×ª»»
+        // å¯¹äºæ²¡æœ‰å®šä¹‰åå‘è¿­ä»£å™¨çš„å®¹å™¨ï¼Œå¯ä»¥ä½¿ç”¨make_reverse_iteratorè½¬æ¢
         std::copy(std::make_reverse_iterator(l.end()), std::make_reverse_iterator(l.begin()), std::ostream_iterator<int>{std::cout, ", "});
         std::cout << '\n';
     }
 
     {
-        // C++ 17 Ê¹ÓÃLambdaÎªstd::functionÌí¼Ó¶àÌ¬ĞÔ {
+        // C++ 17 ä½¿ç”¨Lambdaä¸ºstd::functionæ·»åŠ å¤šæ€æ€§ {
         std::deque<int> d;
         std::list<int> l;
         std::vector<int> v;
@@ -135,7 +135,7 @@ int main() {
         print(d);
         print(l);
         print(v);
-        // C++ 17 Ê¹ÓÃLambdaÎªstd::functionÌí¼Ó¶àÌ¬ĞÔ }
+        // C++ 17 ä½¿ç”¨Lambdaä¸ºstd::functionæ·»åŠ å¤šæ€æ€§ }
 
 
     }

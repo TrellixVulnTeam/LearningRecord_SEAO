@@ -3,8 +3,8 @@
 #include <string>
 #include <mutex>
 
-#define WIN32_LEAN_AND_MEAN             // ´Ó Windows Í·ÖĞÅÅ³ı¼«ÉÙÊ¹ÓÃµÄ×ÊÁÏ
-// Windows Í·ÎÄ¼ş: 
+#define WIN32_LEAN_AND_MEAN             // ä» Windows å¤´ä¸­æ’é™¤æå°‘ä½¿ç”¨çš„èµ„æ–™
+// Windows å¤´æ–‡ä»¶: 
 #include <windows.h>
 
 class WinMutexWrapperInternal {

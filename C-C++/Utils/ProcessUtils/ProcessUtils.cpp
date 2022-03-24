@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include <vector>
 #include <Tlhelp32.h>
 #include <strsafe.h>

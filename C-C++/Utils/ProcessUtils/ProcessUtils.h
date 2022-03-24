@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifdef PROCESSUTILS_EXPORTS
     #define PROCESSUTILS_API __declspec(dllexport)

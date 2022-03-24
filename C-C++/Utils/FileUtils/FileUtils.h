@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifdef FILEUTILS_EXPORTS
     #define FILEUTILS_API __declspec(dllexport)

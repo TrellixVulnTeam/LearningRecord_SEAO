@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-// Ä£°å·¶Î§ÌØ»¯
+// æ¨¡æ¿èŒƒå›´ç‰¹åŒ–
 template <typename T>
 void ref(T const& x) {
     std::cout << "x in ref(T const&): "
@@ -25,40 +25,40 @@ struct T {
         T(Floating) : type(float_t) {} // OK
 };
 
-// C++ 17 ½á¹¹»¯°ó¶¨ {
+// C++ 17 ç»“æ„åŒ–ç»‘å®š {
 /*auto[fraction, remainder] = divide_remainder(16, 3);
 std::cout << "16 / 3 is "
 << fraction << " with a remainder of "
 << remainder << '\n';*/
-// C++ 17 ½á¹¹»¯°ó¶¨ }
+// C++ 17 ç»“æ„åŒ–ç»‘å®š }
 
-// C++ 17 Ê¹ÓÃÕÛµş±í´ïÊ½ÊµÏÖ¸¨Öúº¯Êı {
-// ÊµÏÖÒ»¸öº¯Êı£¬ÓÃÓÚ½«ËùÓĞ²ÎÊı½øĞĞÀÛ¼Ó
+// C++ 17 ä½¿ç”¨æŠ˜å è¡¨è¾¾å¼å®ç°è¾…åŠ©å‡½æ•° {
+// å®ç°ä¸€ä¸ªå‡½æ•°ï¼Œç”¨äºå°†æ‰€æœ‰å‚æ•°è¿›è¡Œç´¯åŠ 
 template<typename ... Ts>
 inline auto sum(Ts ... ts) {
     return (ts + ...);
 }
 
-// Æ¥Åä·¶Î§ÄÚµÄµ¥¸öÔªËØ
+// åŒ¹é…èŒƒå›´å†…çš„å•ä¸ªå…ƒç´ 
 template <typename R, typename ... Ts>
 inline auto matches(const R& range, Ts ... ts) {
     return (std::count(std::begin(range), std::end(range), ts) + ...);
 }
 
-// ¼ì²éËùÓĞ²ÎÊıÊÇ·ñÔÚ·¶Î§ÄÚ
+// æ£€æŸ¥æ‰€æœ‰å‚æ•°æ˜¯å¦åœ¨èŒƒå›´å†…
 template <typename T, typename ... Ts>
 inline bool within(T min, T max, Ts ...ts) {
     return ((min <= ts && ts <= max) && ...);
 }
 
-// ½«¶à¸öÔªËØÍÆÈëvectorÖĞ
+// å°†å¤šä¸ªå…ƒç´ æ¨å…¥vectorä¸­
 template <typename T, typename ... Ts>
 void insert_all(std::vector<T> &vec, Ts ... ts) {
     (vec.push_back(ts), ...);
 }
-// C++ 17 Ê¹ÓÃÕÛµş±í´ïÊ½ÊµÏÖ¸¨Öúº¯Êı }
+// C++ 17 ä½¿ç”¨æŠ˜å è¡¨è¾¾å¼å®ç°è¾…åŠ©å‡½æ•° }
 
-// C++ 17 std::unordered_mapÖĞÊ¹ÓÃ×Ô¶¨ÒåÀàĞÍ {
+// C++ 17 std::unordered_mapä¸­ä½¿ç”¨è‡ªå®šä¹‰ç±»å‹ {
 struct coord {
     int x;
     int y;
@@ -89,9 +89,9 @@ struct my_hash_type {
             + static_cast<result_type>(c.y);
     }
 };
-// C++ 17 std::unordered_mapÖĞÊ¹ÓÃ×Ô¶¨ÒåÀàĞÍ }
+// C++ 17 std::unordered_mapä¸­ä½¿ç”¨è‡ªå®šä¹‰ç±»å‹ }
 
-// C++ 17 Ê¹ÓÃLambdaÎªstd::functionÌí¼Ó¶àÌ¬ĞÔ {
+// C++ 17 ä½¿ç”¨Lambdaä¸ºstd::functionæ·»åŠ å¤šæ€æ€§ {
 template <typename C>
 inline auto consumer(C& container) {
     return [&](auto value) {
@@ -106,9 +106,9 @@ inline void print(const C& c) {
     }
     std::cout << '\n';
 }
-// C++ 17 Ê¹ÓÃLambdaÎªstd::functionÌí¼Ó¶àÌ¬ĞÔ }
+// C++ 17 ä½¿ç”¨Lambdaä¸ºstd::functionæ·»åŠ å¤šæ€æ€§ }
 
-// ¼ÆÊıËã·¨Ä£°å
+// è®¡æ•°ç®—æ³•æ¨¡æ¿
 template <typename InputIterator, typename T, typename F>
 inline T accumulate(InputIterator first, InputIterator last, T init, F f) {
     for (; first != last; ++first) {

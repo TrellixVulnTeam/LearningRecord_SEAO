@@ -368,3 +368,11 @@ tools/*
 /C-C++/Output/Win32/Release/*
 !/C-C++/Output/Win32/Release
 !/C-C++/Output/Win32/Release/7z.*
+!/C-C++/Output/x64
+/C-C++/Output/x64/*
+/C-C++/Output/x64/Debug/*
+!/C-C++/Output/x64/Debug
+!/C-C++/Output/x64/Debug/7z.*
+/C-C++/Output/x64/Release/*
+!/C-C++/Output/x64/Release
+!/C-C++/Output/x64/Release/7z.*

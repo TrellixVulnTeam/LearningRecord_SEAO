@@ -1,4 +1,4 @@
-﻿//
+//
 // NumberParser.cpp
 //
 // Library: Foundation

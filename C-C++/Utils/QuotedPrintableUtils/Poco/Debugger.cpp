@@ -1,4 +1,4 @@
-﻿//
+//
 // Debugger.cpp
 //
 // Library: Foundation

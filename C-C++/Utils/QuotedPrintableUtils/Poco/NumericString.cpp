@@ -1,4 +1,4 @@
-﻿//
+//
 // NumericString.h
 //
 // Library: Foundation

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include <io.h>
 #include <algorithm>
 #include "FileUtils.h"

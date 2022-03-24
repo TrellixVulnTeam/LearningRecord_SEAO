@@ -1,4 +1,4 @@
-// HttpDemo.cpp : ¶¨Òå¿ØÖÆÌ¨Ó¦ÓÃ³ÌĞòµÄÈë¿Úµã¡£
+// HttpDemo.cpp : å®šä¹‰æ§åˆ¶å°åº”ç”¨ç¨‹åºçš„å…¥å£ç‚¹ã€‚
 //
 
 #define WIN32_LEAN_AND_MEAN
@@ -21,7 +21,7 @@ int main() {
     CurlWrapper::Response response;
 
     /*request.strUrl = "https://down.sandai.net/thunder11/XunLeiWebSetup11.3.8.1890gw.exe";
-    request.wstrResponseContentFilePath = LR"(E:\\ĞÂ½¨ÎÄ¼ş¼Ğ\Ñ¸À×.exe)";
+    request.wstrResponseContentFilePath = LR"(E:\\æ–°å»ºæ–‡ä»¶å¤¹\è¿…é›·.exe)";
     response = curlWrapper.HttpGet(request);*/
 
     request.Clear();
@@ -38,7 +38,7 @@ int main() {
     request.forms.emplace_back(CurlWrapper::Form("device_version", "25_7.1.1"));
     request.forms.emplace_back(CurlWrapper::Form("device_type", "ONEPLUS%20A5000"));
     request.forms.emplace_back(CurlWrapper::Form("data", "{\"address_type\":2,\"extra\":\"\"}"));
-    request.wstrResponseContentFilePath = LR"(E:\ĞÂ½¨ÎÄ¼ş¼Ğ\address.json)";
+    request.wstrResponseContentFilePath = LR"(E:\æ–°å»ºæ–‡ä»¶å¤¹\address.json)";
     response = curlWrapper.HttpPost(request);
     return 0;
 

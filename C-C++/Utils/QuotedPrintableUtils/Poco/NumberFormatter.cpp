@@ -1,4 +1,4 @@
-﻿//
+//
 // NumberFormatter.cpp
 //
 // Library: Foundation

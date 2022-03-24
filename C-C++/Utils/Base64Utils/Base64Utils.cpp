@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Base64Utils.h"
 
 #include <openssl/evp.h>

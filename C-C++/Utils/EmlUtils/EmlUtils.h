@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifdef EMLUTILS_EXPORTS
     #define EMLUTILS_API __declspec(dllexport)
