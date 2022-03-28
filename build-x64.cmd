@@ -45,6 +45,30 @@ xcopy %cd%\zlib1.dll ..\..\..\Output\x64\Release /y
 xcopy %cd%\zlib1.pdb ..\..\..\Output\x64\Release /y
 nmake -f win32/Makefile.msc clean
 
+::libzip
+cd ..\libzip
+xcopy ..\zlib .\vstudio\zlib /e /y
+rmdir /s /q vstudio\zlib\build
+rmdir /s /q vstudio\zlib\installed
+del lib\config.h
+del lib\zipconf.h
+del lib\zip_err_str.c
+rmdir /s /q build
+cd vstudio
+vsbuild build "Visual Studio 16 2019" v142 x64
+xcopy ..\build\config.h ..\lib /y
+xcopy ..\build\zipconf.h ..\lib /y
+xcopy ..\build\lib\zip_err_str.c ..\lib /y
+xcopy ..\build\lib\Debug\zip.lib ..\..\..\..\Output\x64\Debug /y
+xcopy ..\build\lib\Debug\zip.dll ..\..\..\..\Output\x64\Debug /y
+xcopy ..\build\lib\Debug\zip.pdb ..\..\..\..\Output\x64\Debug /y
+xcopy ..\build\lib\RelWithDebInfo\zip.lib ..\..\..\..\Output\x64\Release /y
+xcopy ..\build\lib\RelWithDebInfo\zip.dll ..\..\..\..\Output\x64\Release /y
+xcopy ..\build\lib\RelWithDebInfo\zip.pdb ..\..\..\..\Output\x64\Release /y
+rmdir /s /q ..\build
+rmdir /s /q zlib\build
+rmdir /s /q zlib\installed
+
 ::curl
 cd ..\..\network\curl
 git checkout curl-7_79_1

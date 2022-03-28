@@ -6,7 +6,7 @@
 	url = https://github.com/songwenhao/zlib.git
 [submodule "C-C++/ThirdPartyLibrarys/compression/libzip"]
 	path = C-C++/ThirdPartyLibrarys/compression/libzip
-	url = https://github.com/nih-at/libzip.git
+	url = https://github.com/songwenhao/libzip.git
 [submodule "C-C++/ThirdPartyLibrarys/xml/pugixml"]
 	path = C-C++/ThirdPartyLibrarys/xml/pugixml
 	url = https://github.com/zeux/pugixml.git
@@ -190,3 +190,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/apple/libimobiledevice-glue"]
 	path = C-C++/ThirdPartyLibrarys/apple/libimobiledevice-glue
 	url = https://github.com/songwenhao/libimobiledevice-glue.git
+[submodule "C-C++/ThirdPartyLibrarys/apple/ideviceinstaller"]
+	path = C-C++/ThirdPartyLibrarys/apple/ideviceinstaller
+	url = https://github.com/songwenhao/ideviceinstaller.git
