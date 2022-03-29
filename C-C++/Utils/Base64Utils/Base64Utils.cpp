@@ -229,7 +229,7 @@ namespace Base64Utils {
 
     void FreeData(void *p) {
         if (p) {
-            free(p);
+            delete[] p;
         }
     }
 
