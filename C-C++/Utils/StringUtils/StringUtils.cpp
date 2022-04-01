@@ -590,39 +590,11 @@ namespace StringUtils {
         return GetBitsNum<unsigned short>(data, 2, isBigEndian);
     }
 
-    unsigned int Get24BitsNum(
-        const unsigned char *data,
-        bool isBigEndian
-    ) {
-        return GetBitsNum<unsigned int>(data, 3, isBigEndian);
-    }
-
     unsigned int Get32BitsNum(
         const unsigned char *data,
         bool isBigEndian
     ) {
         return GetBitsNum<unsigned int>(data, 4, isBigEndian);
-    }
-
-    unsigned long long Get40BitsNum(
-        const unsigned char *data,
-        bool isBigEndian
-    ) {
-        return GetBitsNum<unsigned long long>(data, 5, isBigEndian);
-    }
-
-    unsigned long long Get48BitsNum(
-        const unsigned char *data,
-        bool isBigEndian
-    ) {
-        return GetBitsNum<unsigned long long>(data, 6, isBigEndian);
-    }
-
-    unsigned long long Get56BitsNum(
-        const unsigned char *data,
-        bool isBigEndian
-    ) {
-        return GetBitsNum<unsigned long long>(data, 7, isBigEndian);
     }
 
     unsigned long long Get64BitsNum(

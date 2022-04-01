@@ -5,27 +5,34 @@
 
 namespace FileUtils {
 
+    static std::wstring GetFormatFilePath(const std::wstring &wstrFilePath) {
+        std::wstring wstrFormatFilePath = wstrFilePath;
+
+        if (wstrFormatFilePath.find(LR"(\\?\)") == 0) {
+            wstrFormatFilePath.erase(0, 4);
+        }
+
+        // 移除连续 \ eg. E:\\1
+        wstrFormatFilePath.erase(std::unique(wstrFormatFilePath.begin(), wstrFormatFilePath.end(), [](const auto &lhs, const auto &rhs)->bool {
+            return lhs == rhs && lhs == L'\\';
+        }), wstrFormatFilePath.end());
+
+        // 拼接路径前缀
+        wstrFormatFilePath = LR"(\\?\)" + wstrFormatFilePath;
+
+        return wstrFormatFilePath;
+    }
+
     void CreateDir(
-        const std::wstring& wstrDirPath,
-        const int* stopFlag
+        const std::wstring &wstrDirPath,
+        const int *stopFlag
     ) {
         do {
             if (wstrDirPath.empty()) {
                 break;
             }
 
-            std::wstring wstrTmpDirPath = wstrDirPath;
-            if (wstrTmpDirPath.find(LR"(\\?\)") == 0) {
-                wstrTmpDirPath.erase(0, 4);
-            }
-
-            // 移除连续 \ eg. E:\\1
-            wstrTmpDirPath.erase(std::unique(wstrTmpDirPath.begin(), wstrTmpDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
-                return lhs == rhs && lhs == L'\\';
-            }), wstrTmpDirPath.end());
-
-            // 拼接路径前缀
-            wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
+            std::wstring wstrTmpDirPath = GetFormatFilePath(wstrDirPath);
 
             if (PathIsExist(wstrTmpDirPath)) {
                 break;
@@ -62,9 +69,9 @@ namespace FileUtils {
     }
 
     void MoveDirEx(
-        const std::wstring& wstrSrcDirPath,
-        const std::wstring& wstrDstDirPath,
-        const int* stopFlag
+        const std::wstring &wstrSrcDirPath,
+        const std::wstring &wstrDstDirPath,
+        const int *stopFlag
     ) {
         do {
             BOOL ret = FALSE;
@@ -138,9 +145,9 @@ namespace FileUtils {
     }
 
     void MoveDir(
-        const std::wstring& wstrSrcDirPath,
-        const std::wstring& wstrDstDirPath,
-        const int* stopFlag
+        const std::wstring &wstrSrcDirPath,
+        const std::wstring &wstrDstDirPath,
+        const int *stopFlag
     ) {
         do {
             if (wstrSrcDirPath.empty()
@@ -148,22 +155,11 @@ namespace FileUtils {
                 break;
             }
 
-            std::wstring wstrTmpSrcDirPath(wstrSrcDirPath);
-            if (wstrTmpSrcDirPath.find(LR"(\\?\)") == 0) {
-                wstrTmpSrcDirPath.erase(0, 4);
-            }
+            std::wstring wstrTmpSrcDirPath = GetFormatFilePath(wstrSrcDirPath);
 
             if (L'\\' != wstrTmpSrcDirPath.back()) {
                 wstrTmpSrcDirPath.append(L"\\");
             }
-
-            // 移除连续 \ eg. E:\\1
-            wstrTmpSrcDirPath.erase(std::unique(wstrTmpSrcDirPath.begin(), wstrTmpSrcDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
-                return lhs == rhs && lhs == L'\\';
-            }), wstrTmpSrcDirPath.end());
-
-            // 拼接路径前缀
-            wstrTmpSrcDirPath = LR"(\\?\)" + wstrTmpSrcDirPath;
 
             if (!PathIsExist(wstrTmpSrcDirPath)) {
                 break;
@@ -174,22 +170,11 @@ namespace FileUtils {
                 break;
             }
 
-            std::wstring wstrTmpDstDirPath(wstrDstDirPath);
-            if (wstrTmpDstDirPath.find(LR"(\\?\)") == 0) {
-                wstrTmpDstDirPath.erase(0, 4);
-            }
+            std::wstring wstrTmpDstDirPath = GetFormatFilePath(wstrDstDirPath);
 
             if (L'\\' != wstrTmpDstDirPath.back()) {
                 wstrTmpDstDirPath.append(L"\\");
             }
-
-            // 移除连续 \ eg. E:\\1
-            wstrTmpDstDirPath.erase(std::unique(wstrTmpDstDirPath.begin(), wstrTmpDstDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
-                return lhs == rhs && lhs == L'\\';
-            }), wstrTmpDstDirPath.end());
-
-            // 拼接路径前缀
-            wstrTmpDstDirPath = LR"(\\?\)" + wstrTmpDstDirPath;
 
             // 文件路径长度必须>=7 如：\\?\C:\ 
             if (wstrTmpDstDirPath.size() < 7 || wstrTmpDstDirPath[5] != L':') {
@@ -207,9 +192,9 @@ namespace FileUtils {
     }
 
     void CopyDirEx(
-        const std::wstring& wstrSrcDirPath,
-        const std::wstring& wstrDstDirPath,
-        const int* stopFlag
+        const std::wstring &wstrSrcDirPath,
+        const std::wstring &wstrDstDirPath,
+        const int *stopFlag
     ) {
         do {
             BOOL ret = FALSE;
@@ -270,9 +255,9 @@ namespace FileUtils {
     }
 
     void CopyDir(
-        const std::wstring& wstrSrcDirPath,
-        const std::wstring& wstrDstDirPath,
-        const int* stopFlag
+        const std::wstring &wstrSrcDirPath,
+        const std::wstring &wstrDstDirPath,
+        const int *stopFlag
     ) {
         do {
             if (wstrSrcDirPath.empty()
@@ -280,22 +265,11 @@ namespace FileUtils {
                 break;
             }
 
-            std::wstring wstrTmpSrcDirPath(wstrSrcDirPath);
-            if (wstrTmpSrcDirPath.find(LR"(\\?\)") == 0) {
-                wstrTmpSrcDirPath.erase(0, 4);
-            }
+            std::wstring wstrTmpSrcDirPath = GetFormatFilePath(wstrSrcDirPath);
 
             if (L'\\' != wstrTmpSrcDirPath.back()) {
                 wstrTmpSrcDirPath.append(L"\\");
             }
-
-            // 移除连续 \ eg. E:\\1
-            wstrTmpSrcDirPath.erase(std::unique(wstrTmpSrcDirPath.begin(), wstrTmpSrcDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
-                return lhs == rhs && lhs == L'\\';
-            }), wstrTmpSrcDirPath.end());
-
-            // 拼接路径前缀
-            wstrTmpSrcDirPath = LR"(\\?\)" + wstrTmpSrcDirPath;
 
             if (!PathIsExist(wstrTmpSrcDirPath)) {
                 break;
@@ -306,22 +280,11 @@ namespace FileUtils {
                 break;
             }
 
-            std::wstring wstrTmpDstDirPath(wstrDstDirPath);
-            if (wstrTmpDstDirPath.find(LR"(\\?\)") == 0) {
-                wstrTmpDstDirPath.erase(0, 4);
-            }
-
+            std::wstring wstrTmpDstDirPath = GetFormatFilePath(wstrDstDirPath);
+            
             if (L'\\' != wstrTmpDstDirPath.back()) {
                 wstrTmpDstDirPath.append(L"\\");
             }
-
-            // 移除连续 \ eg. E:\\1
-            wstrTmpDstDirPath.erase(std::unique(wstrTmpDstDirPath.begin(), wstrTmpDstDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
-                return lhs == rhs && lhs == L'\\';
-            }), wstrTmpDstDirPath.end());
-
-            // 拼接路径前缀
-            wstrTmpDstDirPath = LR"(\\?\)" + wstrTmpDstDirPath;
 
             // 文件路径长度必须>=7 如：\\?\C:\ 
             if (wstrTmpDstDirPath.size() < 7 || wstrTmpDstDirPath[5] != L':') {
@@ -334,8 +297,8 @@ namespace FileUtils {
     }
 
     void DeleteDirEx(
-        const std::wstring& wstrDirPath,
-        const int* stopFlag
+        const std::wstring &wstrDirPath,
+        const int *stopFlag
     ) {
         do {
             BOOL ret = FALSE;
@@ -392,30 +355,19 @@ namespace FileUtils {
     }
 
     void DeleteDir(
-        const std::wstring& wstrDirPath,
-        const int* stopFlag
+        const std::wstring &wstrDirPath,
+        const int *stopFlag
     ) {
         do {
             if (wstrDirPath.empty()) {
                 break;
             }
 
-            std::wstring wstrTmpDirPath = wstrDirPath;
-            if (wstrTmpDirPath.find(LR"(\\?\)") == 0) {
-                wstrTmpDirPath.erase(0, 4);
-            }
+            std::wstring wstrTmpDirPath = GetFormatFilePath(wstrDirPath);
 
             if (L'\\' != wstrTmpDirPath.back()) {
                 wstrTmpDirPath.append(L"\\");
             }
-
-            // 移除连续 \ eg. E:\\1
-            wstrTmpDirPath.erase(std::unique(wstrTmpDirPath.begin(), wstrTmpDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
-                return lhs == rhs && lhs == L'\\';
-            }), wstrTmpDirPath.end());
-
-            // 拼接路径前缀
-            wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
 
             if (!PathIsExist(wstrTmpDirPath)) {
                 break;
@@ -432,7 +384,7 @@ namespace FileUtils {
     }
 
     bool PathIsExist(
-        const std::wstring& wstrPath
+        const std::wstring &wstrPath
     ) {
         DWORD dwResult = GetFileAttributesW(wstrPath.c_str());
         if (dwResult == -1) {
@@ -448,8 +400,8 @@ namespace FileUtils {
     }
 
     std::list<std::wstring> DirEntryList(
-        const std::wstring& wstrDirPath,
-        const std::wstring& wstrFilter,
+        const std::wstring &wstrDirPath,
+        const std::wstring &wstrFilter,
         Filter filter
     ) {
         std::list<std::wstring> entryList;
@@ -459,22 +411,11 @@ namespace FileUtils {
                 break;
             }
 
-            std::wstring wstrTmpDirPath = wstrDirPath;
-            if (wstrTmpDirPath.find(LR"(\\?\)") == 0) {
-                wstrTmpDirPath.erase(0, 4);
-            }
+            std::wstring wstrTmpDirPath = GetFormatFilePath(wstrDirPath);
 
             if (wstrTmpDirPath.back() != L'\\') {
                 wstrTmpDirPath.append(L"\\");
             }
-
-            // 移除连续 \ eg. E:\\1
-            wstrTmpDirPath.erase(std::unique(wstrTmpDirPath.begin(), wstrTmpDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
-                return lhs == rhs && lhs == L'\\';
-            }), wstrTmpDirPath.end());
-
-            // 拼接路径前缀
-            wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
 
             // 文件路径长度必须>=9 如：\\?\C:\1\ 
             if (wstrTmpDirPath.size() < 9 || wstrTmpDirPath[5] != L':') {
@@ -516,8 +457,8 @@ namespace FileUtils {
     }
 
     std::list<WIN32_FIND_DATAW> DirEntryInfoList(
-        const std::wstring& wstrDirPath,
-        const std::wstring& wstrFilter,
+        const std::wstring &wstrDirPath,
+        const std::wstring &wstrFilter,
         Filter filter
     ) {
         std::list<WIN32_FIND_DATAW> entryInfoList;
@@ -527,22 +468,11 @@ namespace FileUtils {
                 break;
             }
 
-            std::wstring wstrTmpDirPath = wstrDirPath;
-            if (wstrTmpDirPath.find(LR"(\\?\)") == 0) {
-                wstrTmpDirPath.erase(0, 4);
-            }
+            std::wstring wstrTmpDirPath = GetFormatFilePath(wstrDirPath);
 
             if (wstrTmpDirPath.back() != L'\\') {
                 wstrTmpDirPath.append(L"\\");
             }
-
-            // 移除连续 \ eg. E:\\1
-            wstrTmpDirPath.erase(std::unique(wstrTmpDirPath.begin(), wstrTmpDirPath.end(), [](const auto &lhs, const auto &rhs)->bool {
-                return lhs == rhs && lhs == L'\\';
-            }), wstrTmpDirPath.end());
-
-            // 拼接路径前缀
-            wstrTmpDirPath = LR"(\\?\)" + wstrTmpDirPath;
 
             // 文件路径长度必须>=9 如：\\?\C:\1\ 
             if (wstrTmpDirPath.size() < 9 || wstrTmpDirPath[5] != L':') {
@@ -580,8 +510,8 @@ namespace FileUtils {
             }
         } while (false);
 
-        return entryInfoList;
-    }
+		return entryInfoList;
+	}
 
     std::wstring GetExeDirPath() {
         wchar_t dirPath[MAX_PATH] = { 0 };
@@ -596,8 +526,8 @@ namespace FileUtils {
     }
 
     char* ReadFileContent(
-        const std::wstring& wstrFilePath,
-        int* fileSize
+        const std::wstring &wstrFilePath,
+        int *fileSize
     ) {
         FILE* fp = nullptr;
         char* buffer = nullptr;
@@ -650,8 +580,8 @@ namespace FileUtils {
     }
 
     bool SaveContentToFile(
-        const std::wstring& wstrFilePath,
-        const char* data,
+        const std::wstring &wstrFilePath,
+        const char *data,
         int dataSize
     ) {
         FILE* fp = nullptr;

@@ -24,9 +24,6 @@
     <ClInclude Include="CurlWrapper.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CurlWrapperImpl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -36,9 +33,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CurlWrapper.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CurlWrapperImpl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

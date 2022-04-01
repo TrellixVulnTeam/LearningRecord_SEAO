@@ -109,27 +109,7 @@ namespace StringUtils {
         bool isBigEndian = false
     );
 
-    STRINGUTILS_API unsigned int Get24BitsNum(
-        const unsigned char *data,
-        bool isBigEndian = false
-    );
-
     STRINGUTILS_API unsigned int Get32BitsNum(
-        const unsigned char *data,
-        bool isBigEndian = false
-    );
-
-    STRINGUTILS_API unsigned long long Get40BitsNum(
-        const unsigned char *data,
-        bool isBigEndian = false
-    );
-
-    STRINGUTILS_API unsigned long long Get48BitsNum(
-        const unsigned char *data,
-        bool isBigEndian = false
-    );
-
-    STRINGUTILS_API unsigned long long Get56BitsNum(
         const unsigned char *data,
         bool isBigEndian = false
     );

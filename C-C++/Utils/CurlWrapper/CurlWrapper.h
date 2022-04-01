@@ -10,9 +10,7 @@
 #include <vector>
 #include <map>
 
-class CurlWrapperImpl;
-class CURLWRAPPER_API CurlWrapper {
-public:
+namespace CurlWrapper {
 
     // 表单信息
     struct Form {
@@ -137,18 +135,10 @@ public:
         }
     };
 
-public:
-    CurlWrapper();
-    ~CurlWrapper();
-    CurlWrapper(const CurlWrapper&) = delete;
-    CurlWrapper& operator=(const CurlWrapper&) = delete;
+    CURLWRAPPER_API Response HttpGet(const Request &request);
 
-    Response HttpGet(const Request &request);
+    CURLWRAPPER_API Response HttpPost(const Request &request);
 
-    Response HttpPost(const Request &request);
+    CURLWRAPPER_API bool CheckNetworkConnect();
 
-    static bool CheckNetworkConnect();
-
-private:
-    CurlWrapperImpl *m_impl;
-};
+}
