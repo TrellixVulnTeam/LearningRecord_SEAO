@@ -39,7 +39,7 @@
 	url = https://github.com/mackyle/sqlite.git
 [submodule "C-C++/ThirdPartyLibrarys/database/sqlcipher"]
 	path = C-C++/ThirdPartyLibrarys/database/sqlcipher
-	url = https://github.com/sqlcipher/sqlcipher.git
+	url = https://github.com/songwenhao/sqlcipher.git
 [submodule "C-C++/ThirdPartyLibrarys/network/cpp-httplib"]
 	path = C-C++/ThirdPartyLibrarys/network/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib.git

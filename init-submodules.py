@@ -24,7 +24,7 @@ if __name__ == '__main__':
         'git submodule add "https://github.com/FFmpeg/FFmpeg.git" "C-C++/ThirdPartyLibrarys/multimedia/FFmpeg"',
         'git submodule add "https://github.com/ImageMagick/ImageMagick.git" "C-C++/ThirdPartyLibrarys/multimedia/ImageMagick"',
         'git submodule add "https://github.com/mackyle/sqlite.git" "C-C++/ThirdPartyLibrarys/database/sqlite"',
-        'git submodule add "https://github.com/sqlcipher/sqlcipher.git" "C-C++/ThirdPartyLibrarys/database/sqlcipher"',
+        'git submodule add "https://github.com/songwenhao/sqlcipher.git" "C-C++/ThirdPartyLibrarys/database/sqlcipher"',
         'git submodule add "https://github.com/yhirose/cpp-httplib.git" "C-C++/ThirdPartyLibrarys/network/cpp-httplib"',
         'git submodule add "https://github.com/curl/curl.git" "C-C++/ThirdPartyLibrarys/network/curl"',
         'git submodule add "https://github.com/grpc/grpc.git" "C-C++/ThirdPartyLibrarys/network/grpc"',
