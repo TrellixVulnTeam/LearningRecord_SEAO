@@ -30,7 +30,6 @@ if __name__ == '__main__':
         'git submodule add "https://github.com/grpc/grpc.git" "C-C++/ThirdPartyLibrarys/network/grpc"',
         'git submodule add "https://github.com/warmcat/libwebsockets.git" "C-C++/ThirdPartyLibrarys/network/libwebsockets"',
         'git submodule add "https://github.com/zaphoyd/websocketpp.git" "C-C++/ThirdPartyLibrarys/network/websocketpp"',
-        'git submodule add "https://github.com/uNetworking/uSockets.git" "C-C++/ThirdPartyLibrarys/network/uSockets"',
         'git submodule add "https://github.com/uNetworking/uWebSockets.git" "C-C++/ThirdPartyLibrarys/network/uWebSockets"',
         'git submodule add "https://github.com/ithewei/libhv.git" "C-C++/ThirdPartyLibrarys/network/libhv"',
         'git submodule add "https://github.com/libuv/libuv.git" "C-C++/ThirdPartyLibrarys/network/libuv"',
@@ -44,6 +43,7 @@ if __name__ == '__main__':
         'git submodule add "https://github.com/pocoproject/poco.git" "C-C++/ThirdPartyLibrarys/network/poco"',
         'git submodule add "https://github.com/scylladb/seastar.git" "C-C++/ThirdPartyLibrarys/network/seastar"',
         'git submodule add "https://github.com/wolfSSL/wolfssl.git" "C-C++/ThirdPartyLibrarys/network/wolfssl"',
+        'git submodule add "https://github.com/google/boringssl.git" "C-C++/ThirdPartyLibrarys/network/boringssl"',
         'git submodule add "https://github.com/ARMmbed/mbedtls.git" "C-C++/ThirdPartyLibrarys/network/mbedtls"',
         'git submodule add "https://github.com/libressl-portable/portable.git" "C-C++/ThirdPartyLibrarys/network/libressl"',
         'git submodule add "https://github.com/openssl/openssl.git" "C-C++/ThirdPartyLibrarys/network/openssl"',
@@ -53,6 +53,8 @@ if __name__ == '__main__':
         'git submodule add "https://github.com/WayneD/rsync.git" "C-C++/ThirdPartyLibrarys/network/rsync"',
         'git submodule add "https://github.com/github/putty.git" "C-C++/ThirdPartyLibrarys/network/putty"',
         'git submodule add "https://github.com/chriskohlhoff/asio.git" "C-C++/ThirdPartyLibrarys/network/asio"',
+        'git submodule add "https://gitlab.com/samba-team/samba" "C-C++/ThirdPartyLibrarys/network/samba"',
+        'git submodule add "https://sourceware.org/git/glibc.git" "C-C++/ThirdPartyLibrarys/linux/glibc"',
         'git submodule add "https://github.com/GerHobbelt/pthread-win32.git" "C-C++/ThirdPartyLibrarys/windows/pthread-win32"',
         'git submodule add "https://github.com/PowerShell/openssh-portable.git" "C-C++/ThirdPartyLibrarys/windows/openssh-win32"',
         'git submodule add "https://github.com/ImageMagick/ImageMagick-Windows.git" "C-C++/ThirdPartyLibrarys/windows/ImageMagick-Windows"',
@@ -60,6 +62,8 @@ if __name__ == '__main__':
         'git submodule add "https://github.com/TortoiseGit/tortoisesvn.git" "C-C++/ThirdPartyLibrarys/windows/tortoisesvn"',
         'git submodule add "https://github.com/TortoiseGit/TortoiseGit.git" "C-C++/ThirdPartyLibrarys/windows/TortoiseGit"',
         'git submodule add "https://github.com/winscp/winscp.git" "C-C++/ThirdPartyLibrarys/windows/winscp"',
+        'git submodule add "https://github.com/songwenhao/Windows-classic-samples.git" "C-C++/ThirdPartyLibrarys/windows/Windows-classic-samples"',
+        'git submodule add "https://github.com/songwenhao/Windows-driver-samples.git" "C-C++/ThirdPartyLibrarys/windows/Windows-driver-samples"',
         'git submodule add "https://github.com/openssl/openssl.git" "C-C++/ThirdPartyLibrarys/crypto/openssl"',
         'git submodule add "https://github.com/weidai11/cryptopp.git" "C-C++/ThirdPartyLibrarys/crypto/cryptopp"',
         'git submodule add "https://github.com/libtom/libtomcrypt.git" "C-C++/ThirdPartyLibrarys/crypto/libtomcrypt"',
@@ -68,7 +72,8 @@ if __name__ == '__main__':
         'git submodule add "https://github.com/google/glog.git" "C-C++/ThirdPartyLibrarys/tools/glog"',
         'git submodule add "https://github.com/log4cplus/log4cplus.git" "C-C++/ThirdPartyLibrarys/tools/log4cplus"',
         'git submodule add "https://github.com/google/googletest.git" "C-C++/ThirdPartyLibrarys/tools/googletest"',
-        'git submodule add "https://github.com/troydhanson/uthash.git" "C-C++/ThirdPartyLibrarys/tools/uthash"'
+        'git submodule add "https://github.com/troydhanson/uthash.git" "C-C++/ThirdPartyLibrarys/tools/uthash"',
+        'git submodule add "https://github.com/yanyiwu/cppjieba.git" "C-C++/ThirdPartyLibrarys/tools/cppjieba"'
     ]
 
     for cmd in cmds:

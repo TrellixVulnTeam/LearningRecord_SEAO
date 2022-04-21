@@ -52,9 +52,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/network/websocketpp"]
 	path = C-C++/ThirdPartyLibrarys/network/websocketpp
 	url = https://github.com/zaphoyd/websocketpp.git
-[submodule "C-C++/ThirdPartyLibrarys/network/uSockets"]
-	path = C-C++/ThirdPartyLibrarys/network/uSockets
-	url = https://github.com/uNetworking/uSockets.git
 [submodule "C-C++/ThirdPartyLibrarys/network/uWebSockets"]
 	path = C-C++/ThirdPartyLibrarys/network/uWebSockets
 	url = https://github.com/uNetworking/uWebSockets.git
@@ -193,3 +190,24 @@
 [submodule "C-C++/ThirdPartyLibrarys/apple/ideviceinstaller"]
 	path = C-C++/ThirdPartyLibrarys/apple/ideviceinstaller
 	url = https://github.com/songwenhao/ideviceinstaller.git
+[submodule "C-C++/ThirdPartyLibrarys/linux/glibc"]
+	path = C-C++/ThirdPartyLibrarys/linux/glibc
+	url = https://sourceware.org/git/glibc.git
+[submodule "C-C++/ThirdPartyLibrarys/network/samba"]
+	path = C-C++/ThirdPartyLibrarys/network/samba
+	url = https://gitlab.com/samba-team/samba
+[submodule "C-C++/ThirdPartyLibrarys/network/boringssl"]
+	path = C-C++/ThirdPartyLibrarys/network/boringssl
+	url = https://github.com/google/boringssl.git
+[submodule "C-C++/ThirdPartyLibrarys/network/haproxy"]
+	path = C-C++/ThirdPartyLibrarys/network/haproxy
+	url = https://github.com/haproxy/haproxy.git
+[submodule "C-C++/ThirdPartyLibrarys/tools/cppjieba"]
+	path = C-C++/ThirdPartyLibrarys/tools/cppjieba
+	url = https://github.com/yanyiwu/cppjieba.git
+[submodule "C-C++/ThirdPartyLibrarys/windows/Windows-classic-samples"]
+	path = C-C++/ThirdPartyLibrarys/windows/Windows-classic-samples
+	url = https://github.com/songwenhao/Windows-classic-samples.git
+[submodule "C-C++/ThirdPartyLibrarys/windows/Windows-driver-samples"]
+	path = C-C++/ThirdPartyLibrarys/windows/Windows-driver-samples
+	url = https://github.com/songwenhao/Windows-driver-samples.git

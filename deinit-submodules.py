@@ -30,7 +30,6 @@ if __name__ == '__main__':
         'C-C++/ThirdPartyLibrarys/network/grpc',
         'C-C++/ThirdPartyLibrarys/network/libwebsockets',
         'C-C++/ThirdPartyLibrarys/network/websocketpp',
-        'C-C++/ThirdPartyLibrarys/network/uSockets',
         'C-C++/ThirdPartyLibrarys/network/uWebSockets',
         'C-C++/ThirdPartyLibrarys/network/libhv',
         'C-C++/ThirdPartyLibrarys/network/libuv',
@@ -44,6 +43,7 @@ if __name__ == '__main__':
         'C-C++/ThirdPartyLibrarys/network/poco',
         'C-C++/ThirdPartyLibrarys/network/seastar',
         'C-C++/ThirdPartyLibrarys/network/wolfssl',
+        'C-C++/ThirdPartyLibrarys/network/boringssl',
         'C-C++/ThirdPartyLibrarys/network/mbedtls',
         'C-C++/ThirdPartyLibrarys/network/libressl',
         'C-C++/ThirdPartyLibrarys/network/openssl',
@@ -53,6 +53,8 @@ if __name__ == '__main__':
         'C-C++/ThirdPartyLibrarys/network/rsync',
         'C-C++/ThirdPartyLibrarys/network/putty',
         'C-C++/ThirdPartyLibrarys/network/asio',
+        'C-C++/ThirdPartyLibrarys/network/samba',
+        'C-C++/ThirdPartyLibrarys/linux/glibc',
         'C-C++/ThirdPartyLibrarys/windows/pthread-win32',
         'C-C++/ThirdPartyLibrarys/windows/openssh-win32',
         'C-C++/ThirdPartyLibrarys/windows/ImageMagick-Windows',
@@ -60,6 +62,8 @@ if __name__ == '__main__':
         'C-C++/ThirdPartyLibrarys/windows/tortoisesvn',
         'C-C++/ThirdPartyLibrarys/windows/TortoiseGit',
         'C-C++/ThirdPartyLibrarys/windows/winscp',
+        'C-C++/ThirdPartyLibrarys/windows/Windows-classic-samples',
+        'C-C++/ThirdPartyLibrarys/windows/Windows-driver-samples',
         'C-C++/ThirdPartyLibrarys/crypto/openssl',
         'C-C++/ThirdPartyLibrarys/crypto/cryptopp',
         'C-C++/ThirdPartyLibrarys/crypto/botan',
@@ -69,6 +73,7 @@ if __name__ == '__main__':
         'C-C++/ThirdPartyLibrarys/tools/log4cplus',
         'C-C++/ThirdPartyLibrarys/tools/googletest',
         'C-C++/ThirdPartyLibrarys/tools/uthash',
+        'C-C++/ThirdPartyLibrarys/tools/cppjieba'
     ]
 
     for submodule in submodules:
