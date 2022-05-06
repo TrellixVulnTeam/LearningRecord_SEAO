@@ -16,7 +16,6 @@
 #pragma comment(lib, "CurlWrapper")
 
 int main() {
-    CurlWrapper curlWrapper;
     CurlWrapper::Request request;
     CurlWrapper::Response response;
 
@@ -39,7 +38,7 @@ int main() {
     request.forms.emplace_back(CurlWrapper::Form("device_type", "ONEPLUS%20A5000"));
     request.forms.emplace_back(CurlWrapper::Form("data", "{\"address_type\":2,\"extra\":\"\"}"));
     request.wstrResponseContentFilePath = LR"(E:\新建文件夹\address.json)";
-    response = curlWrapper.HttpPost(request);
+    response = CurlWrapper::HttpPost(request);
     return 0;
 
     // IMPORTANT: 1st parameter must be a hostname or an IP adress string.
