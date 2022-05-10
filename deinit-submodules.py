@@ -47,6 +47,7 @@ if __name__ == '__main__':
         'C-C++/ThirdPartyLibrarys/network/mbedtls',
         'C-C++/ThirdPartyLibrarys/network/libressl',
         'C-C++/ThirdPartyLibrarys/network/openssl',
+        'C-C++/ThirdPartyLibrarys/network/libssh',
         'C-C++/ThirdPartyLibrarys/network/libssh2',
         'C-C++/ThirdPartyLibrarys/network/openssh',
         'C-C++/ThirdPartyLibrarys/network/dropbear-ssh',

@@ -47,6 +47,7 @@ if __name__ == '__main__':
         'git submodule add "https://github.com/ARMmbed/mbedtls.git" "C-C++/ThirdPartyLibrarys/network/mbedtls"',
         'git submodule add "https://github.com/libressl-portable/portable.git" "C-C++/ThirdPartyLibrarys/network/libressl"',
         'git submodule add "https://github.com/openssl/openssl.git" "C-C++/ThirdPartyLibrarys/network/openssl"',
+        'git submodule add "https://git.libssh.org/projects/libssh.git" "C-C++/ThirdPartyLibrarys/network/libssh"',
         'git submodule add "https://github.com/libssh2/libssh2.git" "C-C++/ThirdPartyLibrarys/network/libssh2"',
         'git submodule add "https://github.com/openssh/openssh-portable.git" "C-C++/ThirdPartyLibrarys/network/openssh"',
         'git submodule add "https://github.com/mkj/dropbear.git" "C-C++/ThirdPartyLibrarys/network/dropbear"',

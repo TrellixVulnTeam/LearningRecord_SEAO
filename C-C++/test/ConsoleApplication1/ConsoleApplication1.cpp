@@ -6,9 +6,15 @@
 #include <WindowsUtils/WindowsUtils.h>
 #pragma comment(lib, "WindowsUtils")
 
+#include <EmlUtils/EmlUtils.h>
+#pragma comment(lib, "EmlUtils")
+
 int main(int argc, char *argv[])
 {
     auto usbDevices = WindowsUtils::EnumUsbDevices();
+
+    std::wstring wstrEmlFilePath = LR"(E:\test\MCloudData\outlook\转发_ 测试附件.eml)";
+    auto emlInfo = EmlUtils::ParseEmlFile(wstrEmlFilePath);
 
     return 0;
 }

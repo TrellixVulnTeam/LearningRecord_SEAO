@@ -357,8 +357,14 @@ tools/*
 !tools/python38/
 !/C-C++/Utils/EmlUtils/libs/
 !/C-C++/Utils/EmlUtils/libs/*
-!/C-C++/Utils/ImageUtils/libs/
-!/C-C++/Utils/ImageUtils/libs/*
+!/C-C++/Utils/EmlUtils/libs/Win32/
+!/C-C++/Utils/EmlUtils/libs/Win32/*
+!/C-C++/Utils/EmlUtils/libs/Win32/Debug/*.pdb
+!/C-C++/Utils/EmlUtils/libs/Win32/Release/*.pdb
+!/C-C++/Utils/EmlUtils/libs/x64/
+!/C-C++/Utils/EmlUtils/libs/x64/*
+!/C-C++/Utils/EmlUtils/libs/x64/Debug/*.pdb
+!/C-C++/Utils/EmlUtils/libs/x64/Release/*.pdb
 !/C-C++/Output
 !/C-C++/Output/Win32
 /C-C++/Output/Win32/*

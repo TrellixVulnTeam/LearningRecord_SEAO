@@ -211,3 +211,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/windows/Windows-driver-samples"]
 	path = C-C++/ThirdPartyLibrarys/windows/Windows-driver-samples
 	url = https://github.com/songwenhao/Windows-driver-samples.git
+[submodule "C-C++/ThirdPartyLibrarys/network/libssh"]
+	path = C-C++/ThirdPartyLibrarys/network/libssh
+	url = https://git.libssh.org/projects/libssh.git
