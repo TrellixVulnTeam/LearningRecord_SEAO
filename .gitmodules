@@ -31,120 +31,108 @@
 [submodule "C-C++/ThirdPartyLibrarys/multimedia/ImageMagick"]
 	path = C-C++/ThirdPartyLibrarys/multimedia/ImageMagick
 	url = https://github.com/ImageMagick/ImageMagick.git
-[submodule "C-C++/ThirdPartyLibrarys/windows/ImageMagick-Windows"]
-	path = C-C++/ThirdPartyLibrarys/windows/ImageMagick-Windows
-	url = https://github.com/ImageMagick/ImageMagick-Windows.git
 [submodule "C-C++/ThirdPartyLibrarys/database/sqlite"]
 	path = C-C++/ThirdPartyLibrarys/database/sqlite
 	url = https://github.com/mackyle/sqlite.git
 [submodule "C-C++/ThirdPartyLibrarys/database/sqlcipher"]
 	path = C-C++/ThirdPartyLibrarys/database/sqlcipher
 	url = https://github.com/songwenhao/sqlcipher.git
-[submodule "C-C++/ThirdPartyLibrarys/network/curl"]
-	path = C-C++/ThirdPartyLibrarys/network/curl
-	url = https://github.com/curl/curl.git
+[submodule "C-C++/ThirdPartyLibrarys/network/asio"]
+	path = C-C++/ThirdPartyLibrarys/network/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "C-C++/ThirdPartyLibrarys/network/boringssl"]
+	path = C-C++/ThirdPartyLibrarys/network/boringssl
+	url = https://github.com/google/boringssl.git
 [submodule "C-C++/ThirdPartyLibrarys/network/cpp-httplib"]
 	path = C-C++/ThirdPartyLibrarys/network/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib.git
-[submodule "C-C++/ThirdPartyLibrarys/network/haproxy"]
-	path = C-C++/ThirdPartyLibrarys/network/haproxy
-	url = https://github.com/haproxy/haproxy.git
+[submodule "C-C++/ThirdPartyLibrarys/network/curl"]
+	path = C-C++/ThirdPartyLibrarys/network/curl
+	url = https://github.com/curl/curl.git
+[submodule "C-C++/ThirdPartyLibrarys/network/dropbear"]
+	path = C-C++/ThirdPartyLibrarys/network/dropbear
+	url = https://github.com/mkj/dropbear.git
 [submodule "C-C++/ThirdPartyLibrarys/network/grpc"]
 	path = C-C++/ThirdPartyLibrarys/network/grpc
 	url = https://github.com/grpc/grpc.git
-[submodule "C-C++/ThirdPartyLibrarys/network/srpc"]
-	path = C-C++/ThirdPartyLibrarys/network/srpc
-	url = https://github.com/sogou/srpc.git
-[submodule "C-C++/ThirdPartyLibrarys/network/libwebsockets"]
-	path = C-C++/ThirdPartyLibrarys/network/libwebsockets
-	url = https://github.com/warmcat/libwebsockets.git
-[submodule "C-C++/ThirdPartyLibrarys/network/uWebSockets"]
-	path = C-C++/ThirdPartyLibrarys/network/uWebSockets
-	url = https://github.com/uNetworking/uWebSockets.git
-[submodule "C-C++/ThirdPartyLibrarys/network/libhv"]
-	path = C-C++/ThirdPartyLibrarys/network/libhv
-	url = https://github.com/ithewei/libhv.git
-[submodule "C-C++/ThirdPartyLibrarys/network/libuv"]
-	path = C-C++/ThirdPartyLibrarys/network/libuv
-	url = https://github.com/libuv/libuv.git
+[submodule "C-C++/ThirdPartyLibrarys/network/haproxy"]
+	path = C-C++/ThirdPartyLibrarys/network/haproxy
+	url = https://github.com/haproxy/haproxy.git
 [submodule "C-C++/ThirdPartyLibrarys/network/libev"]
 	path = C-C++/ThirdPartyLibrarys/network/libev
 	url = https://github.com/enki/libev.git
 [submodule "C-C++/ThirdPartyLibrarys/network/libevent"]
 	path = C-C++/ThirdPartyLibrarys/network/libevent
 	url = https://github.com/libevent/libevent.git
-[submodule "C-C++/ThirdPartyLibrarys/network/nginx"]
-	path = C-C++/ThirdPartyLibrarys/network/nginx
-	url = https://github.com/nginx/nginx.git
-[submodule "C-C++/ThirdPartyLibrarys/network/memcached"]
-	path = C-C++/ThirdPartyLibrarys/network/memcached
-	url = https://github.com/memcached/memcached.git
-[submodule "C-C++/ThirdPartyLibrarys/network/redis"]
-	path = C-C++/ThirdPartyLibrarys/network/redis
-	url = https://github.com/redis/redis.git
-[submodule "C-C++/ThirdPartyLibrarys/network/mu_event"]
-	path = C-C++/ThirdPartyLibrarys/network/mu_event
-	url = https://github.com/shonm520/mu_event.git
-[submodule "C-C++/ThirdPartyLibrarys/network/muduo"]
-	path = C-C++/ThirdPartyLibrarys/network/muduo
-	url = https://github.com/chenshuo/muduo.git
-[submodule "C-C++/ThirdPartyLibrarys/network/poco"]
-	path = C-C++/ThirdPartyLibrarys/network/poco
-	url = https://github.com/pocoproject/poco.git
-[submodule "C-C++/ThirdPartyLibrarys/network/seastar"]
-	path = C-C++/ThirdPartyLibrarys/network/seastar
-	url = https://github.com/scylladb/seastar.git
-[submodule "C-C++/ThirdPartyLibrarys/network/wolfssl"]
-	path = C-C++/ThirdPartyLibrarys/network/wolfssl
-	url = https://github.com/wolfSSL/wolfssl.git
-[submodule "C-C++/ThirdPartyLibrarys/network/mbedtls"]
-	path = C-C++/ThirdPartyLibrarys/network/mbedtls
-	url = https://github.com/ARMmbed/mbedtls.git
+[submodule "C-C++/ThirdPartyLibrarys/network/libhv"]
+	path = C-C++/ThirdPartyLibrarys/network/libhv
+	url = https://github.com/ithewei/libhv.git
 [submodule "C-C++/ThirdPartyLibrarys/network/libressl"]
 	path = C-C++/ThirdPartyLibrarys/network/libressl
 	url = https://github.com/libressl-portable/portable.git
-[submodule "C-C++/ThirdPartyLibrarys/network/boringssl"]
-	path = C-C++/ThirdPartyLibrarys/network/boringssl
-	url = https://github.com/google/boringssl.git
 [submodule "C-C++/ThirdPartyLibrarys/network/libssh"]
 	path = C-C++/ThirdPartyLibrarys/network/libssh
 	url = https://git.libssh.org/projects/libssh.git
 [submodule "C-C++/ThirdPartyLibrarys/network/libssh2"]
 	path = C-C++/ThirdPartyLibrarys/network/libssh2
 	url = https://github.com/libssh2/libssh2.git
+[submodule "C-C++/ThirdPartyLibrarys/network/libuv"]
+	path = C-C++/ThirdPartyLibrarys/network/libuv
+	url = https://github.com/libuv/libuv.git
+[submodule "C-C++/ThirdPartyLibrarys/network/libwebsockets"]
+	path = C-C++/ThirdPartyLibrarys/network/libwebsockets
+	url = https://github.com/warmcat/libwebsockets.git
+[submodule "C-C++/ThirdPartyLibrarys/network/mbedtls"]
+	path = C-C++/ThirdPartyLibrarys/network/mbedtls
+	url = https://github.com/ARMmbed/mbedtls.git
+[submodule "C-C++/ThirdPartyLibrarys/network/memcached"]
+	path = C-C++/ThirdPartyLibrarys/network/memcached
+	url = https://github.com/memcached/memcached.git
+[submodule "C-C++/ThirdPartyLibrarys/network/mu_event"]
+	path = C-C++/ThirdPartyLibrarys/network/mu_event
+	url = https://github.com/shonm520/mu_event.git
+[submodule "C-C++/ThirdPartyLibrarys/network/muduo"]
+	path = C-C++/ThirdPartyLibrarys/network/muduo
+	url = https://github.com/chenshuo/muduo.git
+[submodule "C-C++/ThirdPartyLibrarys/network/nginx"]
+	path = C-C++/ThirdPartyLibrarys/network/nginx
+	url = https://github.com/nginx/nginx.git
 [submodule "C-C++/ThirdPartyLibrarys/network/openssh"]
 	path = C-C++/ThirdPartyLibrarys/network/openssh
 	url = https://github.com/openssh/openssh-portable.git
-[submodule "C-C++/ThirdPartyLibrarys/network/openssh-win32"]
-	path = C-C++/ThirdPartyLibrarys/network/openssh-win32
-	url = https://github.com/PowerShell/openssh-portable.git
-[submodule "C-C++/ThirdPartyLibrarys/network/dropbear"]
-	path = C-C++/ThirdPartyLibrarys/network/dropbear
-	url = https://github.com/mkj/dropbear.git
-[submodule "C-C++/ThirdPartyLibrarys/network/rsync"]
-	path = C-C++/ThirdPartyLibrarys/network/rsync
-	url = https://github.com/WayneD/rsync.git
-[submodule "C-C++/ThirdPartyLibrarys/network/putty"]
-	path = C-C++/ThirdPartyLibrarys/network/putty
-	url = https://github.com/github/putty.git
-[submodule "C-C++/ThirdPartyLibrarys/network/asio"]
-	path = C-C++/ThirdPartyLibrarys/network/asio
-	url = https://github.com/chriskohlhoff/asio.git
-[submodule "C-C++/ThirdPartyLibrarys/network/winscp"]
-	path = C-C++/ThirdPartyLibrarys/network/winscp
-	url = https://github.com/winscp/winscp.git
-[submodule "C-C++/ThirdPartyLibrarys/search/grepWin"]
-	path = C-C++/ThirdPartyLibrarys/search/grepWin
-	url = https://github.com/stefankueng/grepWin.git
-[submodule "C-C++/ThirdPartyLibrarys/version-control/tortoisesvn"]
-	path = C-C++/ThirdPartyLibrarys/version-control/tortoisesvn
-	url = https://github.com/TortoiseGit/tortoisesvn.git
-[submodule "C-C++/ThirdPartyLibrarys/version-control/TortoiseGit"]
-	path = C-C++/ThirdPartyLibrarys/version-control/TortoiseGit
-	url = https://github.com/TortoiseGit/TortoiseGit.git
 [submodule "C-C++/ThirdPartyLibrarys/crypto/openssl"]
 	path = C-C++/ThirdPartyLibrarys/crypto/openssl
 	url = https://github.com/openssl/openssl.git
+[submodule "C-C++/ThirdPartyLibrarys/network/openssh-win32"]
+	path = C-C++/ThirdPartyLibrarys/network/openssh-win32
+	url = https://github.com/PowerShell/openssh-portable.git
+[submodule "C-C++/ThirdPartyLibrarys/network/poco"]
+	path = C-C++/ThirdPartyLibrarys/network/poco
+	url = https://github.com/pocoproject/poco.git
+[submodule "C-C++/ThirdPartyLibrarys/network/putty"]
+	path = C-C++/ThirdPartyLibrarys/network/putty
+	url = https://github.com/github/putty.git
+[submodule "C-C++/ThirdPartyLibrarys/network/redis"]
+	path = C-C++/ThirdPartyLibrarys/network/redis
+	url = https://github.com/redis/redis.git
+[submodule "C-C++/ThirdPartyLibrarys/network/rsync"]
+	path = C-C++/ThirdPartyLibrarys/network/rsync
+	url = https://github.com/WayneD/rsync.git
+[submodule "C-C++/ThirdPartyLibrarys/network/seastar"]
+	path = C-C++/ThirdPartyLibrarys/network/seastar
+	url = https://github.com/scylladb/seastar.git
+[submodule "C-C++/ThirdPartyLibrarys/network/srpc"]
+	path = C-C++/ThirdPartyLibrarys/network/srpc
+	url = https://github.com/sogou/srpc.git
+[submodule "C-C++/ThirdPartyLibrarys/network/uWebSockets"]
+	path = C-C++/ThirdPartyLibrarys/network/uWebSockets
+	url = https://github.com/uNetworking/uWebSockets.git
+[submodule "C-C++/ThirdPartyLibrarys/network/winscp"]
+	path = C-C++/ThirdPartyLibrarys/network/winscp
+	url = https://github.com/winscp/winscp.git
+[submodule "C-C++/ThirdPartyLibrarys/network/wolfssl"]
+	path = C-C++/ThirdPartyLibrarys/network/wolfssl
+	url = https://github.com/wolfSSL/wolfssl.git
 [submodule "C-C++/ThirdPartyLibrarys/crypto/libtomcrypt"]
 	path = C-C++/ThirdPartyLibrarys/crypto/libtomcrypt
 	url = https://github.com/libtom/libtomcrypt.git
@@ -154,15 +142,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/tools/uthash"]
 	path = C-C++/ThirdPartyLibrarys/tools/uthash
 	url = https://github.com/troydhanson/uthash.git
-[submodule "C-C++/ThirdPartyLibrarys/logging/log4cplus"]
-	path = C-C++/ThirdPartyLibrarys/logging/log4cplus
-	url = https://github.com/log4cplus/log4cplus.git
-[submodule "C-C++/ThirdPartyLibrarys/logging/spdlog"]
-	path = C-C++/ThirdPartyLibrarys/logging/spdlog
-	url = https://github.com/gabime/spdlog.git
-[submodule "C-C++/ThirdPartyLibrarys/test/googletest"]
-	path = C-C++/ThirdPartyLibrarys/test/googletest
-	url = https://github.com/google/googletest.git
 [submodule "C-C++/ThirdPartyLibrarys/serialization/protobuf"]
 	path = C-C++/ThirdPartyLibrarys/serialization/protobuf
 	url = https://github.com/protocolbuffers/protobuf.git
@@ -193,3 +172,24 @@
 [submodule "C-C++/ThirdPartyLibrarys/windows/Windows-driver-samples"]
 	path = C-C++/ThirdPartyLibrarys/windows/Windows-driver-samples
 	url = https://github.com/songwenhao/Windows-driver-samples.git
+[submodule "C-C++/ThirdPartyLibrarys/multimedia/ImageMagick-Windows"]
+	path = C-C++/ThirdPartyLibrarys/multimedia/ImageMagick-Windows
+	url = https://github.com/ImageMagick/ImageMagick-Windows.git
+[submodule "C-C++/ThirdPartyLibrarys/search/grepWin"]
+	path = C-C++/ThirdPartyLibrarys/search/grepWin
+	url = https://github.com/stefankueng/grepWin.git
+[submodule "C-C++/ThirdPartyLibrarys/version-control/tortoisesvn"]
+	path = C-C++/ThirdPartyLibrarys/version-control/tortoisesvn
+	url = https://github.com/TortoiseGit/tortoisesvn.git
+[submodule "C-C++/ThirdPartyLibrarys/version-control/TortoiseGit"]
+	path = C-C++/ThirdPartyLibrarys/version-control/TortoiseGit
+	url = https://github.com/TortoiseGit/TortoiseGit.git
+[submodule "C-C++/ThirdPartyLibrarys/logging/log4cplus"]
+	path = C-C++/ThirdPartyLibrarys/logging/log4cplus
+	url = https://github.com/log4cplus/log4cplus.git
+[submodule "C-C++/ThirdPartyLibrarys/logging/spdlog"]
+	path = C-C++/ThirdPartyLibrarys/logging/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "C-C++/ThirdPartyLibrarys/test/googletest"]
+	path = C-C++/ThirdPartyLibrarys/test/googletest
+	url = https://github.com/google/googletest.git
