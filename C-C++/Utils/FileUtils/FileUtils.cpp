@@ -336,7 +336,18 @@ namespace FileUtils {
                             if (ERROR_SHARING_VIOLATION == GetLastError()) {
                                 Sleep(200);
                                 iTimes--;
-                            } else {
+                            } 
+                            else if (ERROR_ACCESS_DENIED == GetLastError())
+                            {
+                                //只读文件属性修改
+                                if (!SetFileAttributesW(wstrTmpDirPath.c_str(), FILE_ATTRIBUTE_NORMAL))
+                                {
+                                    break;
+                                }
+								Sleep(200);
+								iTimes--;
+                            }
+                            else {
                                 break;
                             }
                         } while (iTimes > 0);
@@ -397,6 +408,92 @@ namespace FileUtils {
         }
 
         return true;
+    }
+
+    void GetPathDataSizeEx(
+        const std::wstring& wstrPath,
+        unsigned long long &dataSize,
+        const int* stopFlag
+    ) {
+        do {
+            std::wstring wstrFileName;
+            std::wstring wstrTmpPath;
+            std::wstring wstrFindStr = wstrPath + L"*.*";
+            WIN32_FIND_DATAW findFileData;
+            memset(&findFileData, 0, sizeof(WIN32_FIND_DATAW));
+
+            HANDLE fileHandle = ::FindFirstFileW(wstrFindStr.c_str(), &findFileData);
+            if (INVALID_HANDLE_VALUE != fileHandle) {
+                do {
+                    if (stopFlag && *stopFlag != 0) {
+                        break;
+                    }
+
+                    wstrFileName = findFileData.cFileName;
+                    if (L"." == wstrFileName || L".." == wstrFileName) {
+                        continue;
+                    }
+
+                    wstrTmpPath = wstrPath + wstrFileName;
+
+                    if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                        wstrTmpPath.append(L"\\");
+                        GetPathDataSizeEx(wstrTmpPath, dataSize, stopFlag);
+                    } else {
+                        unsigned long long tmpDataSize = findFileData.nFileSizeHigh;
+                        tmpDataSize <<= 32;
+                        tmpDataSize |= findFileData.nFileSizeLow;
+                        dataSize += tmpDataSize;
+                    }
+
+                } while (FindNextFileW(fileHandle, &findFileData));
+
+                FindClose(fileHandle);
+            }
+        } while (false);
+    }
+
+    unsigned long long GetPathDataSize(
+        const std::wstring& wstrPath,
+        const int* stopFlag
+    ) {
+        unsigned long long dataSize = 0;
+
+        do {
+            if (wstrPath.empty()) {
+                break;
+            }
+
+            std::wstring wstrTmpPath = GetFormatFilePath(wstrPath);
+
+            if (!PathIsExist(wstrTmpPath)) {
+                break;
+            }
+
+            // 文件路径长度必须>=8 如：\\?\C:\1 
+            if (wstrTmpPath.size() < 8 || wstrTmpPath[5] != L':') {
+                break;
+            }
+
+            WIN32_FILE_ATTRIBUTE_DATA fileInfo;
+            memset(&fileInfo, 0, sizeof(WIN32_FILE_ATTRIBUTE_DATA));
+            if (GetFileAttributesEx(wstrTmpPath.c_str(), GetFileExInfoStandard, &fileInfo)) {
+                if (fileInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                    if (L'\\' != wstrTmpPath.back()) {
+                        wstrTmpPath.append(L"\\");
+                    }
+
+                    GetPathDataSizeEx(wstrTmpPath, dataSize, stopFlag);
+                } else {
+                    dataSize = fileInfo.nFileSizeHigh;
+                    dataSize <<= 32;
+                    dataSize |= fileInfo.nFileSizeLow;
+                }
+            }
+
+        } while (false);
+
+        return dataSize;
     }
 
     std::list<std::wstring> DirEntryList(

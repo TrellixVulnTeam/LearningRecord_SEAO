@@ -128,9 +128,14 @@ ClassGuid = {4d36e96b-e325-11ce-bfc1-08002be10318}
 
 Class = Mouse
 ClassGuid = {4d36e96f-e325-11ce-bfc1-08002be10318}
+
+Class = Bluetooth
+ClassGuid = {e0cbf06c-cd8b-4647-bb8a-263b43f0f974}
+
 */
 #define GUID_KEYBOARD_CLASS_STRING L"{4d36e96b-e325-11ce-bfc1-08002be10318}"
 #define GUID_MOUSE_CLASS_STRING L"{4d36e96f-e325-11ce-bfc1-08002be10318}"
+#define GUID_BLUETOOTH_CLASS_STRING L"{e0cbf06c-cd8b-4647-bb8a-263b43f0f974}"
 
 /*
     https://android.googlesource.com/platform/development/+/8c78ba643862731c603677284ae88089a959cc52/host/windows/usb/api/adb_api_extra.h
@@ -434,19 +439,27 @@ typedef struct _DEVICE_INFO {
 
     /*
     -1 - other device
+    -2 - usb hub
     0 - keyboard
     1 - mouse
-    2 - android device
-    3 - apple device
+    2 - bluetooth
+    3 - android device
+    4 - apple device
     */
     ULONG deviceType;
 
     PWCHAR portChain;
     PWCHAR companionPortChain;
+    PWCHAR hubSymbolicLinkName;
+    USHORT companionPortNumber;
+    PWCHAR companionHubSymbolicLinkName;
     PWCHAR manufacturer;
     PWCHAR deviceId;
     USB_PROTOCOLS supportedUsbProtocols;
     ULONG connectionIndex;
+
+    // an opaque handle to the device instance(also known as a handle to the devnode).
+    DWORD devInst;
 } DEVICE_INFO, *PDEVICE_INFO;
 
 
@@ -469,7 +482,7 @@ PWCHAR MultiStrToWideStr(
 //
 
 VOID
-EnumerateHostControllers(PLIST_ENTRY listHead);
+EnumerateHostControllers(PLIST_ENTRY listHead, int getDetailData);
 
 DEVICE_POWER_STATE
 AcquireDevicePowerState(

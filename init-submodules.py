@@ -22,7 +22,7 @@ if __name__ == '__main__':
         'C-C++/ThirdPartyLibrarys/apple/ideviceinstaller'
     ]
 
-    cmd = "git submodule update --init --recursive"
+    cmd = "git submodule update --init"
     for submodule in submodules:
         cmd += " " + submodule
 

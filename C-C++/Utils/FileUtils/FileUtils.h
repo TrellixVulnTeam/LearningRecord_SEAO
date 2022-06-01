@@ -6,6 +6,8 @@
     #define FILEUTILS_API __declspec(dllimport)
 #endif
 
+#define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
+#include <windows.h>
 #include <string>
 #include <list>
 
@@ -39,7 +41,12 @@ namespace FileUtils {
 
     // 判断文件、文件夹是否存在
     FILEUTILS_API bool PathIsExist(
-        const std::wstring& wstrPath
+        const std::wstring &wstrPath
+    );
+
+    FILEUTILS_API unsigned long long GetPathDataSize(
+        const std::wstring& wstrPath,
+        const int* stopFlag = NULL
     );
 
     enum class Filter {

@@ -1,5 +1,3 @@
-// WindowsUtils.cpp : 定义 DLL 应用程序的导出函数。
-//
 
 #include "framework.h"
 #include "WindowsUtils.h"
@@ -9,132 +7,151 @@ namespace WindowsUtils {
     WinVer CheckWindowsVersion() {
         WinVer winver = WinVer::Unknown;
 
-        typedef LONG(__stdcall *FN_RtlGetVersion)(PRTL_OSVERSIONINFOW);
-        HINSTANCE hinst = LoadLibrary(TEXT("ntdll.dll"));
-        FN_RtlGetVersion fnRtlGetVersion = (FN_RtlGetVersion)GetProcAddress(hinst, "RtlGetVersion");
-        if (fnRtlGetVersion) {
-            return winver;
-        }
+        do {
+            typedef LONG(__stdcall* FN_RtlGetVersion)(PRTL_OSVERSIONINFOW);
+            HINSTANCE instance = LoadLibrary(TEXT("ntdll.dll"));
+            if (!instance) {
+                break;
+            }
 
-        OSVERSIONINFOEXW verInfo;
-        memset(&verInfo, 0, sizeof(OSVERSIONINFOEXW));
-        verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXW);
-        fnRtlGetVersion((PRTL_OSVERSIONINFOW)&verInfo);
+            FN_RtlGetVersion fnRtlGetVersion = (FN_RtlGetVersion)GetProcAddress(instance, "RtlGetVersion");
+            if (!fnRtlGetVersion) {
+                break;
+            }
 
-        if (verInfo.dwMajorVersion == 10 &&
-            verInfo.dwMinorVersion == 0 &&
-            verInfo.dwBuildNumber >= 22000 &&
-            verInfo.wProductType == VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::Win11;
-        } else if (verInfo.dwMajorVersion == 10 &&
-            verInfo.dwMinorVersion == 0 &&
-            verInfo.dwBuildNumber <= 20348 &&
-            verInfo.dwBuildNumber > 17763 &&
-            verInfo.wProductType != VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinServer_2022;
-        } else if (verInfo.dwMajorVersion == 10 &&
-            verInfo.dwMinorVersion == 0 &&
-            verInfo.dwBuildNumber <= 17763 &&
-            verInfo.dwBuildNumber > 14393 &&
-            verInfo.wProductType != VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinServer_2019;
-        } else if (verInfo.dwMajorVersion == 10 &&
-            verInfo.dwMinorVersion == 0 &&
-            verInfo.dwBuildNumber <= 14393 &&
-            verInfo.wProductType != VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinServer_2016;
-        } else if (verInfo.dwMajorVersion == 10 &&
-            verInfo.dwMinorVersion == 0 &&
-            verInfo.dwBuildNumber < 22000 &&
-            verInfo.wProductType == VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::Win10;
-        } else if (verInfo.dwMajorVersion == 6 &&
-            verInfo.dwMinorVersion == 3 &&
-            verInfo.wProductType != VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinServer_2012_R2;
-        } else if (verInfo.dwMajorVersion == 6 &&
-            verInfo.dwMinorVersion == 3 &&
-            verInfo.wProductType == VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::Win8_1;
-        } else if (verInfo.dwMajorVersion == 6 &&
-            verInfo.dwMinorVersion == 2 &&
-            verInfo.wProductType != VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinServer_2012;
-        } else if (verInfo.dwMajorVersion == 6 &&
-            verInfo.dwMinorVersion == 2 &&
-            verInfo.wProductType == VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::Win8;
-        } else if (verInfo.dwMajorVersion == 6 &&
-            verInfo.dwMinorVersion == 1 &&
-            verInfo.wProductType != VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinServer_2008_R2;
-        } else if (verInfo.dwMajorVersion == 6 &&
-            verInfo.dwMinorVersion == 1 &&
-            verInfo.wProductType == VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::Win7;
-        } else if (verInfo.dwMajorVersion == 6 &&
-            verInfo.dwMinorVersion == 0 &&
-            verInfo.wProductType != VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinServer_2008;
-        } else if (verInfo.dwMajorVersion == 6 &&
-            verInfo.dwMinorVersion == 0 &&
-            verInfo.wProductType == VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinVista;
-        } else if (verInfo.dwMajorVersion == 5 &&
-            verInfo.dwMinorVersion == 2 &&
-            verInfo.wProductType != VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinServer_2003;
-        } else if (verInfo.dwMajorVersion == 5 &&
-            verInfo.dwMinorVersion == 2 &&
-            verInfo.wProductType == VER_NT_WORKSTATION
-            ) {
-            winver = WinVer::WinXP_Professional_x64;
-        } else if (verInfo.dwMajorVersion == 5 &&
-            verInfo.dwMinorVersion == 1
-            ) {
-            winver = WinVer::WinXP;
-        } else if (verInfo.dwMajorVersion == 5 &&
-            verInfo.dwMinorVersion == 0) {
-            winver = WinVer::Win2000;
-        }
+            RTL_OSVERSIONINFOEXW verInfo;
+            memset(&verInfo, 0, sizeof(RTL_OSVERSIONINFOEXW));
+            verInfo.dwOSVersionInfoSize = sizeof(RTL_OSVERSIONINFOEXW);
+            fnRtlGetVersion((PRTL_OSVERSIONINFOW)&verInfo);
+
+            if (verInfo.dwMajorVersion == 10 &&
+                verInfo.dwMinorVersion == 0 &&
+                verInfo.dwBuildNumber >= 22000 &&
+                verInfo.wProductType == VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::Win11;
+            } else if (verInfo.dwMajorVersion == 10 &&
+                verInfo.dwMinorVersion == 0 &&
+                verInfo.dwBuildNumber <= 20348 &&
+                verInfo.dwBuildNumber > 17763 &&
+                verInfo.wProductType != VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinServer_2022;
+            } else if (verInfo.dwMajorVersion == 10 &&
+                verInfo.dwMinorVersion == 0 &&
+                verInfo.dwBuildNumber <= 17763 &&
+                verInfo.dwBuildNumber > 14393 &&
+                verInfo.wProductType != VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinServer_2019;
+            } else if (verInfo.dwMajorVersion == 10 &&
+                verInfo.dwMinorVersion == 0 &&
+                verInfo.dwBuildNumber <= 14393 &&
+                verInfo.wProductType != VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinServer_2016;
+            } else if (verInfo.dwMajorVersion == 10 &&
+                verInfo.dwMinorVersion == 0 &&
+                verInfo.dwBuildNumber < 22000 &&
+                verInfo.wProductType == VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::Win10;
+            } else if (verInfo.dwMajorVersion == 6 &&
+                verInfo.dwMinorVersion == 3 &&
+                verInfo.wProductType != VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinServer_2012_R2;
+            } else if (verInfo.dwMajorVersion == 6 &&
+                verInfo.dwMinorVersion == 3 &&
+                verInfo.wProductType == VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::Win8_1;
+            } else if (verInfo.dwMajorVersion == 6 &&
+                verInfo.dwMinorVersion == 2 &&
+                verInfo.wProductType != VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinServer_2012;
+            } else if (verInfo.dwMajorVersion == 6 &&
+                verInfo.dwMinorVersion == 2 &&
+                verInfo.wProductType == VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::Win8;
+            } else if (verInfo.dwMajorVersion == 6 &&
+                verInfo.dwMinorVersion == 1 &&
+                verInfo.wProductType != VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinServer_2008_R2;
+            } else if (verInfo.dwMajorVersion == 6 &&
+                verInfo.dwMinorVersion == 1 &&
+                verInfo.wProductType == VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::Win7;
+            } else if (verInfo.dwMajorVersion == 6 &&
+                verInfo.dwMinorVersion == 0 &&
+                verInfo.wProductType != VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinServer_2008;
+            } else if (verInfo.dwMajorVersion == 6 &&
+                verInfo.dwMinorVersion == 0 &&
+                verInfo.wProductType == VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinVista;
+            } else if (verInfo.dwMajorVersion == 5 &&
+                verInfo.dwMinorVersion == 2 &&
+                verInfo.wProductType != VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinServer_2003;
+            } else if (verInfo.dwMajorVersion == 5 &&
+                verInfo.dwMinorVersion == 2 &&
+                verInfo.wProductType == VER_NT_WORKSTATION
+                ) {
+                winver = WinVer::WinXP_Professional_x64;
+            } else if (verInfo.dwMajorVersion == 5 &&
+                verInfo.dwMinorVersion == 1
+                ) {
+                winver = WinVer::WinXP;
+            } else if (verInfo.dwMajorVersion == 5 &&
+                verInfo.dwMinorVersion == 0) {
+                winver = WinVer::Win2000;
+            }
+        } while (false);
 
         return winver;
     }
 
     static HINSTANCE s_shell32Instance = NULL;
     bool GUIDFromString(const wchar_t *guidString, GUID *guid) {
-        if (!guidString || !guid) {
-            return false;
-        }
-
-        memset(guid, 0, sizeof(GUID));
-
-        if (s_shell32Instance == NULL) {
-            s_shell32Instance = LoadLibrary(TEXT("Shell32.dll"));
-        }
-
         bool ret = false;
 
-        typedef BOOL(__stdcall *FN_GUIDFromStringW)(LPCTSTR, LPGUID);
-        int ordinal = 704;
-        FN_GUIDFromStringW fnGUIDFromString = (FN_GUIDFromStringW)GetProcAddress(s_shell32Instance, MAKEINTRESOURCEA(ordinal));
-        if (fnGUIDFromString) {
+        do {
+            if (guid) {
+                memset(guid, 0, sizeof(GUID));
+            } else {
+                break;
+            }
+
+            if (!guidString) {
+                break;
+            }
+
+            if (!s_shell32Instance) {
+                s_shell32Instance = LoadLibrary(TEXT("Shell32.dll"));
+            }
+
+            if (!s_shell32Instance) {
+                break;
+            }
+
+            typedef BOOL(__stdcall* FN_GUIDFromStringW)(LPCTSTR, LPGUID);
+            DWORD ordinal = 704;
+            FN_GUIDFromStringW fnGUIDFromString = (FN_GUIDFromStringW)GetProcAddress(s_shell32Instance, MAKEINTRESOURCEA(ordinal));
+            if (!fnGUIDFromString) {
+                break;
+            }
+
             ret = !!fnGUIDFromString(guidString, guid);
-        }
+
+        } while (false);
 
         return ret;
     }
@@ -142,18 +159,18 @@ namespace WindowsUtils {
     std::wstring GUIDToString(const GUID &guid) {
         wchar_t guidString[64];
         memset(guidString, 0, sizeof(guidString));
-        StringFromGUID2(guid, guidString, sizeof(guidString) / sizeof(guidString[0]));
+        auto ret = StringFromGUID2(guid, guidString, sizeof(guidString) / sizeof(guidString[0]));
 
         return guidString;
     }
 
-    std::vector<UsbDevice> EnumUsbDevices() {
+    std::vector<UsbDevice> EnumUsbDevices(bool getDetailData) {
         std::vector<UsbDevice> usbDevices;
 
         do {
             LIST_ENTRY listHead;
             InitializeListHead(&listHead);
-            EnumerateHostControllers(&listHead);
+            EnumerateHostControllers(&listHead, (getDetailData ? 1 : 0));
 
             if (!IsListEmpty(&listHead)) {
                 PLIST_ENTRY pEntry = listHead.Flink;
@@ -167,6 +184,7 @@ namespace WindowsUtils {
 
                     if (devInfo) {
                         UsbDevice usbDevice;
+                        usbDevice.devInst = devInfo->devInst;
 
                         switch (devInfo->deviceType) {
                         case 0:
@@ -176,9 +194,12 @@ namespace WindowsUtils {
                             usbDevice.deviceType = DeviceType::mouse;
                             break;
                         case 2:
-                            usbDevice.deviceType = DeviceType::android_device;
+                            usbDevice.deviceType = DeviceType::bluetooth;
                             break;
                         case 3:
+                            usbDevice.deviceType = DeviceType::android_device;
+                            break;
+                        case 4:
                             usbDevice.deviceType = DeviceType::apple_device;
                             break;
                         default:
@@ -206,14 +227,14 @@ namespace WindowsUtils {
                         }
 
                         if (!IsListEmpty(&devInfo->listEntryDeviceDriver)) {
-                            PLIST_ENTRY pEntry = devInfo->listEntryDeviceDriver.Flink;
+                            PLIST_ENTRY listEntryDeviceDriver = devInfo->listEntryDeviceDriver.Flink;
 
-                            while (pEntry != &devInfo->listEntryDeviceDriver) {
-                                PDEVICE_DRIVER_INFO deviceDriverInfo = CONTAINING_RECORD(pEntry,
+                            while (listEntryDeviceDriver != &devInfo->listEntryDeviceDriver) {
+                                PDEVICE_DRIVER_INFO deviceDriverInfo = CONTAINING_RECORD(listEntryDeviceDriver,
                                     DEVICE_DRIVER_INFO,
                                     listEntry);
 
-                                pEntry = pEntry->Flink;
+                                listEntryDeviceDriver = listEntryDeviceDriver->Flink;
 
                                 if (!deviceDriverInfo) {
                                     continue;
@@ -222,14 +243,14 @@ namespace WindowsUtils {
                                 DeviceDriverInfo driverInfo;
 
                                 if (!IsListEmpty(&deviceDriverInfo->listEntryDeviceInterface)) {
-                                    PLIST_ENTRY pEntry = deviceDriverInfo->listEntryDeviceInterface.Flink;
+                                    PLIST_ENTRY listEntryDeviceInterface = deviceDriverInfo->listEntryDeviceInterface.Flink;
 
-                                    while (pEntry != &deviceDriverInfo->listEntryDeviceInterface) {
-                                        PDEVICE_INTERFACE_INFO deviceInterfaceInfo = CONTAINING_RECORD(pEntry,
+                                    while (listEntryDeviceInterface != &deviceDriverInfo->listEntryDeviceInterface) {
+                                        PDEVICE_INTERFACE_INFO deviceInterfaceInfo = CONTAINING_RECORD(listEntryDeviceInterface,
                                             DEVICE_INTERFACE_INFO,
                                             listEntry);
 
-                                        pEntry = pEntry->Flink;
+                                        listEntryDeviceInterface = listEntryDeviceInterface->Flink;
 
                                         if (!deviceInterfaceInfo) {
                                             continue;
@@ -262,17 +283,6 @@ namespace WindowsUtils {
 
                                 if (deviceDriverInfo->instanceId) {
                                     driverInfo.wstrDeviceInstanceId = deviceDriverInfo->instanceId;
-
-                                    /*if (usbDevice.deviceType == DeviceType::android_device ||
-                                        usbDevice.deviceType == DeviceType::apple_device) {
-                                        const WCHAR *p = wcsrchr(deviceDriverInfo->instanceId, L'\\');
-                                        if (p) {
-                                            driverInfo.wstrDeviceID = p + 1;
-                                        } else {
-                                            driverInfo.wstrDeviceID = deviceDriverInfo->instanceId;
-                                        }
-                                    }*/
-
                                     FREE(deviceDriverInfo->instanceId);
                                 }
 
@@ -314,9 +324,11 @@ namespace WindowsUtils {
                             }
                         }
 
-                        FREE(devInfo);
+                        if (devInfo->deviceType != -2) {
+                            usbDevices.push_back(std::move(usbDevice));
+                        }
 
-                        usbDevices.push_back(std::move(usbDevice));
+                        FREE(devInfo);
                     }
                 }
             }

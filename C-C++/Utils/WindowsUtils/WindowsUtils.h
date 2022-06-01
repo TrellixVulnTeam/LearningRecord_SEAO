@@ -6,6 +6,8 @@
     #define WINDOWSUTILS_API __declspec(dllimport)
 #endif
 
+#define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
+#include <windows.h>
 #include <string>
 #include <vector>
 #include <map>
@@ -162,16 +164,18 @@ namespace WindowsUtils {
     };
 
     enum class DeviceType {
-        other_device = -1,
+        unknown_device = -1,
         keyboard = 0,
         mouse,
+        bluetooth,
         android_device,
         apple_device,
     };
 
     struct UsbDevice {
         UsbDevice() {
-            deviceType = DeviceType::other_device;
+            deviceType = DeviceType::unknown_device;
+            devInst = 0;
         }
 
         DeviceType deviceType;
@@ -192,10 +196,13 @@ namespace WindowsUtils {
         // other device type is empty
         std::wstring wstrDeviceID;
 
+        // an opaque handle to the device instance(also known as a handle to the devnode).
+        DWORD devInst;
+
         // <driverKeyName, driverInfo>
         std::map<std::wstring, DeviceDriverInfo> driverInfoMap;
     };
 
-    WINDOWSUTILS_API std::vector<UsbDevice> EnumUsbDevices();
+    WINDOWSUTILS_API std::vector<UsbDevice> EnumUsbDevices(bool getDetailData = true);
 
 }
