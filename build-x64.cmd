@@ -189,3 +189,27 @@ call xcopy sqlcipher.lib ..\..\..\Output\x64\Release /y
 call xcopy sqlcipher.dll ..\..\..\Output\x64\Release /y
 call xcopy sqlcipher.pdb ..\..\..\Output\x64\Release /y
 call nmake /f Makefile-x64-release.msc clean
+
+::ideviceinstaller libcnary libimobiledevice libimobiledevice-glue libplist libusbmuxd
+cd ..\..\apple\libimobiledevice
+call git checkout master
+cd ..\libimobiledevice-glue
+call git checkout master
+cd ..\libplist
+call git checkout master
+cd ..\libusbmuxd
+call git checkout master
+cd ..\ideviceinstaller
+call git checkout master
+call rmdir /s /q x64
+call msbuild /P:Configuration=Debug ideviceinstaller.vcxproj
+call msbuild /P:Configuration=Release ideviceinstaller.vcxproj
+call rmdir /s /q x64
+
+::libiconv
+cd ..\..\character-encoding\libiconv
+call git checkout main
+call rmdir /s /q x64
+call msbuild /P:Configuration=Debug libiconv.vcxproj
+call msbuild /P:Configuration=Release libiconv.vcxproj
+call rmdir /s /q x64

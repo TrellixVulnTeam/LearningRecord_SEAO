@@ -172,6 +172,7 @@ call xcopy build-x86\RelWithDebInfo\tinyxml2.dll ..\..\..\Output\Win32\Release /
 call xcopy build-x86\RelWithDebInfo\tinyxml2.pdb ..\..\..\Output\Win32\Release /y
 call rmdir /s /q build-x86
 call git checkout master
+
 ::SQLCipher 
 cd ..\..\database\sqlcipher
 call nmake /f Makefile-x86-debug.msc clean
@@ -188,3 +189,27 @@ call xcopy sqlcipher.lib ..\..\..\Output\Win32\Release /y
 call xcopy sqlcipher.dll ..\..\..\Output\Win32\Release /y
 call xcopy sqlcipher.pdb ..\..\..\Output\Win32\Release /y
 call nmake /f Makefile-x86-release.msc clean
+
+::ideviceinstaller libcnary libimobiledevice libimobiledevice-glue libplist libusbmuxd
+cd ..\..\apple\libimobiledevice
+call git checkout master
+cd ..\libimobiledevice-glue
+call git checkout master
+cd ..\libplist
+call git checkout master
+cd ..\libusbmuxd
+call git checkout master
+cd ..\ideviceinstaller
+call git checkout master
+call rmdir /s /q Win32
+call msbuild /P:Configuration=Debug ideviceinstaller.vcxproj
+call msbuild /P:Configuration=Release ideviceinstaller.vcxproj
+call rmdir /s /q Win32
+
+::libiconv
+cd ..\..\character-encoding\libiconv
+call git checkout main
+call rmdir /s /q Win32
+call msbuild /P:Configuration=Debug libiconv.vcxproj
+call msbuild /P:Configuration=Release libiconv.vcxproj
+call rmdir /s /q Win32
