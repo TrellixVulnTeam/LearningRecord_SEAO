@@ -183,6 +183,11 @@
     </ClCompile>
     <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ThirdPartyLibrarys\character-encoding\libiconv\libiconv.vcxproj">
+      <Project>{6eb3c2ba-e883-409b-86d8-60aaa2fc98bb}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

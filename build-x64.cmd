@@ -188,4 +188,4 @@ call nmake /f Makefile-x64-release.msc TOP=. USE_CRT_DLL=1
 call xcopy sqlcipher.lib ..\..\..\Output\x64\Release /y
 call xcopy sqlcipher.dll ..\..\..\Output\x64\Release /y
 call xcopy sqlcipher.pdb ..\..\..\Output\x64\Release /y
-call nmake /f Makefile-x64-release clean
+call nmake /f Makefile-x64-release.msc clean

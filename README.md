@@ -4,7 +4,9 @@
 **Before proceeding with the following steps, you must have installed Visual Studio 2019 in your computer!**
 
 ## Clone codes
-git clone --recursive https://github.com/songwenhao/LearningRecord
+git clone https://github.com/songwenhao/LearningRecord
+
+tools\python38\python.exe init-submodules.py
 
 ## Open Visual Studio 2019 Command Prompt
 ### x86

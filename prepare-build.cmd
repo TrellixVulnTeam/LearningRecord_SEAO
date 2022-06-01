@@ -37,4 +37,4 @@ call wget.exe https://curl.se/ca/cacert.pem -O ./ca/cacert.pem
 ::MSYS2
 ::wget.exe https://github.com/msys2/msys2-installer/releases/download/2021-07-25/msys2-x86_64-20210725.exe -O ./msys2-x86_64-20210725.exe
 
-python38\python.exe init-submodules.py
+cd ..
