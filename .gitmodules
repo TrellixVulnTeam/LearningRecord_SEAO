@@ -199,3 +199,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/serialization/yaml-cpp"]
 	path = C-C++/ThirdPartyLibrarys/serialization/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "C-C++/ThirdPartyLibrarys/test/cppunit"]
+	path = C-C++/ThirdPartyLibrarys/test/cppunit
+	url = git://anongit.freedesktop.org/git/libreoffice/cppunit/
