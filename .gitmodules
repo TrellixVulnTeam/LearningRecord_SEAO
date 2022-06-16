@@ -193,3 +193,9 @@
 [submodule "C-C++/ThirdPartyLibrarys/test/googletest"]
 	path = C-C++/ThirdPartyLibrarys/test/googletest
 	url = https://github.com/google/googletest.git
+[submodule "C-C++/ThirdPartyLibrarys/search/pcre2"]
+	path = C-C++/ThirdPartyLibrarys/search/pcre2
+	url = https://github.com/PCRE2Project/pcre2.git
+[submodule "C-C++/ThirdPartyLibrarys/serialization/yaml-cpp"]
+	path = C-C++/ThirdPartyLibrarys/serialization/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git

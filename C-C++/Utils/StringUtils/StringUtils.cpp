@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "StringUtils.h"
 
 #ifndef USE_ICONV
@@ -22,6 +22,7 @@
 #endif
 
 #include <openssl/md5.h>
+#include <openssl/sha.h>
 #pragma comment(lib, "libcrypto")
 
 namespace StringUtils {
@@ -527,39 +528,87 @@ namespace StringUtils {
     }
 
     std::string GetMD5String(
-        const std::string &strSrc
+        const std::string& strSrc,
+        bool isUpper
     ) {
-        unsigned char md5[16] = { 0 };
+        unsigned char md5[MD5_DIGEST_LENGTH] = { 0 };
 
         MD5_CTX ctx = { 0 };
         MD5_Init(&ctx);
         MD5_Update(&ctx, strSrc.c_str(), strSrc.size());
         MD5_Final(md5, &ctx);
 
-        char hex[128] = { 0 };
-        for (int i = 0; i < 16; ++i) {
-            sprintf_s(hex, sizeof(hex) / sizeof(hex[0]), "%s%.2x", hex, md5[i]);
+        const char* format = isUpper ? "%s%.2X" : "%s%.2x";
+
+        char hexString[128] = { 0 };
+        for (int i = 0; i < MD5_DIGEST_LENGTH; ++i) {
+            sprintf_s(hexString, sizeof(hexString) / sizeof(hexString[0]), format, hexString, md5[i]);
         }
 
-        return hex;
+        return hexString;
     }
 
     std::string GetMD5String(
-        const std::wstring &wstrSrc
+        const std::wstring& wstrSrc,
+        bool isUpper
     ) {
-        return GetMD5String(StringUtils::Utf16ToUtf8(wstrSrc));
+        return GetMD5String(StringUtils::Utf16ToUtf8(wstrSrc), isUpper);
     }
 
     std::wstring GetMD5WString(
-        const std::string &strSrc
+        const std::string& strSrc,
+        bool isUpper
     ) {
-        return StringUtils::Utf8ToUtf16(GetMD5String(strSrc));
+        return StringUtils::Utf8ToUtf16(GetMD5String(strSrc, isUpper));
     }
 
     std::wstring GetMD5WString(
-        const std::wstring &wstrSrc
+        const std::wstring& wstrSrc,
+        bool isUpper
     ) {
-        return StringUtils::Utf8ToUtf16(GetMD5String(wstrSrc));
+        return StringUtils::Utf8ToUtf16(GetMD5String(wstrSrc, isUpper));
+    }
+
+    std::string GetSHA256String(
+        const std::string& strSrc,
+        bool isUpper
+    ) {
+        unsigned char sha256[SHA256_DIGEST_LENGTH] = { 0 };
+
+        SHA256_CTX ctx = { 0 };
+        SHA256_Init(&ctx);
+        SHA256_Update(&ctx, strSrc.c_str(), strSrc.size());
+        SHA256_Final(sha256, &ctx);
+
+        const char* format = isUpper ? "%s%.2X" : "%s%.2x";
+
+        char hexString[128] = { 0 };
+        for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+            sprintf_s(hexString, sizeof(hexString) / sizeof(hexString[0]), format, hexString, sha256[i]);
+        }
+
+        return hexString;
+    }
+
+    std::string GetSHA256String(
+        const std::wstring& wstrSrc,
+        bool isUpper
+    ) {
+        return GetSHA256String(StringUtils::Utf16ToUtf8(wstrSrc), isUpper);
+    }
+
+    std::wstring GetSHA256WString(
+        const std::string& strSrc,
+        bool isUpper
+    ) {
+        return StringUtils::Utf8ToUtf16(GetSHA256String(strSrc, isUpper));
+    }
+
+    std::wstring GetSHA256WString(
+        const std::wstring& wstrSrc,
+        bool isUpper
+    ) {
+        return StringUtils::Utf8ToUtf16(GetSHA256String(wstrSrc, isUpper));
     }
 
     template<typename NUM_TYPE>
@@ -584,28 +633,28 @@ namespace StringUtils {
     }
 
     unsigned short Get16BitsNum(
-        const unsigned char *data,
+        const char *data,
         bool isBigEndian
     ) {
-        return GetBitsNum<unsigned short>(data, 2, isBigEndian);
+        return GetBitsNum<unsigned short>((const unsigned char*)data, 2, isBigEndian);
     }
 
     unsigned int Get32BitsNum(
-        const unsigned char *data,
+        const char *data,
         bool isBigEndian
     ) {
-        return GetBitsNum<unsigned int>(data, 4, isBigEndian);
+        return GetBitsNum<unsigned int>((const unsigned char*)data, 4, isBigEndian);
     }
 
     unsigned long long Get64BitsNum(
-        const unsigned char *data,
+        const char *data,
         bool isBigEndian
     ) {
-        return GetBitsNum<unsigned long long>(data, 8, isBigEndian);
+        return GetBitsNum<unsigned long long>((const unsigned char*)data, 8, isBigEndian);
     }
 
     double GetDoubleNum(
-        const unsigned char *data,
+        const char *data,
         bool isBigEndian
     ) {
         unsigned char buffer[8] = { 0 };
@@ -626,6 +675,25 @@ namespace StringUtils {
         }
 
         return *((double*)buffer);
+    }
+
+    std::string GetFormatFileSize(
+        long long fileSize
+    ) {
+        double doubleFileSize = (double)fileSize;
+        char buf[32] = { 0 };
+
+        if (fileSize < 1024) {
+            sprintf_s(buf, sizeof(buf) / sizeof(buf[0]), "%.2lfB", doubleFileSize);
+        } else if (fileSize < 1024 * 1024) {
+            sprintf_s(buf, sizeof(buf) / sizeof(buf[0]), "%.2lfKB", doubleFileSize / 1024);
+        } else if (fileSize < 1024 * 1024 * 1024) {
+            sprintf_s(buf, sizeof(buf) / sizeof(buf[0]), "%.2lfMB", doubleFileSize / 1024 / 1024);
+        } else {
+            sprintf_s(buf, sizeof(buf) / sizeof(buf[0]), "%.2lfGB", doubleFileSize / 1024 / 1024 / 1024);
+        }
+
+        return buf;
     }
 
 }

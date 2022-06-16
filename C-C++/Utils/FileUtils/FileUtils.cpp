@@ -5,7 +5,7 @@
 
 namespace FileUtils {
 
-    static std::wstring GetFormatFilePath(const std::wstring &wstrFilePath) {
+    static std::wstring GetFormatFilePath(const std::wstring& wstrFilePath) {
         std::wstring wstrFormatFilePath = wstrFilePath;
 
         if (wstrFormatFilePath.find(LR"(\\?\)") == 0) {
@@ -13,9 +13,9 @@ namespace FileUtils {
         }
 
         // 移除连续 \ eg. E:\\1
-        wstrFormatFilePath.erase(std::unique(wstrFormatFilePath.begin(), wstrFormatFilePath.end(), [](const auto &lhs, const auto &rhs)->bool {
+        wstrFormatFilePath.erase(std::unique(wstrFormatFilePath.begin(), wstrFormatFilePath.end(), [](const auto& lhs, const auto& rhs)->bool {
             return lhs == rhs && lhs == L'\\';
-        }), wstrFormatFilePath.end());
+            }), wstrFormatFilePath.end());
 
         // 拼接路径前缀
         wstrFormatFilePath = LR"(\\?\)" + wstrFormatFilePath;
@@ -24,8 +24,8 @@ namespace FileUtils {
     }
 
     void CreateDir(
-        const std::wstring &wstrDirPath,
-        const int *stopFlag
+        const std::wstring& wstrDirPath,
+        const int* stopFlag
     ) {
         do {
             if (wstrDirPath.empty()) {
@@ -69,9 +69,9 @@ namespace FileUtils {
     }
 
     void MoveDirEx(
-        const std::wstring &wstrSrcDirPath,
-        const std::wstring &wstrDstDirPath,
-        const int *stopFlag
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag
     ) {
         do {
             BOOL ret = FALSE;
@@ -145,9 +145,9 @@ namespace FileUtils {
     }
 
     void MoveDir(
-        const std::wstring &wstrSrcDirPath,
-        const std::wstring &wstrDstDirPath,
-        const int *stopFlag
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag
     ) {
         do {
             if (wstrSrcDirPath.empty()
@@ -192,9 +192,9 @@ namespace FileUtils {
     }
 
     void CopyDirEx(
-        const std::wstring &wstrSrcDirPath,
-        const std::wstring &wstrDstDirPath,
-        const int *stopFlag
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag
     ) {
         do {
             BOOL ret = FALSE;
@@ -255,9 +255,9 @@ namespace FileUtils {
     }
 
     void CopyDir(
-        const std::wstring &wstrSrcDirPath,
-        const std::wstring &wstrDstDirPath,
-        const int *stopFlag
+        const std::wstring& wstrSrcDirPath,
+        const std::wstring& wstrDstDirPath,
+        const int* stopFlag
     ) {
         do {
             if (wstrSrcDirPath.empty()
@@ -281,7 +281,7 @@ namespace FileUtils {
             }
 
             std::wstring wstrTmpDstDirPath = GetFormatFilePath(wstrDstDirPath);
-            
+
             if (L'\\' != wstrTmpDstDirPath.back()) {
                 wstrTmpDstDirPath.append(L"\\");
             }
@@ -297,8 +297,8 @@ namespace FileUtils {
     }
 
     void DeleteDirEx(
-        const std::wstring &wstrDirPath,
-        const int *stopFlag
+        const std::wstring& wstrDirPath,
+        const int* stopFlag
     ) {
         do {
             BOOL ret = FALSE;
@@ -336,18 +336,14 @@ namespace FileUtils {
                             if (ERROR_SHARING_VIOLATION == GetLastError()) {
                                 Sleep(200);
                                 iTimes--;
-                            } 
-                            else if (ERROR_ACCESS_DENIED == GetLastError())
-                            {
+                            } else if (ERROR_ACCESS_DENIED == GetLastError()) {
                                 //只读文件属性修改
-                                if (!SetFileAttributesW(wstrTmpDirPath.c_str(), FILE_ATTRIBUTE_NORMAL))
-                                {
+                                if (!SetFileAttributesW(wstrTmpDirPath.c_str(), FILE_ATTRIBUTE_NORMAL)) {
                                     break;
                                 }
-								Sleep(200);
-								iTimes--;
-                            }
-                            else {
+                                Sleep(200);
+                                iTimes--;
+                            } else {
                                 break;
                             }
                         } while (iTimes > 0);
@@ -366,8 +362,8 @@ namespace FileUtils {
     }
 
     void DeleteDir(
-        const std::wstring &wstrDirPath,
-        const int *stopFlag
+        const std::wstring& wstrDirPath,
+        const int* stopFlag
     ) {
         do {
             if (wstrDirPath.empty()) {
@@ -395,7 +391,7 @@ namespace FileUtils {
     }
 
     bool PathIsExist(
-        const std::wstring &wstrPath
+        const std::wstring& wstrPath
     ) {
         DWORD dwResult = GetFileAttributesW(wstrPath.c_str());
         if (dwResult == -1) {
@@ -412,7 +408,7 @@ namespace FileUtils {
 
     void GetPathDataSizeEx(
         const std::wstring& wstrPath,
-        unsigned long long &dataSize,
+        unsigned long long& dataSize,
         const int* stopFlag
     ) {
         do {
@@ -497,8 +493,8 @@ namespace FileUtils {
     }
 
     std::list<std::wstring> DirEntryList(
-        const std::wstring &wstrDirPath,
-        const std::wstring &wstrFilter,
+        const std::wstring& wstrDirPath,
+        const std::wstring& wstrFilter,
         Filter filter
     ) {
         std::list<std::wstring> entryList;
@@ -554,8 +550,8 @@ namespace FileUtils {
     }
 
     std::list<WIN32_FIND_DATAW> DirEntryInfoList(
-        const std::wstring &wstrDirPath,
-        const std::wstring &wstrFilter,
+        const std::wstring& wstrDirPath,
+        const std::wstring& wstrFilter,
         Filter filter
     ) {
         std::list<WIN32_FIND_DATAW> entryInfoList;
@@ -607,8 +603,8 @@ namespace FileUtils {
             }
         } while (false);
 
-		return entryInfoList;
-	}
+        return entryInfoList;
+    }
 
     std::wstring GetExeDirPath() {
         wchar_t dirPath[MAX_PATH] = { 0 };
@@ -623,8 +619,8 @@ namespace FileUtils {
     }
 
     char* ReadFileContent(
-        const std::wstring &wstrFilePath,
-        int *fileSize
+        const std::wstring& wstrFilePath,
+        int* fileSize
     ) {
         FILE* fp = nullptr;
         char* buffer = nullptr;
@@ -677,8 +673,8 @@ namespace FileUtils {
     }
 
     bool SaveContentToFile(
-        const std::wstring &wstrFilePath,
-        const char *data,
+        const std::wstring& wstrFilePath,
+        const char* data,
         int dataSize
     ) {
         FILE* fp = nullptr;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef STRINGUTILS_EXPORTS
     #define STRINGUTILS_API __declspec(dllexport)
@@ -89,39 +89,67 @@ namespace StringUtils {
     );
 
     STRINGUTILS_API std::string GetMD5String(
-        const std::string &strSrc
+        const std::string& strSrc,
+        bool isUpper = false
     );
 
     STRINGUTILS_API std::string GetMD5String(
-        const std::wstring &wstrSrc
+        const std::wstring& wstrSrc,
+        bool isUpper = false
     );
 
     STRINGUTILS_API std::wstring GetMD5WString(
-        const std::string &strSrc
+        const std::string& strSrc,
+        bool isUpper = false
     );
 
     STRINGUTILS_API std::wstring GetMD5WString(
-        const std::wstring &wstrSrc
+        const std::wstring& wstrSrc,
+        bool isUpper = false
+    );
+
+    STRINGUTILS_API std::string GetSHA256String(
+        const std::string& strSrc,
+        bool isUpper = false
+    );
+
+    STRINGUTILS_API std::string GetSHA256String(
+        const std::wstring& wstrSrc,
+        bool isUpper = false
+    );
+
+    STRINGUTILS_API std::wstring GetSHA256WString(
+        const std::string& strSrc,
+        bool isUpper = false
+    );
+
+    STRINGUTILS_API std::wstring GetSHA256WString(
+        const std::wstring& wstrSrc,
+        bool isUpper = false
     );
 
     STRINGUTILS_API unsigned short Get16BitsNum(
-        const unsigned char *data,
+        const char *data,
         bool isBigEndian = false
     );
 
     STRINGUTILS_API unsigned int Get32BitsNum(
-        const unsigned char *data,
+        const char *data,
         bool isBigEndian = false
     );
 
     STRINGUTILS_API unsigned long long Get64BitsNum(
-        const unsigned char *data,
+        const char *data,
         bool isBigEndian = false
     );
 
     STRINGUTILS_API double GetDoubleNum(
-        const unsigned char *data,
+        const char *data,
         bool isBigEndian = false
+    );
+
+    STRINGUTILS_API std::string GetFormatFileSize(
+        long long fileSize
     );
 
 }
