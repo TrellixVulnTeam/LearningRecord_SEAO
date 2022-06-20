@@ -202,3 +202,6 @@
 [submodule "C-C++/ThirdPartyLibrarys/test/cppunit"]
 	path = C-C++/ThirdPartyLibrarys/test/cppunit
 	url = git://anongit.freedesktop.org/git/libreoffice/cppunit/
+[submodule "C-C++/ThirdPartyLibrarys/test/doctest"]
+	path = C-C++/ThirdPartyLibrarys/test/doctest
+	url = https://github.com/doctest/doctest.git
