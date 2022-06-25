@@ -126,6 +126,9 @@ namespace WindowsUtils {
 
     // eg. output = {3F966BD9-FA04-4EC5-991C-D326973B5128}
     WINDOWSUTILS_API std::wstring GUIDToString(const GUID &guid);
+    
+    // 获取GetLastError()函数返回的错误码对应的字符串解释
+    WINDOWSUTILS_API std::wstring GetLastErrorMsg(DWORD errCode);
 
     struct DeviceInterfaceInfo {
         // eg. {a5dcbf10-6530-11d2-901f-00c04fb951ed} GUID_DEVINTERFACE_USB_DEVICE

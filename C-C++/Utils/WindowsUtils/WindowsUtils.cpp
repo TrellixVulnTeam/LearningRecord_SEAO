@@ -164,6 +164,29 @@ namespace WindowsUtils {
         return guidString;
     }
 
+    std::wstring GetLastErrorMsg(DWORD errCode) {
+        std::wstring wstrErrMsg;
+
+        LPVOID msgBuf = NULL;
+
+        DWORD ret = FormatMessageW(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER |
+            FORMAT_MESSAGE_FROM_SYSTEM |
+            FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL,
+            errCode,
+            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            (LPWSTR)&msgBuf,
+            0, NULL);
+
+        if (msgBuf) {
+            wstrErrMsg = (const wchar_t*)msgBuf;
+            LocalFree(msgBuf);
+        }
+
+        return wstrErrMsg;
+    }
+
     std::vector<UsbDevice> EnumUsbDevices(bool getDetailData) {
         std::vector<UsbDevice> usbDevices;
 
