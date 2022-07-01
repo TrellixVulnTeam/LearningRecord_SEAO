@@ -1,4 +1,4 @@
-﻿// ParseAppleCookieFile.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+// ParseAppleCookieFile.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
 #define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料

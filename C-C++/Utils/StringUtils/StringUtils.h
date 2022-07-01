@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifdef STRINGUTILS_EXPORTS
     #define STRINGUTILS_API __declspec(dllexport)

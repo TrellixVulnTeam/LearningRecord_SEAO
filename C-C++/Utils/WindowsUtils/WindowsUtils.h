@@ -140,9 +140,14 @@ namespace WindowsUtils {
 
     // https://github.com/microsoft/Windows-driver-samples/tree/master/usb/usbview
     struct DeviceDriverInfo {
+        DeviceDriverInfo() {
+            isCurrentDriver = false;
+        }
+
+        bool isCurrentDriver;
+
         // device interface info
-        // eg. <\\?\USB#VID_12D1&PID_107E#RKK0218103000878#{a5dcbf10-6530-11d2-901f-00c04fb951ed}, {a5dcbf10-6530-11d2-901f-00c04fb951ed}>
-        std::map<std::wstring, DeviceInterfaceInfo> deviceInterfaceInfoMap;
+        std::vector<DeviceInterfaceInfo> deviceInterfaceInfos;
 
         std::wstring wstrDeviceInstanceId;
 
@@ -202,8 +207,8 @@ namespace WindowsUtils {
         // an opaque handle to the device instance(also known as a handle to the devnode).
         DWORD devInst;
 
-        // <driverKeyName, driverInfo>
-        std::map<std::wstring, DeviceDriverInfo> driverInfoMap;
+        // driverInfo
+        std::vector<DeviceDriverInfo> driverInfos;
     };
 
     WINDOWSUTILS_API std::vector<UsbDevice> EnumUsbDevices(bool getDetailData = true);

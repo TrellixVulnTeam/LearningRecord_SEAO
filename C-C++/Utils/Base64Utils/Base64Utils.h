@@ -8,37 +8,36 @@
 
 #include <string>
 
-namespace Base64Utils
-{
+namespace Base64Utils {
     BASE64UTILS_API std::string Base64EncodeString(
-        const std::string &strSrc
+        const std::string& strSrc
     );
 
     BASE64UTILS_API std::string Base64DecodeString(
-        const std::string &strSrc
+        const std::string& strSrc
     );
 
     BASE64UTILS_API std::string Base64EncodeString(
-        const unsigned char *in,
+        const char* in,
         int inSize
     );
 
     BASE64UTILS_API std::string Base64DecodeString(
-        const unsigned char *in,
+        const char* in,
         int inSize
     );
 
-    BASE64UTILS_API unsigned char * Base64EncodeData(
-        const unsigned char *in,
+    BASE64UTILS_API char* Base64EncodeData(
+        const char* in,
         int inSize,
-        int *outSize = nullptr
+        int* outSize = nullptr
     );
 
-    BASE64UTILS_API unsigned char * Base64DecodeData(
-        const unsigned char *in,
+    BASE64UTILS_API char* Base64DecodeData(
+        const char* in,
         int inSize,
-        int *outSize = nullptr
+        int* outSize = nullptr
     );
 
-    BASE64UTILS_API void FreeData(void *p);
+    BASE64UTILS_API void FreeData(void* p);
 };

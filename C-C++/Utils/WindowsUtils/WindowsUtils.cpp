@@ -282,6 +282,12 @@ namespace WindowsUtils {
                                         DeviceInterfaceInfo interfaceInfo;
 
                                         if (deviceInterfaceInfo->devicePath) {
+                                            WCHAR* p = deviceInterfaceInfo->devicePath;
+                                            while (*p) {
+                                                *p = ::towlower(*p);
+                                                p++;
+                                            }
+
                                             interfaceInfo.wstrDevicePath = deviceInterfaceInfo->devicePath;
                                             FREE(deviceInterfaceInfo->devicePath);
                                         }
@@ -292,7 +298,7 @@ namespace WindowsUtils {
                                         }
 
                                         if (!interfaceInfo.wstrDevicePath.empty()) {
-                                            driverInfo.deviceInterfaceInfoMap.insert({ interfaceInfo.wstrDevicePath, interfaceInfo });
+                                            driverInfo.deviceInterfaceInfos.push_back(std::move(interfaceInfo));
                                         }
 
                                         FREE(deviceInterfaceInfo);
@@ -343,7 +349,8 @@ namespace WindowsUtils {
 
                                 FREE(deviceDriverInfo);
 
-                                usbDevice.driverInfoMap.insert({ driverInfo.wstrDriveKeyName, driverInfo });
+                                driverInfo.isCurrentDriver = usbDevice.driverInfos.empty();
+                                usbDevice.driverInfos.push_back(std::move(driverInfo));
                             }
                         }
 

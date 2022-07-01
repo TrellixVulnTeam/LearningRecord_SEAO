@@ -692,7 +692,7 @@ namespace FileUtils {
                 break;
             }
 
-            int writeSize = fwrite(data, 1, dataSize, fp);
+            int writeSize = (int)fwrite(data, 1, dataSize, fp);
             if (writeSize != dataSize) {
                 break;
             }

@@ -1,4 +1,4 @@
-﻿/*++
+/*++
 
 Copyright (c) 1997-2011 Microsoft Corporation
 
@@ -853,6 +853,8 @@ static void GUIDFromString(const WCHAR* guidString, GUID* guid) {
 static PWCHAR s_systemInterfaceGUIDs[] = {
     GUID_ADB_STRING,
     GUID_HDB_STRING,
+    GUID_DEVINTERFACE_USB_DEVICE_STRING,
+    GUID_DEVINTERFACE_WINUSB_STRING,
     GUID_DEVICE_APPLICATIONLAUNCH_BUTTON_STRING,
     GUID_DEVICE_BATTERY_STRING,
     GUID_DEVICE_LID_STRING,
@@ -885,15 +887,13 @@ static PWCHAR s_systemInterfaceGUIDs[] = {
     GUID_DEVINTERFACE_SIDESHOW_STRING,
     GUID_DEVINTERFACE_STORAGEPORT_STRING,
     GUID_DEVINTERFACE_TAPE_STRING,
-    GUID_DEVINTERFACE_USB_DEVICE_STRING,
     GUID_DEVINTERFACE_USB_HOST_CONTROLLER_STRING,
     GUID_DEVINTERFACE_USB_HUB_STRING,
     GUID_DEVINTERFACE_VIDEO_OUTPUT_ARRIVAL_STRING,
     GUID_DEVINTERFACE_VOLUME_STRING,
     GUID_DEVINTERFACE_WPD_STRING,
     GUID_DEVINTERFACE_WPD_PRIVATE_STRING,
-    GUID_DEVINTERFACE_WRITEONCEDISK_STRING,
-    GUID_DEVINTERFACE_WINUSB_STRING
+    GUID_DEVINTERFACE_WRITEONCEDISK_STRING
 };
 
 BOOL IsTargetDevice(
@@ -991,111 +991,114 @@ void GetDeviceInfoDetail(
             }
         }
 
-        if (getDetailData != 0) {
-            deviceInfoSet = SetupDiGetClassDevsW(
-                NULL,
-                NULL,
-                NULL,
-                (DIGCF_ALLCLASSES | DIGCF_PRESENT | DIGCF_DEVICEINTERFACE)
-            );
+        deviceInfoSet = SetupDiGetClassDevsW(
+            NULL,
+            NULL,
+            NULL,
+            (DIGCF_ALLCLASSES | DIGCF_PRESENT | DIGCF_DEVICEINTERFACE)
+        );
 
-            if (deviceInfoSet == INVALID_HANDLE_VALUE) {
+        if (deviceInfoSet == INVALID_HANDLE_VALUE) {
+            break;
+        }
+
+        deviceInfoData = (PSP_DEVINFO_DATA)ALLOC(sizeof(SP_DEVINFO_DATA));
+        if (!deviceInfoData) {
+            break;
+        }
+
+        deviceInfoData->cbSize = sizeof(SP_DEVINFO_DATA);
+
+        cmpDeviceInfoData = (PSP_DEVINFO_DATA)ALLOC(sizeof(SP_DEVINFO_DATA));
+        if (!cmpDeviceInfoData) {
+            break;
+        }
+
+        cmpDeviceInfoData->cbSize = sizeof(SP_DEVINFO_DATA);
+
+        deviceInterfaceData = (PSP_DEVICE_INTERFACE_DATA)ALLOC(sizeof(SP_DEVICE_INTERFACE_DATA));
+        if (!deviceInterfaceData) {
+            break;
+        }
+
+        deviceInterfaceData->cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+
+        BOOL findTarget = FALSE;
+
+        for (DWORD deviceIndex = 0; ; ++deviceIndex) {
+            if (!SetupDiEnumDeviceInfo(deviceInfoSet, deviceIndex, deviceInfoData)) {
                 break;
             }
 
-            deviceInfoData = (PSP_DEVINFO_DATA)ALLOC(sizeof(SP_DEVINFO_DATA));
-            if (!deviceInfoData) {
-                break;
-            }
+            if (devInst == deviceInfoData->DevInst/*IsTargetDevice(devInst, deviceInfoData->DevInst)*/) {
+                findTarget = TRUE;
 
-            deviceInfoData->cbSize = sizeof(SP_DEVINFO_DATA);
+                GUID systemInterfaceGuid = { 0 };
 
-            cmpDeviceInfoData = (PSP_DEVINFO_DATA)ALLOC(sizeof(SP_DEVINFO_DATA));
-            if (!cmpDeviceInfoData) {
-                break;
-            }
-
-            cmpDeviceInfoData->cbSize = sizeof(SP_DEVINFO_DATA);
-
-            deviceInterfaceData = (PSP_DEVICE_INTERFACE_DATA)ALLOC(sizeof(SP_DEVICE_INTERFACE_DATA));
-            if (!deviceInterfaceData) {
-                break;
-            }
-
-            deviceInterfaceData->cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
-
-            BOOL findTarget = FALSE;
-
-            for (DWORD deviceIndex = 0; ; ++deviceIndex) {
-                if (!SetupDiEnumDeviceInfo(deviceInfoSet, deviceIndex, deviceInfoData)) {
-                    break;
+                // 只获取Android、iOS和usb设备详情
+                if (getDetailData == 0) {
+                    systemInterfaceGuidCount = systemInterfaceGuidCount > 4 ? 4 : systemInterfaceGuidCount;
                 }
 
-                if (devInst == deviceInfoData->DevInst/*IsTargetDevice(devInst, deviceInfoData->DevInst)*/) {
-                    findTarget = TRUE;
+                for (size_t guidIndex = 0; guidIndex < systemInterfaceGuidCount; ++guidIndex) {
+                    ZeroMemory(&systemInterfaceGuid, sizeof(GUID));
+                    GUIDFromString(s_systemInterfaceGUIDs[guidIndex], &systemInterfaceGuid);
 
-                    GUID systemInterfaceGuid = { 0 };
+                    for (DWORD interfaceIndex = 0; ; ++interfaceIndex) {
+                        ZeroMemory(deviceInterfaceData, sizeof(SP_DEVICE_INTERFACE_DATA));
+                        deviceInterfaceData->cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 
-                    for (size_t guidIndex = 0; guidIndex < systemInterfaceGuidCount; ++guidIndex) {
-                        ZeroMemory(&systemInterfaceGuid, sizeof(GUID));
-                        GUIDFromString(s_systemInterfaceGUIDs[guidIndex], &systemInterfaceGuid);
-
-                        for (DWORD interfaceIndex = 0; ; ++interfaceIndex) {
-                            ZeroMemory(deviceInterfaceData, sizeof(SP_DEVICE_INTERFACE_DATA));
-                            deviceInterfaceData->cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
-
-                            if (!SetupDiEnumDeviceInterfaces(deviceInfoSet, NULL, &systemInterfaceGuid, interfaceIndex, deviceInterfaceData)) {
-                                errCode = GetLastError();
-                                break;
-                            }
-
-                            ZeroMemory(cmpDeviceInfoData, sizeof(SP_DEVINFO_DATA));
-                            cmpDeviceInfoData->cbSize = sizeof(SP_DEVINFO_DATA);
-
-                            requiredSize = 0;
-                            ret = SetupDiGetDeviceInterfaceDetailW(deviceInfoSet, deviceInterfaceData, NULL, 0, &requiredSize, cmpDeviceInfoData);
+                        if (!SetupDiEnumDeviceInterfaces(deviceInfoSet, NULL, &systemInterfaceGuid, interfaceIndex, deviceInterfaceData)) {
                             errCode = GetLastError();
-                            if (errCode == ERROR_INSUFFICIENT_BUFFER) {
-                                ZeroMemory(guidString, sizeof(guidString));
-                                StringFromGUID2(&cmpDeviceInfoData->ClassGuid, guidString, sizeof(guidString) / sizeof(guidString[0]));
+                            break;
+                        }
 
-                                PWCHAR driverKeyName = NULL;
-                                ret = GetDeviceProperty(deviceInfoSet,
-                                    cmpDeviceInfoData,
-                                    SPDRP_DRIVER,
-                                    &driverKeyName);
+                        ZeroMemory(cmpDeviceInfoData, sizeof(SP_DEVINFO_DATA));
+                        cmpDeviceInfoData->cbSize = sizeof(SP_DEVINFO_DATA);
 
-                                if (driverKeyName &&
-                                    deviceDriverInfo->classGUID &&
-                                    deviceDriverInfo->driverKeyName &&
-                                    !_wcsicmp(deviceDriverInfo->classGUID, guidString) &&
-                                    !_wcsicmp(deviceDriverInfo->driverKeyName, driverKeyName)) {
-                                    requiredSize = 0;
-                                    ret = SetupDiGetDeviceInterfaceDetailW(deviceInfoSet, deviceInterfaceData, NULL, 0, &requiredSize, deviceInfoData);
-                                    errCode = GetLastError();
-                                    if (errCode == ERROR_INSUFFICIENT_BUFFER) {
-                                        PSP_DEVICE_INTERFACE_DETAIL_DATA deviceInterfaceDetailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)ALLOC(requiredSize);
-                                        if (deviceInterfaceDetailData) {
-                                            deviceInterfaceDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
-                                            ret = SetupDiGetDeviceInterfaceDetailW(deviceInfoSet, deviceInterfaceData, deviceInterfaceDetailData, requiredSize, NULL, deviceInfoData);
-                                            if (ret) {
-                                                PDEVICE_INTERFACE_INFO deviceInterfaceInfo = (PDEVICE_INTERFACE_INFO)ALLOC(sizeof(DEVICE_INTERFACE_INFO));
-                                                if (deviceInterfaceInfo) {
-                                                    CopyString(&deviceInterfaceInfo->interfaceClassGUID, s_systemInterfaceGUIDs[guidIndex], 0);
-                                                    CopyString(&deviceInterfaceInfo->devicePath, deviceInterfaceDetailData->DevicePath, 0);
-                                                    InsertTailList(&deviceDriverInfo->listEntryDeviceInterface, &deviceInterfaceInfo->listEntry);
-                                                }
+                        requiredSize = 0;
+                        ret = SetupDiGetDeviceInterfaceDetailW(deviceInfoSet, deviceInterfaceData, NULL, 0, &requiredSize, cmpDeviceInfoData);
+                        errCode = GetLastError();
+                        if (errCode == ERROR_INSUFFICIENT_BUFFER) {
+                            ZeroMemory(guidString, sizeof(guidString));
+                            StringFromGUID2(&cmpDeviceInfoData->ClassGuid, guidString, sizeof(guidString) / sizeof(guidString[0]));
+
+                            PWCHAR driverKeyName = NULL;
+                            ret = GetDeviceProperty(deviceInfoSet,
+                                cmpDeviceInfoData,
+                                SPDRP_DRIVER,
+                                &driverKeyName);
+
+                            if (driverKeyName &&
+                                deviceDriverInfo->classGUID &&
+                                deviceDriverInfo->driverKeyName &&
+                                !_wcsicmp(deviceDriverInfo->classGUID, guidString) &&
+                                !_wcsicmp(deviceDriverInfo->driverKeyName, driverKeyName)) {
+                                requiredSize = 0;
+                                ret = SetupDiGetDeviceInterfaceDetailW(deviceInfoSet, deviceInterfaceData, NULL, 0, &requiredSize, deviceInfoData);
+                                errCode = GetLastError();
+                                if (errCode == ERROR_INSUFFICIENT_BUFFER) {
+                                    PSP_DEVICE_INTERFACE_DETAIL_DATA deviceInterfaceDetailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)ALLOC(requiredSize);
+                                    if (deviceInterfaceDetailData) {
+                                        deviceInterfaceDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
+                                        ret = SetupDiGetDeviceInterfaceDetailW(deviceInfoSet, deviceInterfaceData, deviceInterfaceDetailData, requiredSize, NULL, deviceInfoData);
+                                        if (ret) {
+                                            PDEVICE_INTERFACE_INFO deviceInterfaceInfo = (PDEVICE_INTERFACE_INFO)ALLOC(sizeof(DEVICE_INTERFACE_INFO));
+                                            if (deviceInterfaceInfo) {
+                                                CopyString(&deviceInterfaceInfo->interfaceClassGUID, s_systemInterfaceGUIDs[guidIndex], 0);
+                                                CopyString(&deviceInterfaceInfo->devicePath, deviceInterfaceDetailData->DevicePath, 0);
+                                                InsertTailList(&deviceDriverInfo->listEntryDeviceInterface, &deviceInterfaceInfo->listEntry);
                                             }
-
-                                            FREE(deviceInterfaceDetailData);
-                                            deviceInterfaceDetailData = NULL;
                                         }
+
+                                        FREE(deviceInterfaceDetailData);
+                                        deviceInterfaceDetailData = NULL;
                                     }
                                 }
+                            }
 
-                                if (driverKeyName) {
-                                    FREE(driverKeyName);
-                                }
+                            if (driverKeyName) {
+                                FREE(driverKeyName);
                             }
                         }
                     }
@@ -1502,74 +1505,72 @@ EnumerateHubPorts(
                         }
 
                         if (!connectionInfoEx->DeviceIsHub) {
-                            if (getDetailData) {
-                                RecursiveGetDeviceInfo(deviceInfo, deviceInfoData->DevInst, getDetailData);
+                            RecursiveGetDeviceInfo(deviceInfo, deviceInfoData->DevInst, getDetailData);
 
-                                if (!IsListEmpty(&deviceInfo->listEntryDeviceDriver)) {
-                                    PLIST_ENTRY pEntry = deviceInfo->listEntryDeviceDriver.Flink;
+                            if (!IsListEmpty(&deviceInfo->listEntryDeviceDriver)) {
+                                PLIST_ENTRY pEntry = deviceInfo->listEntryDeviceDriver.Flink;
 
-                                    while (pEntry != &deviceInfo->listEntryDeviceDriver) {
-                                        PDEVICE_DRIVER_INFO deviceDriverInfo = CONTAINING_RECORD(pEntry,
-                                            DEVICE_DRIVER_INFO,
-                                            listEntry);
+                                while (pEntry != &deviceInfo->listEntryDeviceDriver) {
+                                    PDEVICE_DRIVER_INFO deviceDriverInfo = CONTAINING_RECORD(pEntry,
+                                        DEVICE_DRIVER_INFO,
+                                        listEntry);
 
-                                        pEntry = pEntry->Flink;
+                                    pEntry = pEntry->Flink;
 
-                                        if (!deviceDriverInfo) {
-                                            continue;
-                                        }
+                                    if (!deviceDriverInfo) {
+                                        continue;
+                                    }
 
-                                        if ((deviceDriverInfo->className && !_wcsicmp(deviceDriverInfo->className, L"AndroidUsbDeviceClass")) ||
-                                            (deviceDriverInfo->classGUID && !_wcsicmp(deviceDriverInfo->classGUID, GUID_ANDROID_CLASS_STRING))) {
-                                            deviceInfo->deviceType = 3;
-                                            break;
-                                        }
+                                    if ((deviceDriverInfo->className && !_wcsicmp(deviceDriverInfo->className, L"AndroidUsbDeviceClass")) ||
+                                        (deviceDriverInfo->classGUID && !_wcsicmp(deviceDriverInfo->classGUID, GUID_ANDROID_CLASS_STRING))) {
+                                        deviceInfo->deviceType = 3;
+                                        break;
+                                    }
 
-                                        if (deviceDriverInfo->desc && (StrStrIW(deviceDriverInfo->desc, L"Apple Mobile Device USB Composite Device"))) {
-                                            deviceInfo->deviceType = 4;
-                                            break;
-                                        }
+                                    if (deviceDriverInfo->desc && (StrStrIW(deviceDriverInfo->desc, L"Apple Mobile Device USB Composite Device"))) {
+                                        deviceInfo->deviceType = 4;
+                                        break;
+                                    }
 
-                                        if ((deviceDriverInfo->className && !_wcsicmp(deviceDriverInfo->className, L"Keyboard")) ||
-                                            ((deviceDriverInfo->classGUID && !_wcsicmp(deviceDriverInfo->classGUID, GUID_KEYBOARD_CLASS_STRING)))) {
-                                            deviceInfo->deviceType = 0;
-                                            break;
-                                        }
+                                    if ((deviceDriverInfo->className && !_wcsicmp(deviceDriverInfo->className, L"Keyboard")) ||
+                                        ((deviceDriverInfo->classGUID && !_wcsicmp(deviceDriverInfo->classGUID, GUID_KEYBOARD_CLASS_STRING)))) {
+                                        deviceInfo->deviceType = 0;
+                                        break;
+                                    }
 
-                                        if ((deviceDriverInfo->className && !_wcsicmp(deviceDriverInfo->className, L"Mouse")) ||
-                                            ((deviceDriverInfo->classGUID && !_wcsicmp(deviceDriverInfo->classGUID, GUID_MOUSE_CLASS_STRING)))) {
-                                            deviceInfo->deviceType = 1;
-                                            break;
-                                        }
+                                    if ((deviceDriverInfo->className && !_wcsicmp(deviceDriverInfo->className, L"Mouse")) ||
+                                        ((deviceDriverInfo->classGUID && !_wcsicmp(deviceDriverInfo->classGUID, GUID_MOUSE_CLASS_STRING)))) {
+                                        deviceInfo->deviceType = 1;
+                                        break;
+                                    }
 
-                                        if ((deviceDriverInfo->className && !_wcsicmp(deviceDriverInfo->className, L"Bluetooth")) ||
-                                            ((deviceDriverInfo->classGUID && !_wcsicmp(deviceDriverInfo->classGUID, GUID_BLUETOOTH_CLASS_STRING)))) {
-                                            deviceInfo->deviceType = 2;
-                                            break;
-                                        }
+                                    if ((deviceDriverInfo->className && !_wcsicmp(deviceDriverInfo->className, L"Bluetooth")) ||
+                                        ((deviceDriverInfo->classGUID && !_wcsicmp(deviceDriverInfo->classGUID, GUID_BLUETOOTH_CLASS_STRING)))) {
+                                        deviceInfo->deviceType = 2;
+                                        break;
+                                    }
 
-                                        if (!IsListEmpty(&deviceDriverInfo->listEntryDeviceInterface)) {
-                                            PLIST_ENTRY pEntry = deviceDriverInfo->listEntryDeviceInterface.Flink;
+                                    if (!IsListEmpty(&deviceDriverInfo->listEntryDeviceInterface)) {
+                                        PLIST_ENTRY pEntry = deviceDriverInfo->listEntryDeviceInterface.Flink;
 
-                                            while (pEntry != &deviceDriverInfo->listEntryDeviceInterface) {
-                                                PDEVICE_INTERFACE_INFO deviceInterfaceInfo = CONTAINING_RECORD(pEntry,
-                                                    DEVICE_INTERFACE_INFO,
-                                                    listEntry);
+                                        while (pEntry != &deviceDriverInfo->listEntryDeviceInterface) {
+                                            PDEVICE_INTERFACE_INFO deviceInterfaceInfo = CONTAINING_RECORD(pEntry,
+                                                DEVICE_INTERFACE_INFO,
+                                                listEntry);
 
-                                                pEntry = pEntry->Flink;
+                                            pEntry = pEntry->Flink;
 
-                                                if (!deviceInterfaceInfo) {
-                                                    continue;
-                                                }
-
-                                                if (deviceInterfaceInfo->interfaceClassGUID &&
-                                                    (!_wcsicmp(deviceInterfaceInfo->interfaceClassGUID, GUID_ADB_STRING) ||
-                                                        !_wcsicmp(deviceInterfaceInfo->interfaceClassGUID, GUID_HDB_STRING))) {
-                                                    deviceInfo->deviceType = 3;
-                                                    break;
-                                                }
-
+                                            if (!deviceInterfaceInfo) {
+                                                continue;
                                             }
+
+                                            if (deviceInterfaceInfo->interfaceClassGUID &&
+                                                (!_wcsicmp(deviceInterfaceInfo->interfaceClassGUID, GUID_ADB_STRING) ||
+                                                    !_wcsicmp(deviceInterfaceInfo->interfaceClassGUID, GUID_HDB_STRING))) {
+                                                deviceInfo->deviceType = 3;
+                                                break;
+                                            }
+
                                         }
                                     }
                                 }

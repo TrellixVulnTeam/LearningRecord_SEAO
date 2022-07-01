@@ -44,7 +44,7 @@ namespace CurlWrapper {
             char *data = (char*)buffer;
             if (userData->fileHandle != INVALID_HANDLE_VALUE) {
                 DWORD writeBytes = 0;
-                WriteFile(userData->fileHandle, buffer, retSize, &writeBytes, NULL);
+                WriteFile(userData->fileHandle, buffer, (DWORD)retSize, &writeBytes, NULL);
             } else if (userData->response) {
                 userData->response->strContent.append(data, nmemb);
             }
@@ -136,7 +136,7 @@ namespace CurlWrapper {
         std::string strEncodeString;
 
         if (curl) {
-            char *encodeString = curl_easy_escape(curl, strString.c_str(), strString.size());
+            char *encodeString = curl_easy_escape(curl, strString.c_str(), (int)strString.size());
             if (encodeString) {
                 strEncodeString.assign(encodeString);
                 curl_free(encodeString);
