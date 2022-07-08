@@ -295,7 +295,7 @@ namespace CurlWrapper {
 
             // see. https://curl.se/libcurl/c/CURLOPT_TIMEOUT.html
             if (request.timeout > 0) {
-                curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30);
+                curl_easy_setopt(curl, CURLOPT_TIMEOUT, request.timeout);
             }
 
             // see. https://curl.se/libcurl/c/CURLOPT_PROXY.html
