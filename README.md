@@ -17,10 +17,10 @@ tools\python38\python.exe init-submodules.py
 
 ### Below is my machine
 #### x86
-![image](https://user-images.githubusercontent.com/11570113/181400614-734160bb-1b91-4de6-b0cc-6ccaf81640bc.png)
+![image](https://user-images.githubusercontent.com/11570113/181400969-92f338d6-d964-4765-b18a-063a140cb105.png)
 
 #### x64
-![image](https://user-images.githubusercontent.com/11570113/181400726-c88043e3-1845-4b46-95c5-2dec4bba7993.png)
+![image](https://user-images.githubusercontent.com/11570113/181400895-a615032f-ffcb-415a-96f2-a8c311e86856.png)
 
 **And change path to current path.**
 
