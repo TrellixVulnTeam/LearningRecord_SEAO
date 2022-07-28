@@ -25,26 +25,23 @@ call 7z.exe x strawberry-perl-5.32.1.1-64bit.zip -o./strawberry
 call wget.exe%https_proxy_cmd% https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.zip -O ./nasm-2.15.05.zip
 call 7z.exe x nasm-2.15.05.zip -o./nasm
 
-::Yasm
-call wget.exe%http_proxy_cmd% http://www.tortall.net/projects/yasm/releases/yasm-1.3.0-win64.exe -O ./yasm/yasm.exe
-
 ::Ninja
 call wget.exe%https_proxy_cmd% https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip -O ./ninja-win.zip
-call 7z.exe x ninja-win.zip -o./ninja
+::call 7z.exe x ninja-win.zip -o./ninja
 
 ::jom
 call wget.exe%http_proxy_cmd% http://download.qt.io/official_releases/jom/jom.zip -O ./jom.zip
-call 7z.exe x jom.zip -o./jom
+::call 7z.exe x jom.zip -o./jom
 
 ::groff and nroff
 call wget.exe%http_proxy_cmd% http://downloads.sourceforge.net/gnuwin32/groff-1.20.1-bin.zip -O ./groff.zip
-call 7z.exe x groff.zip -o./groff
+::call 7z.exe x groff.zip -o./groff
 
 ::curl ca
 call mkdir ca
 call wget.exe%https_proxy_cmd% https://curl.se/ca/cacert.pem -O ./ca/cacert.pem
 
 ::MSYS2
-::wget.exe%https_proxy_cmd% https://github.com/msys2/msys2-installer/releases/download/2021-07-25/msys2-x86_64-20210725.exe -O ./msys2-x86_64-20210725.exe
+::wget.exe%https_proxy_cmd% https://github.com/msys2/msys2-installer/releases/download/2022-06-03/msys2-x86_64-20220603.exe -O ./msys2-x86_64-20210725.exe
 
 cd ..

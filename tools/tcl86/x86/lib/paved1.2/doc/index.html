@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" TYPE="text/css" HREF="style.css">
+<TITLE>Paved-widgets - 1.2</TITLE>
+</HEAD><BODY BGCOLOR="white" TEXT="black">
+<P ALIGN="center"><CENTER><H1>Paved-widgets - 1.2</H1>
+<FONT SIZE="4">
+<I>standard widgets with paved (tiled) background.</I><BR>
+ 
+</FONT></CENTER>
+
+<H4>Table Of Contents</H4>
+    <UL>
+    <LI><A HREF="#toc1">INTRO</A>
+    <LI><A HREF="#toc2">EXAMPLE</A>
+    <LI><A HREF="#toc3">SCREENSHOTS</A>
+    <LI><A HREF="#toc4">EXAMPLE</A>
+    <LI><A HREF="#toc5">DEMOS</A>
+    <LI><A HREF="#toc6">DOWNLOAD</A>
+      <UL>
+      <LI><A HREF="#toc7">REQUIRED PACKAGES</A>
+      <LI><A HREF="#toc8">INSTALLATION</A>
+      </UL>
+    <LI><A HREF="#toc9">BUGS</A>
+    <LI><A HREF="#toc10">HISTORY</A>
+    <LI><A HREF="#toc11">AUTHOR</A>
+    </UL>
+
+<P></P>
+<A NAME="toc1"></A>
+<H2>INTRO</H2>
+<P>
+<B>Paved</B> is a collection of standard widgets enhanced with background-tessellation
+capability (tiling).
+</P>
+<P>
+Paved widgets are:
+</P>
+ <UL>
+ <LI><A HREF="pavetoplevel.html">Paved::toplevel</A>
+ <LI><A HREF="paveframe.html">Paved::frame</A>
+ <LI><A HREF="pavebutton.html">Paved::button</A>
+ <LI><A HREF="pavelabel.html">Paved::label</A>
+ <LI><A HREF="pavecanvas.html">Paved::canvas</A>
+ <LI><A HREF="pavetree.html">Paved::Tree</A>
+ </UL>
+
+<P>
+These widgets have been inspired by the <B>BLT</B> package.
+Paved-widgets are pure-tcl widgets requiring the (pure-tcl) <B>snit</B> package.
+</P>
+<P>
+For detailed info about each widget, read the related <B>paveXXX.html</B> document.
+</P>
+<P>
+Starting from release 1.1 you can also transform pre-existing widgets in <B>Paved-Widgets</B>.
+</P>
+<P>
+<B>NOTE:</B> Paved::<I>widget</I>Adaptor command is deprecated ; use the new "Paved::<I>widget</I> adapt" command
+</P>
+<A NAME="toc2"></A>
+<H2>EXAMPLE</H2>
+<PRE>
+    All Paved-widgets can be 'preloaded' with a single command:
+   package require Paved
+    # or you can preload just a single widget:
+   package require Paved::button
+  
+    # CREATING A NEW PAVED-TOPLEVEL
+     Paved::toplevel create .z1 -tile xyz.gif
+      # or
+     Paved::toplevel        .z1 -tile xyz.gif
+      
+  
+    # ADAPTING AN EXISTING WIDGET  --  OLD (DEPRECATED)
+      # create a standard toplevel
+     toplevel .z2 -bg red
+     Paved::toplevelAdaptor .z2 -tile xyz.gif 
+  
+    # ADAPTING AN EXISTING WIDGET  --  NEW (RECOMMENDED)
+     toplevel .z3 -bg red
+     Paved::toplevel  adapt .z3 -tile xyz.gif 
+</PRE>
+<P></P>
+<A NAME="toc3"></A>
+<H2>SCREENSHOTS</H2>
+<P>
+<A HREF="pavetoplevel.html">Paved::toplevel</A>
+</P>
+<P>
+<IMG ALIGN="middle" SRC="images/demoTop.gif" BORDER="0" ALT="">
+</P>
+<P>
+<A HREF="paveframe.html">Paved::frame</A>
+</P>
+<P>
+<IMG ALIGN="middle" SRC="images/demoFrame.gif" BORDER="0" ALT="">
+</P>
+<P>
+<A HREF="pavebutton.html">Paved::button</A>
+</P>
+<P>
+<IMG ALIGN="middle" SRC="images/demoButton.gif" BORDER="0" ALT="">
+</P>
+<P>
+<A HREF="pavelabel.html">Paved::label</A>
+</P>
+<P>
+<IMG ALIGN="middle" SRC="images/demoLabel.gif" BORDER="0" ALT="">
+</P>
+<P>
+<A HREF="pavecanvas.html">Paved::canvas</A>
+</P>
+<P>
+<IMG ALIGN="middle" SRC="images/demoCanvas.gif" BORDER="0" ALT="">
+</P>
+<P>
+<A HREF="pavetree.html">Paved::Tree</A>
+</P>
+<P>
+<IMG ALIGN="middle" SRC="images/demoTree.gif" BORDER="0" ALT="">
+</P>
+<P>
+All widgets together
+</P>
+<P>
+<IMG ALIGN="middle" SRC="images/demoAll.jpg" BORDER="0" ALT="">
+</P>
+<A NAME="toc4"></A>
+<H2>EXAMPLE</H2>
+<PRE>
+    # All Paved-widgets can be 'preloaded' with a single command:
+   package require Paved
+    # or you can preload just a single widget:
+   package require Paved::button
+   
+    # here is a small example:
+    # (suppose xyz.gif is in current directory)
+   package require Paved::frame
+   Paved::frame .c -tile xyz.gif -borderwidth 10 -relief sunken
+   pack .c -fill both -expand true
+   wm geometry . 200x200
+</PRE>
+<P></P>
+<A NAME="toc5"></A>
+<H2>DEMOS</H2>
+<P>
+Run files in demo directory ..
+</P>
+<P>
+We hope the included demos let you appreciate the <B>Paved-widgets</B> capabilities.
+</P>
+<A NAME="toc6"></A>
+<H2>DOWNLOAD</H2>
+<P>
+  <A HREF="http://irrational-numbers.googlecode.com/files/paved-1.2.zip">Paved 1.2</A>
+</P>
+<A NAME="toc7"></A>
+<H3>REQUIRED PACKAGES</H3>
+ <UL>
+ <LI><A HREF="http://www.wjduquette.com/snit">snit</A> or higher
+ <LI><A HREF="http://irrational-numbers.googlecode.com/files/scrodget-2.1.1.zip">Scrodget 2.1.1</A> or higher  (optional, just for some demos)
+ </UL>
+
+<A NAME="toc8"></A>
+<H3>INSTALLATION</H3>
+<P>
+<B>Paved 1.2</B> and all the required packages should be installed under standard 
+library path.
+</P>
+<A NAME="toc9"></A>
+<H2>BUGS</H2>
+<P>
+ Currently, if an error occurs when <B>adapt</B>ing a widget (example: using a wrong option), then the original widget is destroyed !
+</P>
+<P>
+ Example:
+  When adapting an existing  canvas (or any other kind of widget),  if file "xyz.gif" <I>could</I> not exist,
+ it is suggested to replace the command:
+</P>
+<PRE>
+  Paved::canvas adapt $c -tile xyz.gif
+</PRE>
+<P>
+ with
+</P>
+<PRE>
+  Paved::canvas adapt $c
+  $c configure -tile xyz.gif
+</PRE>
+<P>
+ In this latter case, the original canvas is transformed in a paved-canvas (though "$c configure -tile .." fails).
+</P>
+<P>
+ In the former case, if "xyz.gif" does not exist, the whole command fails, and the original canvas is lost!
+</P>
+<A NAME="toc10"></A>
+<H2>HISTORY</H2>
+<UL>
+<LI>1.0
+ <UL>
+ <LI>initial version
+ </UL>
+<LI>1.1
+ <UL>
+ <LI>Paved::canvas : bug-fixing for -scrollregion update
+ <LI>Paved::canvas : added special trap for 'delete' command:
+   <UL>
+   <LI>'current' and 'all' tags are transparently
+     transformed, so that the background image cannot
+     be deleted (..with somee limitations..)
+   </UL>
+ <LI>Added Paved::Tree
+ <LI>Added Paved::<I>widget</I>Adaptor for paving existing widgets.
+ <LI>Removed dependency from a fixed 'Snit' package.
+ <LI>More demos.
+ <LI>Command-reference documentation now available in HTML format.
+ </UL>
+<LI>1.2
+ <UL>
+ <LI>Added a more permissive license
+ <LI>A new way for adapting existing widgets - Paved::<I>widget</I>Adaptor is now deprecated
+ </UL>
+</UL>
+
+<A NAME="toc11"></A>
+<H2>AUTHOR</H2>
+<P>
+Copyright (c) 2004-2012 &lt;Irrational Numbers&gt;
+</P>
+<P>
+For comments and suggestions, please write to : &lt;<A HREF="mailto:aldo.w.buratti@gmail.com">aldo.w.buratti@gmail.com</A>&gt;
+</P>
+
+<!-- html code generated by txt2tags 2.3 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags c:\Documents and Settings\Aldo\Desktop\paved\doc\srcDoc\index.t2t -->
+</BODY></HTML>

@@ -1,0 +1,20 @@
+Package mustache 1.1
+Meta author       {Andreas Kupries}
+Meta build::by    ashok
+Meta build::date  2022-06-10
+Meta category     Template Processing
+Meta description  Implementation of mustache, user commands
+Meta entrysource  mustache.tcl
+Meta included     mustache.tcl
+Meta location     http:/core.tcl.tk/akupries/mustache
+Meta platform     tcl
+Meta require      {Tcl 8.5-}
+Meta require      debug
+Meta require      debug::caller
+Meta require      mustache::parse
+Meta require      mustache::render
+Meta subject      mustache template logic-less
+Meta summary      Mustache, logic-less templates
+Meta vc::revision fatal: No annotated tags can describe
+Meta vc::revision 'f6f1b090bb32a39a62e141574284332848892f07'.
+Meta vc::system   git

@@ -1,0 +1,58 @@
+# Wrapper for TclPro Debugger
+
+# Apply to avoid polluting global namespace
+apply {{} {
+    # Assumes this script is in bin. Paths to applications are relative to
+    # Tcl installation root (i.e. script dir parent)
+    # Some apps need to be execed as from the command line else they
+    # behave like libraries, e.g. tkcon. The Exec key controls this.
+    set apps {
+        tkcon {
+            Name "Tkcon Enhanced Shell"
+            Path {apps tkcon.tcl}
+            Exec 1
+        }
+        tclprodebug {
+            Name "TclPro Debugger"
+            Path {apps tclprodebug startup.tcl}
+            Exec 0
+        }
+        sockspy {
+            Name "Socket Spy"
+            Path {apps sockspy.tcl}
+            Exec 0
+        }
+        tpack {
+            Name "Tpack deployment tool"
+            Path {apps tpack.tcl}
+            Exec 1
+        }
+    }
+
+    set tcldir [file dirname [file dirname [file normalize [info script]]]]
+    set app [file rootname [file tail [info script]]]
+    if {![dict exists $apps $app]} {
+        wm withdraw .
+        tk_messageBox -icon error -type ok \
+            -title "Unknown application" \
+            -message "Tcl application '$app' is not recognized."
+        exit 1
+    }
+
+    dict with apps $app {}
+    set script [file join $tcldir {*}$Path]
+    if {[file exists $script]} {
+        if {$Exec} {
+            exec -- [info nameofexecutable] $script {*}$::argv &
+            exit 0
+        } else {
+            uplevel #0 [list source $script]
+        }
+    } else {
+        wm withdraw .
+        tk_messageBox -icon error -type ok \
+            -title "$Name not found" \
+            -message "$Name package not found (file $script missing). Please run the Magicsplat Tcl installer and ensure it is selected for installation."
+        exit 1
+    }
+}}

@@ -1,0 +1,96 @@
+<HTML>
+<TITLE>
+Building JBlend under Windows/Linux/MacOS
+</TITLE>
+
+<BODY>
+<HR>
+
+<H3>Building JBlend under Windows/Linux/MacOS</H3>
+
+<HR>
+
+<H4>Sources and Tools</H4>
+<UL>
+<li>Download the <A HREF="https://sourceforge.net/projects/irrational-numbers/files/JBlend/tclJBlend-devkit-2.1.zip">
+JBlend Development-Kit</A>, or better download the last version from the
+<A HREF="https://sourceforge.net/p/irrational-numbers/code/HEAD/tree/pkgs/tclJBlend-devkit">
+SourceForge SVN repository</A>
+
+<LI> You need a JDK (>= 1.4)
+<LI> On Unix (Linux/Mac) you need the GNU/C compiler.
+<LI> On Windows you can download MingW , or you can use the free "MS Visual Studio 2005 Community Edition".
+</UL>
+
+<H4>Building on Windows (using a MS C Compiler)</H4>
+
+<PRE><code>
+   cd ...\tclJBlend-devkit
+   ms-build x32
+   ms-build x64
+</code></PRE>
+
+<H4>Building on *nix (Linux/MacOS/Windows+MingW)</H4>
+
+<PRE><code>
+   cd .../tclJBlend-devkit
+   ./build.sh x32
+   ./build.sh x64
+</code></PRE>
+
+<P> 
+By default intermediate results will be saved under the XBUILD subdirectory;
+ XBUILD/JBlend will contain the deliverable package (zip it and deliver it).
+<P>If you use a shared disk for building, you can attach it to Win/Linux/Mac so
+that XBUILD/JBlend will collect all the native DLL/.so/.dylib so far built.
+<P>
+If you need to build a JBlend+JVM bundle, read the detailed instruction in <B>tclJBlend-devkit/HowTO-AssembleJBlend+JVM.txt</B>
+
+
+<H4>Extra settings for Building customizations</H4>
+
+<P>
+You can adapt the build procedure in a limited way, just by
+setting some environment variables or passing'em on the fly on the command
+line of the build script.
+<P>
+<B>Allowed  settings:</B>
+<PRE><code>
+  CFLAGS        (Options for C-compiler)
+  JCFLAGS       (Options for javac.exe)
+  BUILDDIR      (temporary directory for building)
+</code></PRE>
+
+<P>
+BE CAREFUL: All pathnames must be in Unix notation
+
+<P>
+<B>Examples:</B>
+
+<P>
+Change the output directory (on Linux/Mac/MingW)
+<PRE><code>
+ BUILDDIR=/work ; export BUILDDIR ; ./build.sh x64
+</code></PRE>
+or equivalently (on Windows)
+<PRE><code>
+  ms-build.bat x86 "BUILDDIR=c:/work"
+</code></PRE>
+or equivalently (on Linux/Mac)
+<PRE><code>
+ ./build.sh x64   "BUILDDIR=/work"
+</code></PRE>
+
+<P>
+Enable tracing ...
+<PRE><code>
+CFLAGS=-DTCLBLEND_DEBUG=1
+</code></PRE>
+
+<P><P>
+<hr>
+<pre>Based on TclBlend <a href="license.html">Copyright</a> &copy; 1994-1998 Sun Microsystems, Inc.<br></pre>
+<pre>JBlend is Copyright &copy; 2016-2019 - Irrational Numbers.<br></pre>
+
+</BODY>
+</HTML>

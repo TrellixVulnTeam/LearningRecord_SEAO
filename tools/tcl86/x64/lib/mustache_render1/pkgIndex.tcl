@@ -1,0 +1,1 @@
+package ifneeded mustache::render 1 [list source [file join $dir render.tcl]]

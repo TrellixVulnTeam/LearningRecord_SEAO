@@ -1,0 +1,94 @@
+<HTML>
+<TITLE>
+JBlend Package
+</TITLE>
+
+<BODY>
+<HR>
+<H3>
+JBlend Package
+</H3>
+
+<HR>
+
+
+<DL>
+
+<H3>
+Loading into Tcl interpreter:
+</H3>
+
+<DD>
+
+<b>package require JBlend ?version?</b>
+
+<P>
+<B>package require JBlend</B> loads the <B>JBLend</B> package into the
+interpreter. The <B>JBlend</B> package provides an interface for creating and
+manipulating Java objects via <I>object handles</I>. Object handles are
+references to Java objects in Tcl. Many of the commands in this
+package take arguments and return values that are object handles.
+
+<P>
+
+When the <B>JBlend</B> package is loaded into a Tcl interpreter, a new 
+namespace named <B>::java</B> will be created, along with a new JVM instance in Tcl's process space.
+
+
+<P>
+
+You can control some how to start this JVM instance, by setting the global variable
+<B>tclblend_init</B> <U>before</U> loading the package.
+<BR>
+Note that <B>tclblend_init</B> is a <U>list of strings</U>, and each element is passed as
+an option to the Java Virtual Machine being instantiated (see Example below).
+<BR>
+After loading the package, you can inspect all the JVM properties by examining
+the global array <B>::java::jvm</B> ( or the old <U>deprecated</U> array <B>::tcljava</B>).
+
+
+<p>
+<H4>Example:</H4>
+
+<code>lappend ::tclblend_init "-verbose:jni"  ;#print debugging messages</code>
+
+<P>
+For <B>-verbose</B>, the value should be a string with one or
+more comma separated names (i.e. <B>class,jni</B>).  
+The standard names are:
+	 <B>class</B>, <B>gc</B>, <B>jni</B>
+To see what other options are available, run <B>java -help</B>
+from the command line.
+ <p>
+In addition <B>tclblend_init</B> can have the following values:
+<p>
+<B>help</B><br>
+Print a help message and then stop JVM initialization.<br>
+<B>debug</B><br>
+Print out debugging messages when the package is loaded.<br>
+<p>
+To use <B>tclblend_init</B>, set it before loading the <B>java</B>
+package:
+
+<code>
+<pre>
+set tclblend:init {}
+lappend tclblend_init "-verbose:jni"
+lappend tclblend_init "debug"
+package require JBlend
+
+parray java::jvm  ;# prints all the currently loaded JVM properties.
+</pre>
+</code>
+
+<P>
+
+</DL>
+
+<HR>
+<pre>Based on TclBlend <a href="../license.html">Copyright</a> &copy; 1994-1998 Sun Microsystems, Inc.<br></pre>
+<pre>JBlend is Copyright &copy; 2016 - Irrational Numbers.<br></pre>
+
+</BODY>
+</HTML>
+

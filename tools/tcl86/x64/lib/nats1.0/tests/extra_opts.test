@@ -1,0 +1,360 @@
+# Copyright (c) 2021 Petro Kazmirchuk https://github.com/Kazmirchuk
+
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and  limitations under the License.
+
+# Test summary:
+# - verbose, pedantic, no-echo options
+# - PING/PONG protocol and timeouts
+# - publishing and subscription to messages with headers
+# - treating a received message as a dict
+# - the no-responders feature
+# - request with -max_msgs option (for internal use only)
+# - coroutine-aware sync request
+
+startNats NATS
+
+set conn [nats::connection new "ExtraOptions"]
+#debugLogging $conn
+
+$conn configure -servers nats://localhost:4222
+
+test extra_opts-1 "Check verbose and pedantic modes" -body {
+    # in the verbose mode NATS server acks each message with +OK - we simply check that the client doesn't break because of it
+    # in the pedantic mode NATS server reports -ERR for invalid subjects, but doesn't close the connection
+    # in order to get this -ERR I need to disable subject checking on client side
+    $conn configure -verbose true -pedantic true -check_subjects false
+    $conn connect -async ;# NATS sends back INFO, then replies +OK to our CONNECT
+    set obs [test_utils::chanObserver new $conn b]
+    while {[set ${conn}::status] ne $nats::status_connected} {
+        wait_for ${conn}::status
+    }
+    
+    $conn publish dummy_subj "Hello NATS" ;# NATS sends back +OK
+    $conn publish invalid_subj.* "Hello NATS 2" ;# NATS sends back -ERR and +OK (?!)
+    sleep 300
+    lassign [$obs getChanData 0] readData writtenData
+    $obs destroy
+    
+    assert {[set ${conn}::status] == $nats::status_connected} 1 ;# the connection should be still alive
+
+    set connectDict [getConnectOpts [lindex $writtenData 0]] 
+    assert {[dict get $connectDict verbose] eq "true"}
+    assert {[dict get $connectDict pedantic] eq "true"}
+    
+    assert {[lindex $readData 1] eq "+OK"}
+    assert {[lindex $readData 2] eq "+OK"}
+    
+    set err [set ${conn}::last_error]
+    assert {[dict get $err code] eq [list NATS ErrBadSubject]}
+} -cleanup {
+    $conn disconnect
+    $conn reset -verbose -pedantic -check_subjects
+}
+
+test extra_opts-2 "Check the echo=false option" -body {
+    set test_utils::simpleMsg ""
+    $conn configure -echo false
+    $conn connect -async
+    set obs [test_utils::chanObserver new $conn w]
+    while {[set ${conn}::status] ne $nats::status_connected} {
+        wait_for ${conn}::status
+    }
+    set connectDict [getConnectOpts [$obs getChanData]]
+    $obs destroy
+    
+    assert {[dict get $connectDict echo] eq "false"}
+        
+    $conn subscribe no_echo -callback test_utils::simpleCallback
+    $conn publish no_echo "cold is the void" ;# we will not get this message back
+    assert {[catch {wait_for test_utils::simpleMsg}] == 1}
+    # but a request to another subscriber still works fine
+    startResponder $conn no_echo
+    set result [$conn request no_echo "0 hello"]
+    assert {$result eq "hello"}
+} -cleanup {
+    stopResponder $conn no_echo
+    $conn disconnect
+    $conn reset -echo
+}
+
+test extra_opts-3 "PING/PONG protocol initiated by client" -body {
+    $conn configure -ping_interval 1000 ;# default is 2 minutes
+    $conn connect
+    set obs [test_utils::chanObserver new $conn b]
+    duration {
+        wait_for ${conn}::pong 2000
+    } elapsed
+    assert {$elapsed >= 1000 && $elapsed < 1300}
+    lassign [$obs getChanData 0 0] readData writtenData
+    $obs destroy
+    # check that the exchange occurred exactly once
+    assert {[lsearch -all $writtenData "PING"] == 0}
+    assert {[lsearch -all $readData "PONG"] == 0}
+} -cleanup {
+    $conn disconnect
+    $conn reset -ping_interval
+}
+
+stopNats NATS
+
+test extra_opts-4.1 "PING/PONG protocol initiated by server" -body {
+    # I can't pass ping_interval as a command line argument to the NATS server, so have to create a config file
+    set conf [tcltest::makeFile {
+        ping_interval: "2s"
+        ping_max: 1
+    } quick_ping.conf ]
+    startNats quick_ping -c $conf
+    $conn connect
+    set obs [test_utils::chanObserver new $conn b]
+    test_utils::sleep 2400
+    lassign [$obs getChanData 0 0] readData writtenData
+    $obs destroy
+    # check that the exchange occurred exactly once
+    assert {[lsearch -all $writtenData "PONG"] == 0}
+    assert {[lsearch -all $readData "PING"] == 0}
+} -cleanup {
+    tcltest::removeFile quick_ping.conf
+}
+
+test extra_opts-4.2 "PING/PONG - no response from the client" -body {
+    set bufferTrace [lambda {var idx op } {
+        upvar $var buffer
+        set pos [lsearch $buffer "PONG"]
+        if {$pos == -1} {
+            return
+        }
+        set buffer [lsearch -inline -all -not -exact $buffer "PONG"] ;# do not send PONG to the server
+        puts "Deleted PONG"
+    }]
+    # access to a private variable only for test purposes!
+    trace add variable ${conn}::outBuffer write $bufferTrace
+    # wait for the next PING/PONG exchange initiated by the server
+    # we do not respond to PING, so the server will report an error with -ERR and close the socket
+    # which will make the client go into the reconnecting mode
+    duration {
+        wait_for ${conn}::status 6000
+    } elapsed
+    assert {[dict get [set ${conn}::last_error] code] eq [list NATS ErrStaleConnection]}
+    assert {[set ${conn}::status] == $nats::status_reconnecting} 1
+    # after sending PING, the server will wait for 2s more before declaring 'Stale Connection'
+    assert {$elapsed < 5000}
+} -cleanup {
+    $conn disconnect
+    trace remove variable ${conn}::outBuffer write $bufferTrace
+}
+
+stopNats quick_ping
+
+test extra_opts-5 "PING/PONG - no response from the server" -setup {
+    # make a fake NATS server that does not respond to PING
+    # but ensure the first round goes ok for "connect" to succeed
+    startFakeServer
+    set handler {
+        proc handler {channel line} {
+            if {$line eq "PING"} {
+                incr ::ping_count
+                if {$::ping_count == 1} {
+                    puts $channel PONG
+                } else {
+                    puts $channel FAKE_PONG
+                }
+            }
+        }
+    }
+    sendFakeServer $handler
+} -body {
+    $conn configure -ping_interval 1000
+    # default max_outstanding_pings=2
+    $conn connect
+    duration {
+        # the client will send 2 PINGs without reply; when Pinger runs for the 3rd time, it will raise the error
+        # and the client will go into reconnecting
+        wait_for ${conn}::status 4000
+    } elapsed
+    assert {[dict get [set ${conn}::last_error] code] eq [list NATS ErrStaleConnection]}
+    assert {[set ${conn}::status] == $nats::status_reconnecting} 1
+    assert {[approx $elapsed 3000]}
+} -cleanup {
+    $conn disconnect
+    $conn reset -ping_interval
+    stopFakeServer
+}
+
+startNats NATS
+
+test extra_opts-6.1 "Publish and receive a message with a header" -body {
+    $conn configure -dictmsg true
+    $conn connect
+    set obs [test_utils::chanObserver new $conn b]
+    set msg_received 0
+    set sid [$conn subscribe nats_2.2 -callback [lambda {subject message replyTo} {
+        assert {$subject eq "nats_2.2"}
+        assert {[dict get $message data] eq "payload"}
+        assert {$replyTo eq ""}
+        set hdr [dict get $message header]
+        # each key points to a list of values
+        assert {[lindex [dict get $hdr hdr1] 0] eq "val 1"}
+        assert {[lindex [dict get $hdr hdr2] 0] eq "val2"}
+        set ::msg_received 1
+    }]]
+    
+    set h [dict create hdr1 [list "val 1"] hdr2 val2]
+    $conn publish nats_2.2 "payload" -header $h
+    wait_for ::msg_received
+    assert {$msg_received == 1}
+    lassign [$obs getChanData 0 1] readData writtenData
+    $obs destroy
+    # remove the first element in the list with SUB
+    assert {[lrange $writtenData 1 end] eq [list {HPUB nats_2.2  37 44} NATS/1.0 {hdr1: val 1} {hdr2: val2} {} payload {}]} 1
+    assert {$readData eq [list "HMSG nats_2.2 $sid 37 44" "NATS/1.0" "hdr1: val 1" "hdr2: val2" "" "payload" ""]}
+} -cleanup {
+    $conn disconnect
+    $conn reset -dictmsg
+}
+
+$conn connect
+
+test extra_opts-6.2 "Send requests with headers" -setup {
+    startResponder $conn nats_2.2 "" 1
+} -body {
+    # test a sync request
+    set header_out [dict create hdr1 val1]
+    set response [$conn request "nats_2.2" "0 msg with header" -dictmsg true -header $header_out -timeout 500]
+    set header_in [dict get $response header]
+    assert {[dict get $response data] eq "msg with header" } 1
+    assert {$header_in eq $header_out}
+    
+    # test an async request
+    $conn request "nats_2.2" "0 msg2 with header" -dictmsg true -header $header_out -timeout 500 -callback [lambda {timedOut msg} {
+        assert {[string is false -strict $timedOut]}
+        assert {[dict get $msg data] eq "msg2 with header"} 1
+        assert {[dict get $msg header] eq $::header_out} 1
+        set ::msg_received 2
+    }]
+    wait_for ::msg_received 1000
+    assert {$msg_received == 2}
+    
+    # test a sync request, but get back a plain message with no header
+    set response [$conn request "nats_2.2" "0 msg3 with header" -header $header_out -timeout 500]
+    assert { $response eq "msg3 with header" }
+} -cleanup {
+    stopResponder $conn nats_2.2
+}
+
+test extra_opts-6.3 "Receive a message with a header from NATS CLI" -body {
+    set msg_received 0
+    $conn subscribe nats_cli -dictmsg true -callback [lambda {subject message replyTo} {
+        assert {$subject eq "nats_cli"}
+        assert {[dict get $message data] eq "payload"}
+        assert {$replyTo eq ""}
+        set hdr [dict get $message header]
+        # each key points to a list of values
+        assert {[lindex [dict get $hdr hdr1] 0] eq "val1"}
+        assert {[lindex [dict get $hdr hdr2] 0] eq "val2"}
+        set ::msg_received 1
+    }]
+    wait_flush $conn
+    execNatsCmd pub -H hdr1:val1 -H hdr2:val2 nats_cli payload
+    wait_for ::msg_received 1000
+    set msg_received
+} -result 1
+
+test extra_opts-7 "Receive no-responders from a subscription" -body {
+    set inbox [$conn inbox]
+    $conn subscribe $inbox -callback test_utils::simpleCallback -dictmsg true
+    $conn publish nats_2.2 -reply $inbox
+    wait_for test_utils::simpleMsg
+    assert {[dict get $test_utils::simpleMsg data] eq ""}
+    set hdr [dict get $test_utils::simpleMsg header]
+    assert {[dict get $hdr Status] == 503} 1
+}
+
+test extra_opts-8 "Receive no-responders from a request" -body {
+    set msg_received 0
+    
+    duration {
+        catch {$conn request nats_2.2 "no response" -timeout 500} err errOpts
+    } elapsed
+    assert { $elapsed < 100 } ;# much lower than the timeout!
+    assert {[dict get $errOpts -errorcode] eq {NATS ErrNoResponders}}
+    assert {$err eq "No responders available for request" }
+    
+    $conn request nats_2.2 "no response" -timeout 500 -callback [lambda {timedOut msg} {
+        assert {[string is true -strict $timedOut]}
+        set ::msg_received 1
+    }]
+    duration {
+        wait_for ::msg_received
+    } elapsed
+    assert { $elapsed < 100 }
+}
+
+test extra_opts-9.1 "Gather multiple responses to a request" -setup {
+    for {set i 0} { $i < 3} { incr i } {
+        startResponder $conn
+    }
+} -body {
+    set msg_received 0
+    set exit_wait 0
+    $conn request service "0 I need help" -max_msgs 3 -callback [lambda {timedOut msg} {
+        assert {[string is false -strict $timedOut]}
+        assert {$msg eq "I need help"}
+        incr ::msg_received
+        if {$::msg_received == 3} {
+            set ::exit_wait 1
+        }
+    }]
+    wait_for ::exit_wait 2000
+    assert {$msg_received == 3}
+    assert {[array size ${conn}::requests] == 0} 1
+}
+
+test extra_opts-9.2 "Gather multiple responses to a request - timeout" -body {
+    set msg_received 0
+    set exit_wait 0
+    # now we ask for -max_msgs=4
+    $conn request service "0 I need help" -max_msgs 4 -timeout 1000 -callback [lambda {timedOut msg} {
+        if {$timedOut} {
+            set ::exit_wait 1
+            return
+        }
+        assert {$msg eq "I need help"}
+        incr ::msg_received
+    }]
+    duration {
+        wait_for ::exit_wait 2000
+    } elapsed
+    assert {[approx $elapsed 1000]}
+    assert {$msg_received == 3}
+    assert {[array size ${conn}::requests] == 0} 1
+} -cleanup {
+    # will stop all 3 responders
+    stopResponder $conn
+}
+
+test extra_opts-10 "Send 2 sync requests in coroutines" -setup {
+    startResponder $conn
+} -body {
+    # prove that vwait in "request" is coroutine-aware
+    set results [list]
+    proc coro_body {delay msg} {
+        lappend ::results [$::conn request service "$delay $msg"] 
+    }
+    duration {
+        coroutine coro1 coro_body 600 "msg1"
+        coroutine coro2 coro_body 0 "msg2"
+        while {[llength $results] != 2} {
+            wait_for ::results 2000
+        }
+    } elapsed
+    assert {[approx $elapsed 600 200]}
+    # the second response will arrive sooner than the first. This would be impossible without coroutines
+    set results
+} -result "msg2 msg1" -cleanup {
+    stopResponder $conn
+}
+
+$conn destroy
+stopNats NATS
+tcltest::cleanupTests

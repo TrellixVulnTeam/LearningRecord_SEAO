@@ -1,0 +1,134 @@
+[comment {-*- tcl -*- doctools manpage}]
+
+[comment {
+
+ Source file for doctools
+
+ Usage:
+ tclsh c:\tcl\lib\dtp.kit doc html bcontour.man > bcontour.html
+ tclsh c:\tcl\lib\dtp.kit doc wiki bcontour.man > bcontour.wiki.txt
+
+}]
+
+
+[manpage_begin BContour n 1.1]
+[copyright {2014, by A.Buratti}]
+[moddesc { BContour }]
+[titledesc  {a BContour is a sequences of connected Bezier curves, not necessarily a closed contour.}]
+[category  {math}]
+[require Itcl]
+[require Bezier [opt 1.1]]
+[require BContour [opt 1.1]]
+
+[description]
+[section INTRODUCTION]
+
+A BContour is a sequences of connected Bezier curves. 
+Aim of this package is to provide a method for splitting the contour
+in sub-curves with the same length.
+
+A BContour is built by appending contiguos Bezier curves (also called [emph strokes]);
+
+In order to be able to split the contour in uniform-length sub-curves, and also to
+be able to preserve its 'shape', this package introduces the notion of C1-continuity:
+if two contiguos strokes have, in their joining point, the same prime derivative, then
+the two strokes are grouped, so that they could be split better.
+
+[comment =====================================================================]
+[section {COMMANDS}]
+
+A [class BContour] is built by first setting its initial point, then by repeatedly [cmd append]ing
+all the control-points of the Bezier curves, without repeating the control-points in common.
+[list_begin definitions]
+[call [cmd {::BContour::new}] [arg point]] 
+returns the (fully qualified) name of a new object representing a BContour.
+Object is created in the caller's namespace.
+[list_end]
+[comment =====================================================================]
+[section {METHODS}]
+The following commands are possible for a BContour-object:
+[list_begin definitions]
+  
+[call [arg bcObj] [method append] [arg point] [arg ...]] 
+adds to the BContour a new Bezier curve, i.e all its control-points BUT the first (since it is already stored).
+All points of a BContour must have the same dimension.
+
+[example {
+   # creates a new contour: set the initial point  (this is a 2D contour)"
+   set f [BContour::new {1 2} ]
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+   $f append {25 -9} {0 -15} {-1 33.3} {-15.32 3.0} ;# a degree:4 curve
+}]
+
+
+
+[call [arg bcObj] [method destroy]] 
+destroys the object, including its storage space and associated command.
+
+
+[call [arg bcObj] [method strokes] [arg i]] 
+returns the list of control-points of the [arg i]-th stroke. Argument [arg i] can be a
+an integer, as well as "end", "end-1", ...
+
+[call [arg bcObj] [method strokes]] 
+returns the list of all the strokes, i.e. a list of list of control-points.
+
+
+[call [arg bcObj] [method isclosed]] 
+returns true if the contour is closed.
+
+[call [arg bcObj] [method isContinuityC1] [arg i]] 
+returns true if the [arg i]-th stroke and next stroke are C1-continuos (prime derivate collinear).
+If [arg i] is the last stroke and the contour is closed, then the first stroke is used as the [arg next] stroke. 
+
+
+[call [arg bcObj] [method length] [opt "[const -tolerance] [arg tolerance]"]]
+returns the (approximated) length of the contour.
+Approximation is controlled by the [arg tolerance] value.
+
+You can change the default value for [arg tolerance] by setting the global
+variable [const BContour::Default(-tolerance)].
+
+
+[call [arg bcObj] [method onUniformDistance] [arg dl] [arg kind] [opt "[const -tolerance] [arg tolerance]"]]
+splits the whole contour in sub-curves each having a curve-length of (about) [arg dL].
+Note that the initial [arg dL] is internally 'rounded', so that
+it divides each sequence of curves with C1-continuity in N parts of length dL*
+[para]    
+WARNING: the last point (t=1) is NOT returned.
+[para]
+Result depends on the [arg kind] parameter:
+For [arg kind] [method at],[method tangent_at],[method normal_at], result is a list of points
+and the last point is NOT returned.
+[para]
+For [arg kind] [method vtangent_at],[method vnormal_at], result is a list of segments (pairs of points), each of lenght [arg dL]/2
+[para]
+Approximation is controlled by the [arg tolerance] value.
+You can change the default value for [arg tolerance] by setting the global
+variable [const BContour::Default(-tolerance)].
+[list_end]
+
+
+[comment =====================================================================] 
+[section {DEPRECATED METHODS}]
+Method [method flatnesstolerance] is still supported but deprecated; You should use
+the  [const -tolerance] option when calling the [method length] or 
+[method onUniformDistance], or change the default value by setting
+the [const Bezier::Default(-tolerance)] variable.
+[para]
+Method [method flatnesstolerance] may still be called, but it has no effect.
+[list_begin definitions]
+[call [arg bzObj] [method flatnesstolerance]]
+[call [arg bzObj] [method flatnesstolerance] [arg val]]
+[list_end]
+
+
+[comment =====================================================================]
+
+[see_also  [package Bezier]]
+[keywords [package Itcl]]
+[keywords math]
+[manpage_end]   
+
+

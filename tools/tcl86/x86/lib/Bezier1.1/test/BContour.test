@@ -1,0 +1,444 @@
+package require TTXN
+
+ # Software Under testing is package BContour 1.0
+ #
+package require BContour 1.0.3
+
+    # ====================================================
+    # INIT: 
+    # ====================================================
+
+     proc resetApproxError {} { set ::ApproxError 0.01 ;# default }
+     resetApproxError
+     
+     tcltest::customMatch approx approxCompare     
+     proc approxCompare {expected actual} {
+    	expr {abs($expected - $actual) <= $::ApproxError ?true:false} 
+     }      
+
+     tcltest::customMatch approxPoint approxComparePoint     
+     proc approxComparePoint {expectedPoint actualPoint} {
+        foreach expected $expectedPoint actual $actualPoint {
+    	   if { abs($expected - $actual) > $::ApproxError } {return false}
+        }
+        return true    	   
+     }      
+       
+ # ---------------------------------------------------------------------------
+     
+Name: create
+Description: { create a new BContour with a starting point }
+Test: {
+   set f [BContour::new {1 2 3} ] ;# good this is a 3d point
+}
+Cleanup: { $f destroy }
+Expected: glob {*bContour*}
+
+
+Name: create.1.NEG
+Description: { try to create a new BContour without startingPoint}
+Test: {
+   set f [BContour::new] ;# wrong, missing a starting point
+}
+Expected: error glob {wrong # args: *}
+
+
+Name: create.2.NEG
+Description: { try to create a new BContour without more than 1 parameter}
+Test: {
+   set f [BContour::new 1 2] ;# wrong: these are two numbers, not ONE (2d) point
+}
+Expected: error glob {wrong # args: *}
+
+
+Name: create.2.NEG
+Description: { try to create a new BContour with bad parameters}
+Test: {
+   set f [BContour::new {one 2}] ;# wrong: elements of "points" are not numbers
+}
+Expected: error glob {* is not a point}
+
+
+Name: create.3.NEG
+Description: { try to create a new BContour with bad parameters}
+Test: {
+   set f [BContour::new {{1 2 3}}]  ;# wrong: this is a list with a (3d) point
+}
+Expected: error glob {* is not a point}
+
+
+Name: create.append.1
+Description: { create a new BContour and append some curves }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+   $f append {25 -9} {0 -15} {-1 33.3} {-15.32 3.0} ;# a degree:4 curve
+   llength [$f strokes]
+}
+Cleanup: { $f destroy }
+Expected: 3
+
+
+Name: create.append.2
+Description: { prove that the first point of a stroke is equal to the last point of prev stroke}
+Test: {
+   set f [BContour::new {1 2} ]
+    # 0th stroke
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+    # 1st stroke
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+    # get 0th point of the 1st stroke
+    lindex [[$f stroke 1] points] 0   
+}
+Cleanup: { $f destroy }
+Expected: approxPoint {5 6}
+
+
+Name: create.append.3
+Description: { get points of last stroke }
+Test: {
+   set f [BContour::new {1 2} ]
+    # 0th stroke
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+    
+    # compare points of last stroke
+    foreach P [[$f stroke end] points] Q { {1 2} {3 4} {5 6} } {
+        if { ! [approxComparePoint $P $Q] } { return false }
+        }
+    return true
+}
+Cleanup: { $f destroy }
+Expected: true
+
+
+Name: create.append.1.NEG
+Description: { create a new BContour and append some (wrong) curves }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {3 7*7} {5 6}
+}
+Cleanup: { $f destroy }
+Expected: error glob {Malformed Points: *}
+
+
+Name: create.append.2.NEG
+Description: { create a new BContour and append some (wrong) curves }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {3 4 5} {5 6}
+}
+Cleanup: { $f destroy }
+Expected: error glob {Dimension of point "3 4 5" different *}
+
+
+Name: create-destroy.memory-leaks
+Description: { check if all created objects were properly destroyed }
+Test: {
+    set f [BContour::new {1 2} ]
+    $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+    $f append {20 0}       ;# a degree:1 curve  (straight segment)
+    $f append {25 -9} {0 -15} {-1 33.3} {-15.32 3.0} ;# a degree:4 curve
+    
+    $f destroy
+
+    set objs {}
+    lappend objs {*}[itcl::find object -isa BContour]
+    lappend objs {*}[itcl::find object -isa Bezier]
+    return $objs
+}    
+Expected: {}
+
+
+
+Name: isclosed.true
+Description: { check if contour is closed }
+Test: {
+    set f [BContour::new {1 2} ]
+    $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+    $f append {1 2}        ;# a degree:1 curve  (straight segment)
+    $f isclosed
+}
+Cleanup: { $f destroy }
+Expected: true
+
+
+Name: isclosed.false
+Description: { check if contour is closed }
+Test: {
+    set f [BContour::new {1 2} ]
+    $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+    $f append {1 7} ;# a degree:1 curve  (straight segment)
+    $f isclosed
+}
+Cleanup: { $f destroy }
+Expected: false
+
+
+Name: isclosed.single.point
+Description: { check contour is closed }
+Test: {
+    set f [BContour::new {1 2} ]
+    $f isclosed
+}
+Cleanup: { $f destroy }
+Expected: false
+
+
+
+ # **DEPRECATED**  This method will be removed in a future release.
+Name: flatnesstolerance.get.default
+Description: { get default flatnesstolerance }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+
+   $f flatnesstolerance
+}
+Cleanup: { $f destroy }
+Expected: 0.5
+
+ # **DEPRECATED**  This method will be removed in a future release.
+Name: flatnesstolerance.get
+Description: { set and then get flatnesstolerance }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+
+   $f flatnesstolerance 0.1
+   $f flatnesstolerance
+}
+Cleanup: { $f destroy }
+Expected: 0.1
+
+
+
+Name: stroke.0
+Description: { get 0th stroke of a contour }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+
+   [$f stroke 0] points
+}
+Cleanup: { $f destroy }
+Expected: {{1 2} {3 4} {5 6}}
+
+Name: stroke.end
+Description: { get last stroke of a contour }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+
+   [$f stroke end] points
+}
+Cleanup: { $f destroy }
+Expected: {{5 6} {20 0}}
+
+
+
+Name: length
+Description: { get length with standard precision }
+Setup: { set ::ApproxError 0.1 }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {300 40} {500 637}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+   $f append {200 0} {26 83} {32 43}       ;# a degree:3 curve  (Cubic Bezier)
+   $f length
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 1823.5573964708828
+
+
+Name: length.1
+Description: { get length with very small tolerance }
+Setup: { set ::ApproxError 0.0001 }
+Test: {
+   set f [BContour::new {1 2} ]
+   $f append {300 40} {500 637}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+   $f append {200 0} {26 83} {32 43}       ;# a degree:3 curve  (Cubic Bezier)
+   $f length -tolerance 0.001
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 1823.5576851203039
+
+
+Name: isContinuity.1
+Description: { check C1-continuity between the i-th and the next stroke }
+Test: {
+     # 2 quads forming a "C"
+    set f [BContour::new {100 0} ]
+    $f append {0 0} {0 100}  ;#  a Quadratic Bezier
+    $f append {0 180} {100 180}  ;# a Quad Bezier tangent to the previous
+    $f isContinuityC1 0
+}
+Cleanup: { $f destroy }
+Expected: true
+
+Name: isContinuity.1.NEG
+Description: { check C1-continuity between the i-th and the next stroke }
+Test: {
+     # 2 straights segments
+    set f [BContour::new {0 0} ]
+    $f append {100 100}  ;#  0-th segment
+    $f append {200 0}    ;#  next segment
+    $f isContinuityC1 0
+}
+Cleanup: { $f destroy }
+Expected: false
+
+
+Name: isContinuity.closed
+Description: { check C1-continuity between the last and first stroke }
+Test: {
+     # 2 quads and a cubic forming a "O"
+    set f [BContour::new {100 0} ]
+    $f append {0 0} {0 100}  ;#  a Quadratic Bezier
+    $f append {0 180} {100 180}  ;# a Quad Bezier tangent to the previous
+    $f append {200 180} {200 0} {100 0} ;# a Quad Bezier tangent to the previous
+
+    set lastStrokeIdx [expr {[llength [$f strokes]]-1}]  
+    $f isContinuityC1 $lastStrokeIdx
+}
+Cleanup: { $f destroy }
+Expected: true
+
+
+ # BUGFIX: last contour is not closed, so there cannot be C1-continuity
+ #   between the last and the first stroke
+Name: isContinuity.quasi.closed
+Description: { 
+    check C1-continuity between the the last and the first point 
+    note that tangents are aligned, but the last point is not over the first point
+}
+Test: {
+     # 2 quads and a cubic forming a quasi "O" (note that the first and the last point are different)
+    set f [BContour::new {100 0} ]
+    $f append {0 0} {0 100}  ;#  a Quadratic Bezier
+    $f append {0 180} {100 180}  ;# a Quad Bezier tangent to the previous
+    $f append {200 180} {200 0} {110 0} ;# a Quad Bezier tangent to the previous
+
+    set lastStrokeIdx [expr {[llength [$f strokes]]-1}]  
+    $f isContinuityC1 $lastStrokeIdx
+}
+Cleanup: { $f destroy }
+Expected: false
+
+
+Name: onUniformDistance.1
+Description: { onUniformDistance at - continuity }
+# note that distance will be adjusted ..
+Setup: { set ::ApproxError 0.1 }
+Test: {
+   set f [BContour::new {10 10} ]
+   $f append {10 30} {30 30}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {120 30}          ;# a degree:1 curve  (straight segment)
+   set L [$f onUniformDistance 30 at -tolerance 0.01]
+    # compare just the last point
+   lindex $L end
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected:  approxPoint {89.38371495574697 30.0}
+
+
+ # bugfix - fixed in 1.0.3
+Name: onUniformDistance.1.1
+Description: { onUniformDistance at - continuity, with last stroke C1-joined with the first stroke}
+Test: {
+   set f1 [BContour::new {270 331}]
+   $f1 append {392 331} {477 277} {477 194} ;# a cubic
+   $f1 append {477 110} {392 59} {270 59}  ;# cubic 
+   $f1 append {248 59} ;# line
+   $f1 append {248 331} ;# line
+   $f1 append {270 331} ;# line
+   set L1 [$f1 onUniformDistance 200 at -tolerance 0.5]
+   $f1 destroy
+  
+    # the same path, with strokes in a different order
+   set f2 [BContour::new {248 331}]
+   $f2 append {270 331} ;# line
+   $f2 append {392 331} {477 277} {477 194} ;# a cubic
+   $f2 append {477 110} {392 59} {270 59}  ;# cubic 
+   $f2 append {248 59} ;# line
+   $f2 append {248 331} ;# line 
+   set L2 [$f2 onUniformDistance 200 at -tolerance 0.5]
+   $f2 destroy  
+
+    # prove that L1 and L2 are equal but rotated
+    #
+   if { [llength $L1] != [llength $L2] } {
+        return "different lengths"
+   }
+   set L1_0 [lindex $L1 0]
+   set idx [lsearch $L2 $L1_0]
+   if { $idx < 0 } {
+        return "cannot found \"$L1_0\" in <<$L2>>""
+   }
+     # ROTATE l2
+    set L2_NEW [lrange $L2 $idx end]
+    lappend L2_NEW {*}[lrange $L2 0 $idx-1]   
+    set L2 $L2_NEW ; unset L2_NEW
+    
+    foreach a $L1 b $L2 {
+        if { $a != $b } {
+           # return the first difference ...
+            return "differences: <$a> <$b>"
+        }
+    }
+    return ok
+}
+Expected:  ok
+
+
+Name: onUniformDistance.2
+Description: { onUniformDistance vnormal_at - continuity }
+Setup: { set ::ApproxError 0.1 }
+# note that distance will be adjusted ..
+Test: {
+   set f [BContour::new {10 10} ]
+   $f append {10 30} {30 30}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {120 30}          ;# a degree:1 curve  (straight segment)
+   set L [$f onUniformDistance 30 vnormal_at -tolerance 0.1]
+    # compare just the last-1 point
+   lindex $L end-1 1
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approxPoint {89.3 45.0}
+
+Name: onUniformDistance.1.NEG
+Description: { onUniformDistance .. bad method }
+Test: {
+   set f [BContour::new {10 10} ]
+   $f append {10 30} {30 30}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {120 30}          ;# a degree:1 curve  (straight segment)
+   set L [$f onUniformDistance 30 xxx]
+}
+Cleanup: { $f destroy }
+Expected: error glob "invalid method \"xxx\"*"
+
+ # ---------------------------------------------------------------------------
+ 
+Name: memory-leaks
+Description: { check if all created objects were properly destroyed }
+Test: {
+    itcl::find object -isa BContour
+}    
+Expected: {}
+
+# =========================================================
+# =========================================================
+
+ # cleanup ===========================================
+    
+::tcltest::cleanupTests
+
+    # === Undo the general setup ====================
+     ; # nothing to do
+
+ 

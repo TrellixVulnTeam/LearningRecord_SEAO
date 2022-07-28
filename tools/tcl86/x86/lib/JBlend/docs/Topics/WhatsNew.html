@@ -1,0 +1,165 @@
+<HTML>
+<TITLE>
+What's new in JBlend?
+</TITLE>
+
+<BODY>
+<HR>
+
+<H3>
+What's new in JBlend?
+</H3>
+
+<HR>
+
+<ul>
+<li><A HREF=#2.1>Last Version</A></li>
+<li></li>
+<li><A HREF="#TCLBLEND141">The Ancestor: TclBlend 1.4.1</A></li>
+<li><A HREF="#2.0.0a1">JBlend 2.0.0a1</A></li>
+<li><A HREF="#2.0.0a2">JBlend 2.0.0a2</A></li>
+<li><A HREF="#2.0.0b1">JBlend 2.0.0b1</A></li>
+<li><A HREF="#2.1">JBlend 2.1</A></li>
+</ul>
+
+<HR>
+
+<DL>
+ <DT>
+ <H3><A NAME="TCLBLEND141">The Ancestor: TclBlend 1.4.1</A></H3>
+ </DT>
+
+ <DD>
+
+<P>
+JBlend is a fork of the <A HREF=" http://tcljava.sourceforge.net">TclBlend Project</A>,
+more precisely version 1.4.1.
+<BR>
+Why fork ?
+<BR>
+TclBlend 1.4.1 - the last available release - is pretty old (2008), and our new goals
+required a deep rework on the code base; hence the need of a radical evolution <B>major release (2.0)</B>
+and a new name <B>JBlend</B>.
+<P>
+The new goals were:
+<UL>
+
+<LI><B>Multiplatform support:</B>JBlend must run on all the most popular platforms/architectures 
+(Linux,Windows,MacOS)/(32bit,64bit).
+
+<LI><B>Simplified Build:</B>JBlend must be easy to build for all the above platforms.
+
+<LI><B>Binary portability:</B>Once built, JBlend must be installable on any of the above platforms.
+Of course these target machines should be equipped with *any* Tcl-interpreter and *any* Java VM 
+(well, see below for minimum requirements)
+
+<LI><B>Easy environment upgrading:</B>Once installed, you are also free to 
+change/upgrade the underlyng Tcl or JVM - again, with no need to rebuild JBlend .
+
+</UL> 
+<P>
+To achieve these goals JBlend lost the TclBlend/Tcljava ability to act as a 
+bidirectional bridge between a JVM and a Tcl interpreter; JBlend can be used
+only in one way, from Tcl to Java and not in the opposite direction.
+For many Tcl users like me, this is enough ;-).
+</DD>
+</DL>
+
+
+<DL>
+ <DT><H3><A NAME="2.0.0a1">JBlend 2.0.0a1</A></H3></DT>
+ <DD>
+
+<P>
+Version 2.0.0a1 is the first alpha-version of JBlend.
+<UL>
+<LI>All the java:* commands are available
+<LI>A cross-platform makefile allows you to build on Windows/Linux/Mac, using the
+GNU/C-toolchain or MS-VisualStudio and nothing more.
+<LI>No more need of Tcl source-code for building JBlend; all the required include-files / libraries are delivered with the tclJBlend-devkit.
+<LI>The end result of buid is a tcl package containing all the binaries for the different
+target platforms. At runtime the 'right' libraries for joining the Tcl-interrpreter
+and the Java VM, are automatically selected.
+</UL>
+<UL>
+<H4>TO DO</H4>
+<LI>MacOS support still problematic, due to the difficulties in installing a Java JDK
+and setting the links to the Java runtime ... 
+<LI>Manual/Documentation still missing
+</UL>
+</DD>
+</DL>
+
+
+<DL>
+ <DT><H3><A NAME="2.0.0a2">JBlend 2.0.0a2</A></H3></DT>
+ <DD>
+
+<P>
+Version 2.0.0a2 is fixes some minor bugs, and allows full support for MacOS.
+<UL>
+<LI>Internal rework: moved javalock.tcl to Tcl-side
+<LI>BUGFIX * fix in pkgIndex.tcl : detect right tcl architecture
+<LI>BUGFIX * set java.library.path at startup (this allows more robust support for MacOS)
+</UL>
+<UL>
+<H4>TO DO</H4>
+<LI>Manual/Documentation still missing
+<LI>Need of a test suite
+</UL>
+</DD>
+</DL>
+
+
+<DL> 
+ <DT><H3><A NAME="2.0.0b1">JBlend 2.0.0b1</A></H3></DT>
+ <DD>
+
+<P>
+Version 2.0.0b1 fixes some bugs (some still present in TclBlend 1.4.1), 
+provides documentation for Users  and Developers, and starts providing a basic (greatly incomplete)
+test suite.
+<UL>
+<LI>BUGFIX: * Java resources cannot be found *  Serious bug inherithed by TclBlend 1.4.1 . Now fixed.
+<LI>BUGFIX: * java::lock/unlock commands don't work with Tcl 8.6 - Now fixed.>
+<LI>Added command java::isobject
+<LI>Added command java::listify
+<LI>Added global variable ::java::jvm (array)
+<BR>Now the global array ::tcljava is deprecated.
+<BR>Also replaced the java-code in BlendExtension.java with tcl-code in javaUtils.tcl
+<LI>BUGFIX: *pkgIndex.tcl pollutes the global namespace with some temporary variables* 
+ - Now fixed ! pkgIndex.tcl doesn't use the global namespace anymore.
+<LI>Delivered documentation for Users and Developers
+<LI>Starting Test suite
+</UL>
+<UL>
+<H4>TO DO</H4>
+<LI>Test-suite still incomplete; need to adapt the original TclBlend test-suite.
+</UL>
+</DD>
+</DL>
+
+
+<DL> 
+ <DT><H3><A NAME="2.1">JBlend 2.1</A></H3></DT>
+ <DD>
+
+<P>
+Version 2.1 comes with some intenal changes for an easier installation/configuration.</BR>
+First distribution of JBlend+JVM bundles (for Linux and Windows).
+<UL>
+<LI>No more need to set the LD_LIBRARY environment variable before loading the package.
+<LI>Internal code for launching the JVM is now more flexible; JVM.dll is linked at run-time (previously it was linked at load-time).
+<LI>JBlend binary distributions now come with new variants (JBlend+JVM*.zip is JBlend plus an embedded JVM)
+</UL>
+<UL>
+<H4>TO DO</H4>
+<LI>Test-suite still incomplete - many test-cases to add ; 3 broken test-cases (low priority)
+</UL>
+</DD>
+</DL>
+
+
+</BODY>
+</HTML>
+

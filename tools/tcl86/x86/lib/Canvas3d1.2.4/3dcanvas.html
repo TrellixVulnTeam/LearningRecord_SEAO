@@ -1,0 +1,2021 @@
+
+       <html>
+       <head>
+       <title>canvas3d (n)</title>
+       </head>
+       <body>
+       <h1>canvas3d (n)</h1>
+       <p><a href="#TOC">Table Of Contents</a>
+       <h2 id="section1">Name</h2>
+
+<p>
+canvas3d - Create and manipulate 3d-canvas widgets.
+</p>
+
+
+<h2 id="section2">Synopsis</h2>
+
+<p>
+canvas3d pathName ?options?
+</p>
+
+
+<h2 id="section3">Standard Options</h2>
+
+<p>
+None.
+</p>
+
+
+<h2 id="section4">Widget Specific Options</h2>
+
+
+
+
+    <p>Command-Line Name: -width<br>
+       Database Name: width<br>
+       Database Class: Width
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+Specifies a desired window width that the canvas widget
+should request from its geometry manager.
+
+
+    </div>
+  
+
+
+
+
+    <p>Command-Line Name: -height<br>
+       Database Name: height<br>
+       Database Class: Height
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+Specifies a desired window height that the canvas widget
+should request from its geometry manager.
+
+
+    </div>
+  
+
+
+
+
+    <p>Command-Line Name: -background<br>
+       Database Name: background<br>
+       Database Class: Background
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+Specifies the background color for the widget.
+
+
+    </div>
+  
+
+
+
+
+    <p>Command-Line Name: -visibleangle<br>
+       Database Name: visibleangle<br>
+       Database Class: Visibleangle
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+This option is part of the low-level camera configuration
+interface. See the "CAMERA POSITIONING" section below for
+details.
+
+
+    </div>
+  
+
+
+
+
+    <p>Command-Line Name: -cameralocation<br>
+       Database Name: cameralocation<br>
+       Database Class: Cameralocation
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+This option is part of the low-level camera configuration
+interface. See the "CAMERA POSITIONING" section below for
+details.
+
+
+    </div>
+  
+
+
+
+
+    <p>Command-Line Name: -cameracenter<br>
+       Database Name: cameracenter<br>
+       Database Class: Cameracenter
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+This option is part of the low-level camera configuration
+interface. See the "CAMERA POSITIONING" section below for
+details.
+
+
+    </div>
+  
+
+
+
+
+    <p>Command-Line Name: -cameraup<br>
+       Database Name: cameraup<br>
+       Database Class: Cameraup
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+This option is part of the low-level camera configuration
+interface. See the "CAMERA POSITIONING" section below for
+details.
+
+
+    </div>
+  
+
+
+
+
+    <p>Command-Line Name: -enablealpha<br>
+       Database Name: enablealpha<br>
+       Database Class: Enablealpha
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+If this boolean option is true, then the alpha component
+of colors and light intensities is considered. This adds an
+overhead to the rendering process. If false (the default),
+then the widget operates as if the alpha component of all
+colors and light intensities is 1.0.
+
+
+    </div>
+  
+
+
+
+
+    <p>Command-Line Name: -saveunder<br>
+       Database Name: saveunder<br>
+       Database Class: Saveunder
+    </p>
+    <div style="margin-left:8ex">
+
+       <p>
+The -saveunder option may be set to "none" (the default),
+"3d" or "all". The value determines whether or not the
+scene is rendered directly to a window or to an off-screen
+buffer that is copied to the window after it is rendered.
+Using off-screen buffer can be slower than rendering
+directly to the window, but can speed up certain window
+refresh operations.
+</p>
+
+<p>
+If the value of the -saveunder option is "none", then no
+off-screen buffers are used. Each time a part of the window
+is exposed or an item modified the entire scene is redrawn.
+Unless the scene is very complicated, this is usually the
+best mode to use.
+</p>
+
+<p>
+If the value of the -saveunder option is "all", then the
+entire scene, including overlay items, is rendered to an
+off-screen buffer. If an item is modified the entire scene
+must still be redrawn, but window expose events can be
+handled quickly.
+</p>
+
+<p>
+If the value of the -saveunder option is "3d", then the
+3d portion of the scene is stored in one off-screen buffer,
+and the entire scene (3d plus overlay) in another. This
+means that expose events may be handled without any
+redrawing and modifications to or deletions or additions of
+overlay items can be handled without redrawing the 3d
+portion of the scene.
+
+
+    </div>
+  
+
+
+
+<h2 id="section5">Introduction</h2>
+
+<p>
+The 3d-canvas widget is a Tk widget that provides a way to draw and
+manipulate three-dimensional scenes. It is in many ways similar to
+the core canvas widget that provides for two-dimensional drawing.
+</p>
+
+<p>
+The 3d-canvas widget displays a three-dimensional scene. A scene
+consists of three major elements specified by the user:
+</p>
+
+
+<ul><li>
+Zero or more geometric primitives (polygons, lines,
+points etc.) specified in three-dimensional space.
+<li>
+Zero or more lighting sources.
+<li>
+A camera position and orientation from which the scene is
+viewed.
+<li>
+Zero or more overlay items - primitives specified in
+two-dimensional space drawn on top of a scene.
+scene in two dimensional space.
+</ul>
+
+
+<p>
+Geometric primitives, lighting sources and overlay items are
+collectively referred to as "items".
+</p>
+
+<p>
+After a scene has been created, items or collections of items may
+be manipulated (e.g. moved or re-colored). The camera position and
+orientation may also be altered after a scene has been constructed.
+This may be used to produce animation effects or interactive scenes.
+</p>
+
+
+<h2 id="section6">Widget Command</h2>
+
+<p>
+The canvas3d command creates a new Tcl command whose name is
+pathName. This command may be used to invoke various operations on
+the widget. It has the following general form:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+pathName option ?arg arg ...?
+</pre></div>
+
+
+<p>
+Option and the args determine the exact behavior of the command.
+Some of the widget commands described below accept a "search"
+argument. The format of these arguments is described in the
+ITEM SEARCHES section below. Some widget commands accept a
+"transform" argument. The format of "transform" arguments is
+described in the TRANSFORMATIONS section of this manpage.
+</p>
+
+
+
+      <p>
+      pathName addtag search tagToAdd ?tagToAdd ...?
+      </p>
+  <div style="margin-left:8ex"><p>
+For each item returned by the search parameter, add each
+tagToAdd to the list of tags associated with the item if it
+isn't already present.
+</p>
+
+<p>
+Refer to the "item searches" section of this manpage for the
+format of the search parameter and the significance of
+associating a tag with an item.
+</div>
+
+
+
+
+      <p>
+      pathName boundingsphere search
+      </p>
+  <div style="margin-left:8ex"><p>
+This command returns a description of a three-dimensional
+sphere that encompasses all geometric primitives returned
+by the search parameter. Overlay items and light sources
+are automatically excluded from the search.
+</p>
+
+<p>
+The value returned is a usually a list of four floating
+point numbers. The first list element is the radius of the
+sphere. The following three are the X, Y and Z coordinates
+components of the sphere origin, respectively.  If the
+search parameter specifies an item search that returns no
+items, then an empty string is returned.
+</p>
+
+<p>
+Refer to the "item searches" section of this manpage for the
+format of the search parameter.
+</div>
+
+
+
+
+      <p>
+      pathName bbox search
+      </p>
+  <div style="margin-left:8ex"><p>
+This command returns a description of the smallest possible
+two-dimensional rectangle that encompasses the projection
+of the geometric primitives returned by the search
+parameter onto the widget viewport. Light sources are
+automatically excluded from the search.
+</p>
+
+<p>
+The value returned is usually a list of four integers. The
+first two values are the X and Y coordinates of the
+top-left corner of the returned rectangle. The following
+two values are the X and Y coordinates of the bottom-right
+corner. All values are in pixel units relative to an origin
+in the top-left corner of the viewport.
+</p>
+
+<p>
+Refer to the "item searches" section of this manpage for the
+format of the search parameter.
+</div>
+
+
+
+
+      <p>
+      pathName cget option
+      </p>
+  <div style="margin-left:8ex"><p>
+Returns the current value of the configuration option given
+by option. Option may have any of the values accepted by the
+canvas3d command.
+</div>
+
+
+
+
+      <p>
+      pathName configure ?option? ?value? ?option value ...?
+      </p>
+  <div style="margin-left:8ex"><p>
+Query or modify the configuration options of the widget. If
+no option is specified, returns a list describing all of
+the available options for pathName (see Tk_ConfigureInfo
+for information on the format of this list). If option is
+specified with no value, then the command returns a list
+describing the one named option (this list will be
+identical to the corresponding sublist of the value
+returned if no option is specified). If one or more
+option-value pairs are specified, then the command modifies
+the given widget option(s) to have the given value(s); in
+this case the command returns an empty string. Option may
+have any of the values accepted by the canvas3d command.
+</div>
+
+
+
+
+      <p>
+      pathName coords search ?coordList...?
+      </p>
+  <div style="margin-left:8ex"><p>
+This command is used to query or modify the coordinates of
+an existing item. The way in which item coordinates are
+specified is described in the ITEM TYPES section below.
+</p>
+
+<p>
+If this command is invoked with no coordList arguments,
+then the current coordinates of the item identified by the
+search parameter. If the search parameter identifies more
+than one item, then the coordinates of the first item
+located are returned.
+</p>
+
+<p>
+As described in the ITEM TYPES section, each item type
+accepts either exactly one, or one or more coordList (or
+2dCoordList) parameters. For items that accept a single
+coordList parameter only the value of that parameter is
+returned. For items that accept one or more coordList
+parameters, the returned value is a list of all those
+parameters. For example, assuming ".win" is the name of a
+canvas3d widget:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+.win create polygon {0 0 0} {1 1 1}  -tags P1
+.win create polygon {2 2 2}          -tags P2
+.win create 2dtext {100 100}         -tags T
+set A [.win coords P1]    ;# A is now {{0 0 0} {1 1 1}}
+set B [.win coords P2]    ;# B is now {{2 2 2}}
+set C [.win coords T]     ;# C is now {100 100}
+</pre></div>
+
+
+<p>
+If the [pathName coords] command is invoked with one or
+more coordList (or 2dCoordList, depending on the type of
+the item returned by the search) parameters, then these
+arguments replace the current coordinates of the item
+identified by the search parameter. If the search parameter
+identifies more than one item, then the coordinates of the
+first item located are returned. The arguments are
+interpreted exactly as if they had been passed to the
+[pathName create] command.
+</div>
+
+
+
+
+      <p>
+      pathName create type coordList ?option value ...?
+      </p>
+  <div style="margin-left:8ex"><p>
+Create a new item and add it to pathName. The exact format
+of the coordList and options is determined by type. The
+type parameter must be one of 'polygon', 'line', 'point',
+or 'light'. See the "item types" section of this manpage
+for details.
+</p>
+
+<p>
+The value return is the unique id of the new item. This
+may be used as part of search parameter expressions.
+</div>
+
+
+
+
+      <p>
+      pathName delete search
+      </p>
+  <div style="margin-left:8ex"><p>
+Delete all the items identified by the search parameter.
+</p>
+
+<p>
+Refer to the "item searches" section of this manpage for the
+format of the search parameter.
+</div>
+
+
+
+
+      <p>
+      pathName dtag search tagToDelete
+      </p>
+  <div style="margin-left:8ex"><p>
+For each item returned by the search parameter, remove
+tagToDelete from the list of tags associated with the item
+if it is present.
+</p>
+
+<p>
+Refer to the "item searches" section of this manpage for the
+format of the search parameter and the significance of
+associating a tag with an item.
+</div>
+
+
+
+
+      <p>
+      pathName find ?-sort? search
+      </p>
+  <div style="margin-left:8ex"><p>
+Return a list of the item ids for all items selected by the
+search parameter.
+</p>
+
+<p>
+If the -sort switch is present, then the returned item ids
+are sorted as follows:
+</p>
+
+
+<ul><li>
+Light items, in the order created,
+<li>
+Overlay items, in stacking order from top to
+bottom,
+<li>
+Three dimensional primitives, in order of
+increasing distance from the viewer.
+</ul>
+</div>
+
+
+
+
+      <p>
+      pathName gettags search
+      </p>
+  <div style="margin-left:8ex"><p>
+Return a list whose elements are the tags associated with
+the item identified by the search parameter. If the search
+returns more than one item, then the tags are returned for
+the first item located. If the search returns no items, or
+if the item contains no tags, then an empty string is
+returned. This command has the same effect as:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+pathName itemcget search -tags
+</pre></div>
+</div>
+
+
+
+
+      <p>
+      pathName itemcget search option
+      </p>
+  <div style="margin-left:8ex"><p>
+Returns the current value of the configuration option for
+the item given by tagOrId whose name is option. This
+command is similar to the cget widget command except that
+it applies to a particular item rather than the widget as a
+whole. Option may have any of the values accepted by the
+create widget command when the item was created. If tagOrId
+is a tag that refers to more than one item, the first
+(lowest) such item is used.
+</div>
+
+
+
+
+      <p>
+      pathName itemconfigure search ?option? ?value? ?option value ...?
+      </p>
+  <div style="margin-left:8ex"><p>
+This command is similar to the configure widget command
+except that it modifies item-specific options for the items
+given by identified by the search parameter instead of
+modifying options for the overall 3d-canvas widget. If no
+option is specified, returns a list describing all of the
+available options for the first item returned by search
+(see Tk_ConfigureInfo for information on the format of this
+list). If option is specified with no value, then the
+command returns a list describing the one named option
+(this list will be identical to the corresponding sublist
+of the value returned if no option is specified). If one or
+more option-value pairs are specified, then the command
+modifies the given widget option(s) to have the given
+value(s) in each of the items given by tagOrId; in this
+case the command returns an empty string.  The options and
+values are the same as those permissible in the create
+widget command when the item(s) were created; see the
+sections describing individual item types below for details
+on the legal options.
+</div>
+
+
+
+
+      <p>
+      pathName projection ?x y? ?z?
+      </p>
+  <div style="margin-left:8ex"><p>
+When given no arguments, this command returns 16 floating
+point values which comprise the projection matrix for the
+current camera configuration.  When given pixel coordinate
+arguments x and y, this command returns 3 floating point
+values which form one of many possible 3-D coordinates
+that projects into the given pixel.  When given 3 arguments
+which are a point in 3-D space, this command returns the
+pixel coordinate the point projects into.
+</p>
+
+<p>
+For the first mode of operation (with no arguments)
+the project matrix is a 4x4 matrix as follows:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+M =  p00  p01  p02  p03
+     p10  p11  p12  p13
+     p20  p21  p22  p23
+     p30  p31  p32  p33
+</pre></div>
+
+
+<p>
+The projection matrix is returned in row order: p00, p01,
+p02, ..., p32, p33.  A point in space is defined by
+a vector such as v:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+V =  x
+     y
+     z
+     w
+</pre></div>
+
+
+<p>
+The w value is normally 1.0.   Computing the product
+M*V gives a new vector where x/w and y/w components correspond
+to pixel locations on the screen.  Both x/w and y/w range from
+-1.0 to +1.0 where -1.0 is the left or top of the screen and
++1.0 is the right or bottom of the screen.
+</div>
+
+
+
+
+
+      <p>
+      pathName statistics search
+      </p>
+  <div style="margin-left:8ex"><p>
+This command returns summary statistics for the set of items
+identified by the search parameter. The returned value is a
+list of the form {S V S V...} where S is the name of a
+statistic and V is the corresponding value. The list can
+be passed to the [array set] command for easy processing.
+The following statistics are returned:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+Statistic       Interpretation
+--------------------------------------------------------
+nVertex         Total number of vertices (does not include
+                overlay or light items)
+nFace           Total number of polygon faces.
+</pre></div>
+</div>
+
+
+
+
+      <p>
+      pathName transform ?-camera? search transform
+      </p>
+  <div style="margin-left:8ex"><p>
+Apply the specified transform to all items identified by
+the search parameter. If the -camera option is present,
+then the camera is transformed as well (see section CAMERA
+CONFIGURATION for a description of what this means).
+</div>
+
+
+
+
+      <p>
+      pathName type search
+      </p>
+  <div style="margin-left:8ex"><p>
+Returns the type of the item identified by search, such as
+polygon or line.  If search identifies more than one item,
+then the type of the first item located is returned. If
+search doesn't refer to any items at all then an empty
+string is returned.
+</div>
+
+
+
+<h2 id="section7">Item Types</h2>
+
+
+<p>
+All items accept the following options:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+-tags                    &lt;tag-list&gt;        ()
+-hidden                  &lt;boolean&gt;         (false)
+</pre></div>
+
+
+<p>
+The -tags option is used to set or retrieve the list of tags
+associated with an item (see TAGS AND UNIQUE IDS below).
+</p>
+
+<p>
+If the -hidden option is true for an item, then the item is not
+rendered. An item with the -hidden option set to true never matches
+a viewport() search (see ITEM SEARCHES below).
+</p>
+
+<p>
+All items fall into one of three categories:
+</p>
+
+
+<ul><li>
+Light sources. Currently this is "light" items only.
+<li>
+Overlay items. This category consists of items specified
+in two dimensional space to be rendered on top of the
+three dimensional scene. Items that start with "2d" are
+overlay items: "2dtext", "2dline" and "2dpolygon".
+<li>
+Three dimensional primitives. This category includes all
+items specified in three dimensional space. Currently
+this include "polygon" and "line" items. All items that
+are not light sources or overlay items are three
+dimensional primitives.
+</ul>
+
+
+<p>
+The [pathName create] command for all item types accept a parameter
+or parameters denoted "coordList" or "2dCoordList". "coordList"
+parameters are used to specify coordinates for light sources and
+three dimensional items. "2dCoordList" parameters specify
+coordinates for overlay items.
+</p>
+
+<p>
+The form of a coordList parameter is a Tcl list consisting entirely
+of numeric values. The length of the list must be a multiple of
+three. The first three elements of the list specify the x, y and z
+components of the first vertex, respectively. The fourth, fifth
+and sixth elements of the list (if present) specify the x, y and z
+components of the second vertex, and so on.
+</p>
+
+<p>
+The format of a 2dCoordList parameter is similar to a coordList
+parameter, except that the length of the list must be a multiple of
+two. The first two elements of the list specify the x and y
+components of the first vertex (there is no z component), and so
+on. Coordinates found in 2dCoordList parameters are screen
+coordinates. The 2dCoordList parameter value {100 200} identifies a
+point on the screen 100 pixels to the right of and 200 pixels below
+the top left corner of the widget window.
+</p>
+
+<p>
+Some of the [pathName create] commands below accept multiple
+coordList or 2dCoordList parameters. In this case, as well as the
+syntax shown, passing a single list of coordList (or 2dCoordList)
+parameters is equivalent to passing each list element as a separate
+argument. To illustrate, the first two commands below are
+equivalent, the third is illegal:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+pathName create polygon $coordsA $coordsB $coordsC
+pathName create polygon [list {$coordsA} {$coordsB} {$coordsC}]
+pathName create polygon [list {$coordsA} {$coordsB}] $coordsC
+</pre></div>
+
+
+
+<h3 id="section8">Polygon Items</h3>
+
+
+
+
+      <p>
+      pathName create polygon coordList ?coordList...? ?option value...?
+      </p>
+  <div style="margin-left:8ex"><p>
+Polygon items are displayed as one or more opaque or
+wireframe 2-dimensional polygons located in
+three-dimensional space. A single polygon item consists of
+one geometric polygon for each coordList parameter passed
+to the [pathName create polygon] command.
+</p>
+
+<p>
+To create a geometric polygon, three or more vertices must
+be supplied (i.e. coordList must contain at least 9 numeric
+values). For correct display, geometric polygons must be
+roughly planar and not convex.
+</p>
+
+<p>
+Polygon items support the following options:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+-style            solid|outline             (solid)
+-color            &lt;color&gt;                   (white)
+-smooth           &lt;boolean&gt;                 (false)
+</p>
+
+<p>
+-teximage         &lt;image-name&gt;              ()
+-texcoords        {&lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; ...} ()
+</p>
+
+<p>
+-ambient          &lt;color&gt;
+-diffuse          &lt;color&gt;
+-specular         &lt;color&gt;
+-emission         &lt;color&gt;
+-shininess        &lt;float&gt;
+</pre></div>
+
+
+<p>
+The value of the -style option determines whether the
+polygon is drawn as a solid shape (solid) or a wireframe
+(outline). The default value is solid.
+</p>
+
+<p>
+If no light items are defined, or if the -style option is
+set to "outline", then each polygon is rendered in the color
+specified by the -color option. Otherwise, the -ambient,
+-diffuse, -specular, -emission and -shininess options are
+used in conjunction with the configuration of the various
+light sources to calculate the display color or colors of
+each polygon. See the COLORS AND LIGHTING section below for
+details and default values for these options.
+</p>
+
+<p>
+Polygon faces may or may not have a texture applied to
+them. A texture is an image that is rendered so that it
+appears to be painted on the polygon face in three
+dimensional space. In order to add a texture to a polygon
+face, the -teximage option is set to the name of a Tk image
+to use as the texture.
+</p>
+
+<p>
+Exactly how the texture is applied to the polygon surface
+is determined by the value of the -texcoords option. Each
+vertex of the surface is mapped to a point in image
+coordinates. The top-left corner of the image is designated
+by coordinates (0, 0), the bottom-right corner (1.0, 1.0).
+For the purposes of coordinate values outside the range
+[0.0, 1.0] the image is conceptually tiled horizontally and
+vertically. For example, mapping each vertice of a square
+polygon face to the following coordinates results in nine
+copies of the image being rendered in a three-by-three grid
+on the polygon face:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+Polygon top-left      -&gt;  (0.0, 0.0)
+Polygon top-right     -&gt;  (3.0, 0.0)
+Polygon bottom-right  -&gt;  (3.0, 3.0)
+Polygon bottom-left   -&gt;  (0.0, 3.0)
+</p>
+
+<p>
+# Example Tcl code:
+set image [image create photo -file _image-file-name_]
+.win create polygon {0 0 0   1 0 0   1 1 0   0 1 0} -tags P
+.win itemconfigure P -teximage $image
+.win itemconfigure P -texcoords {0 0   3 0   3 3   0 3}
+</pre></div>
+
+
+<p>
+The -texcoords option is set to a list of 2N floating point
+values, where N is an integer. Each pair of values is
+interpreted as an (x, y) pair of image coordinates.  Each
+polygon vertex is mapped to the corresponding image
+coordinate. If a polygon has more vertices than image
+coordinates, then the image coordinates wrap around. For
+example, if a polygon has 10 vertices and 4 image
+coordinates, the first, fifth and ninth vertices are all
+mapped to the first pair of image coordinates. If
+-texcoords is set to an empty string (the default) this is
+handled as {0 0 1 0 1 1 0 1}.
+</p>
+
+<p>
+If a polygon item has multiple faces, then the texture is
+applied to each face. The algorithm for determining the
+mapping from polygon vertex to texture coordinates ignores
+faces (i.e. if a polygon with six vertices divided into two
+triangular faces is supplied with four texture coordinates,
+the first vertex of the second triangle is mapped to the
+fourth texture coordinate, not the first).
+</p>
+
+<p>
+The final color of each polygon pixel (the "pixel color")
+is determined by modulating the color determined by -color
+and lighting considerations (hereafter the "fragment
+color"), and the color of the image pixel mapped to the
+same location by the texture process (the "texture color").
+Modulating two colors is accomplished by multiplying the
+scalar values of each pair of corresponding channels (red,
+green, blue and alpha):
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+&lt;pixel-red&gt; = &lt;fragment-red&gt; * &lt;texture-red&gt;
+&lt;pixel-green&gt; = &lt;fragment-green&gt; * &lt;texture-green&gt;
+&lt;pixel-blue&gt; = &lt;fragment-blue&gt; * &lt;texture-blue&gt;
+&lt;pixel-alpha&gt; = &lt;fragment-alpha&gt; * &lt;texture-alpha&gt;
+</pre></div>
+
+
+<p>
+To ensure colors are rendered as they appear in the image,
+the calculated fragment color must be set to
+{1.0 1.0 1.0 1.0}. This is most easily done by setting the
+-color option to "white" and not adding any light sources
+to the scene.
+</div>
+
+
+
+<h3 id="section9">Line Items</h3>
+
+
+
+
+      <p>
+      pathName create line coordList ?coordList? ?option value...?
+      </p>
+  <div style="margin-left:8ex"><p>
+Line items are displayed as one or more line-segments in
+three-dimensional space. Mathematically, the line has no
+thickness. The width the line is drawn on the screen with
+is determined by the -width option (see below).
+</p>
+
+<p>
+Each coordList parameter creates a series of one or more
+connected line-segments with a segment drawn between each
+adjacent vertex in the coordList (i.e a coordList
+containing three vertices creates two line-segments). Each
+coordList must contain at least two vertices.
+</p>
+
+<p>
+Line items support the following options:
+</p>
+
+<p>
+                -color              &lt;color&gt;             (white)
+                -width              &lt;double&gt;            1.0
+</p>
+
+<p>
+Line items are always displayed in the color specified by
+the -color option, regardless of the configuration of any
+light sources. A line is rendered approximately -width
+pixels wide, regardless of depth.
+</div>
+
+
+
+<h3 id="section10">Point Items</h3>
+
+
+
+
+      <p>
+      pathName create point coordList ?coordList? ?option value...?
+      </p>
+  <div style="margin-left:8ex"><p>
+Point items are displayed as one or more points in
+three-dimensional space. Mathematically, the point has no
+thickness. The size of the point on the screen is
+determined by the -width option (see below).
+</p>
+
+<p>
+Each coordList parameter creates a geometric point at each
+vertex specified.
+</p>
+
+<p>
+Point items support the following options:
+</p>
+
+<p>
+                -color              &lt;color&gt;             (white)
+                -width              &lt;double&gt;            1.0
+</p>
+
+<p>
+Point items are always displayed in the color specified by
+the -color option, regardless of the configuration of any
+light sources. A point is rendered approximately -width
+pixels wide and high, regardless of depth.
+</div>
+
+
+
+<h3 id="section11">Light Items</h3>
+
+
+
+
+      <p>
+      pathName create light coordList ?option value...?
+      </p>
+  <div style="margin-left:8ex"><p>
+A light item adds a light source to a scene. A maximum of
+eight light sources may be present in a single scene.
+</p>
+
+<p>
+Either one or two vertices may be specified when creating a
+light source. The first vertex represents the location of
+the light source in three dimensional space. The second
+vertex is a point in three dimensional space that the
+spotlight component of the light source (if any) is
+pointing at. If the second vertex is not specified it
+defaults to (x, y, z - 1.0), where (x, y, z) is the
+location of the light source.
+</p>
+
+<p>
+Light items support the following options:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+-ambient                 &lt;color&gt;      (black)
+-diffuse                 &lt;color&gt;      (white)
+-specular                &lt;color&gt;      (white)
+-spotexponent            &lt;float&gt;      (0.0)
+-spotcutoff              &lt;angle&gt;      (180.0)
+-constantattenuation     &lt;float&gt;      (1.0)
+-linearattenuation       &lt;float&gt;      (0.0)
+-quadraticattenuation    &lt;float&gt;      (0.0)
+</pre></div>
+</div>
+
+
+
+<h3 id="section12">2dtext Items</h3>
+
+
+
+
+      <p>
+      pathName create 2dtext 2dCoordList ?option value...?
+      </p>
+  <div style="margin-left:8ex"><div style="margin-left:8ex"><pre><p>
+-color         &lt;color&gt;        (white)
+-font          &lt;font&gt;         (Helvetica)
+-text          &lt;string&gt;       ()
+-anchor        &lt;anchorPos&gt;    (center)
+</pre></div>
+</div>
+
+
+
+<h3 id="section13">2dline Items</h3>
+
+
+
+
+      <p>
+      pathName create 2dline 2dCoordList ?2dCoordList...? ?option value...?
+      </p>
+  <div style="margin-left:8ex"><div style="margin-left:8ex"><pre><p>
+-color         &lt;color&gt;        (white)
+</pre></div>
+</div>
+
+
+
+<h3 id="section14">2dpolygon Items</h3>
+
+
+
+
+      <p>
+      pathName create 2dpolygon 2dCoordList ?2dCoordList...? ?option value...?
+      </p>
+  <div style="margin-left:8ex"><div style="margin-left:8ex"><pre><p>
+-color         &lt;color&gt;        (white)
+</pre></div>
+</div>
+
+
+
+<h2 id="section15">Colors and Lighting</h2>
+
+
+
+<h3 id="section16">Specifying Colors</h3>
+
+
+<p>
+The underlying OpenGL graphics system handles colors as a vector of
+four floating point values representing the red, green, blue and
+alpha channels (RGBA). The alpha value is only used if the widget
+-enablealpha option is set to true. This is used to create
+semi-transparent objects.
+</p>
+
+<p>
+Ignoring the alpha channel for the time being, the color white is
+represented as the vector (1.0, 1.0, 1.0). Black is (0.0, 0.0, 0.0).
+Values outside of the 0.0-1.0 range are valid, but are clipped
+before display.
+</p>
+
+<p>
+Colors may be passed to the widget and item options in any of the
+following formats:
+</p>
+
+
+<ul><li>
+As a three member list specifying values for the R, G and B
+channels. In this case the value of the alpha channel is
+set to 1.0.
+<li>
+As a four member list specifying values for the R, G, B and
+A channels.
+<li>
+Any form accepted by the function Tk_GetColor(). The values
+of the R, G and B channels are set based on the Tk color
+and the alpha channel is automatically set to 1.0.
+</ul>
+
+
+<p>
+The following four color definitions are equivalent:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+LightSalmon
+#FFA07A
+{1.0 0.627 0.478}
+{1.0 0.627 0.478 1.0}
+</pre></div>
+
+
+
+<h3 id="section17">Determining Display Colors</h3>
+
+
+<p>
+Overlay items and three dimensional lines and outlines are always
+drawn in the color specified by the items -color option. The way the
+displayed color of other three-dimensional geometric primitive
+items is determined depends on whether or not lighting is enabled.
+Lighting is enabled if one or more light sources (items of type
+"light") have been added to a scene. Setting the -hidden option on
+a light item stops the item from contributing any light to the
+scene, but has no effect on whether or not lighting is enabled.
+</p>
+
+<p>
+If lighting is not enabled, then the display color of three
+dimensional primitives is set by the -color option, in the same way
+as the color of overlay items. If lighting is enabled, then the
+rendered color of three dimensional primitives other than lines and
+outlines depends on the interaction between the primitive and all
+defined light sources (except those for which the -hidden option is
+set).
+</p>
+
+
+<h3 id="section18">Lighting Calculations</h3>
+
+
+<p>
+TODO: Need a description of lighting (not just an explanation of
+how options are passed through to OpenGL).
+</p>
+
+<p>
+Lighting calculations are performed entirely by OpenGL. The
+parameters of each OpenGL light source are determined by the
+values of options set on the corresponding 3d-canvas light item.
+For example the option of the -ambient option is used to set the
+GL_AMBIENT parameter.
+</p>
+
+<p>
+Items that reflect light have the following options. The values of
+which are used to set the corresponding OpenGL material properties.
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+Option		Type		Default value
+-------------------------------------------------
+-ambient	&lt;color&gt;		"0.2 0.2 0.2 1.0"
+-diffuse	&lt;color&gt;		"0.8 0.8 0.8 1.0"
+-specular	&lt;color&gt;		"0.0 0.0 0.0 1.0"
+-emission	&lt;color&gt;		"0.0 0.0 0.0 1.0"
+-shininess	&lt;float&gt;		"0.0"
+</pre></div>
+
+
+<p>
+The values of OpenGL light-model parameters are set as follows:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+Option				Value
+-------------------------------------------------
+GL_LIGHT_MODEL_AMBIENT		"0.0 0.0 0.0 1.0"
+GL_LIGHT_MODEL_LOCAL_VIEWER	false
+GL_LIGHT_MODEL_TWO_SIDE		true
+</pre></div>
+
+
+
+<h2 id="section19">Transformations</h2>
+
+
+<p>
+A transformation is used to modify the location, orientation or
+size of an existing primitive or primitives. Each transformation is
+specified as a series of one or more "move", "rotate" and "scale"
+operations, which are applied to the primitive in the order
+specified. For example, the transformation:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+rotate 90.0 1.0 0.0 0.0 move 0.0 1.0 0.0
+</pre></div>
+
+
+<p>
+is interpreted as "rotate the primitive 90.0 degrees around the
+X-axis, then move it 1.0 units in the positive Y-direction".
+</p>
+
+
+
+      <p>
+      rotate &lt;angle&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt;
+      </p>
+  <div style="margin-left:8ex"><p>
+A 'rotate' transformation operation requires exactly four
+arguments. The first is the angle, in degrees, of the
+desired rotation. The subsequent three arguments define a
+vector around which the rotation occurs. The rotation
+follows the right-hand rule, so if the vector is pointed
+directly at the viewer, the rotation appears to occur in a
+counter-clockwise direction.
+</p>
+
+<p>
+The center point around which the primitive is rotated is
+always the absolute origin (0.0, 0.0, 0.0).
+</p>
+
+<p>
+The magnitude of the vector specified by &lt;x&gt;, &lt;y&gt;, &lt;z&gt; is
+not used for any purpose. Only the direction of the vector
+is important.
+</div>
+
+
+
+
+      <p>
+      move &lt;x&gt; &lt;y&gt; &lt;z&gt;
+      </p>
+  <div style="margin-left:8ex"><p>
+A 'move' transformation operation requires three arguments.
+The primitive is translated &lt;x&gt; units in the X-direction,
+&lt;y&gt; units in the Y-direction, and &lt;z&gt; units in the
+Z-direction.
+</div>
+
+
+
+
+      <p>
+      scale &lt;x&gt; &lt;y&gt; &lt;z&gt;
+      </p>
+  <div style="margin-left:8ex"><p>
+A 'scale' transformation operation requires three arguments.
+It is used to stretch or contract a primitive in one or
+more dimensions.
+</div>
+
+
+<p>
+For any of the above transforms, one of the following strings may be
+substituted for the three numeric arguments "&lt;x&gt; &lt;y&gt; &lt;z&gt;". Before
+the transform matrix is calculated, the strings are replaced with
+numeric coordinates as follows:
+</p>
+
+
+
+      <p>
+      center
+      </p>
+  <div style="margin-left:8ex"><p>
+The current value of the -cameracenter option.
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      location
+      </p>
+  <div style="margin-left:8ex"><p>
+The current value of the -cameralocation option.
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      lineofsight
+      </p>
+  <div style="margin-left:8ex"><p>
+The vector between the vertex specified by the
+-cameralocation and the -cameracenter vertex
+(cameralocation - cameracenter). The vector is not
+normalized.
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      up
+      </p>
+  <div style="margin-left:8ex"><p>
+A unit vector in the "up" direction, from the point of view
+of the viewer.
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      down
+      </p>
+  <div style="margin-left:8ex"><p>
+A unit vector in the "down" direction, from the point of
+view of the viewer.
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      left
+      </p>
+  <div style="margin-left:8ex"><p>
+A unit vector in the "left" direction, from the point of
+view of the viewer.
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      right
+      </p>
+  <div style="margin-left:8ex"><p>
+A unit vector in the "right" direction, from the point of
+view of the viewer.
+</div>
+
+
+<p>
+Any of the above strings may be prefixed with a "-" character to
+multiply &lt;x&gt;, &lt;y&gt; and &lt;z&gt; by -1. i.e. "-down" is equivalent to
+"up". The string "los" is a synonym for "lineofsight".
+</p>
+
+<p>
+Both vectors specified using shortcut strings and those specified in
+full as three floating point coordinates may be followed by a single
+floating point number, the multiplier. If present, each component of
+the vector is multiplied by the multiplier. This is particularly useful
+in concert with the "up", "down", "left" and "right" unit vectors. A
+vector of length 0.75 in the upward direction, from the point of view
+of the viewer, may be created with the syntax "up 0.75". This in turn
+may be used to create useful and intuitive transform syntax, such as
+"move up 0.75" (move the objects 0.75 units in the upward direction).
+</p>
+
+
+<h2 id="section20">Camera Configurations</h2>
+
+<p>
+How the three dimensional components of a scene (everything except
+overlay items) are projected onto the widget viewport depends on
+the camera configuration. The camera configuration determines the
+point in three dimensional space from which the viewer appears to
+be viewing the scene and the orientation and direction in which the
+viewer is looking. There are two ways to control the camera
+configuration:
+</p>
+
+
+<ul><li>
+Directly, by manipulating the -cameralocation,
+-cameracenter, -cameraup and -visibleangle widget
+options.
+<li>
+Using transformations. The camera can be transformed
+in a similar manner to item primitives, as described in
+the "TRANSFORMATIONS" section.
+</ul>
+
+
+<p>
+Configuring the camera using transformations is almost always
+easier. Both interfaces may be used by a single application.
+</p>
+
+
+<h3 id="section21">Camera Configuration By Widget Options</h3>
+
+
+<p>
+The -visibleangle option is used to set the vertical field of view
+of the viewer, in degrees. The horizontal field of view is
+set automatically, based on the window size and configured vertical
+field of view. The default value is 60.0 degrees.
+</p>
+
+<p>
+The -cameralocation option specifies a point in three dimensional
+space at which the camera is located. It should be set to a list of
+three numeric values, the x, y and z coordinates of the camera. The
+default value is {0.0 0.0 1.0}.
+</p>
+
+<p>
+The -cameracenter option specifies a point in three dimensional
+space that the camera is pointed at. The default value is
+{0.0 0.0 0.0}. Rendering results are undefined if the -cameracenter
+coordinates are the same as the -cameralocation coordinates.
+</p>
+
+<p>
+The -cameraup option is a three dimensional vector that points
+roughly "upwards" from the point of view of the viewer. The default
+value is {0.0 1.0 0.0}. This option does not need to be set to a
+unit vector, it will be scaled internally. Also, this vector does
+not have to lie exactly on the viewport plane. However, if the
+vector is parallel or very close to parallel to the line of sight,
+then rendering results are undefined.
+</p>
+
+
+<h3 id="section22">Camera Configuration By Transformations</h3>
+
+
+<p>
+To avoid the complications of setting the above options,
+transformations can be used to configure the camera center,
+location and up direction (the -visibleangle option still needs to
+be set manually). The transformation specifications used are the
+same as those described in the "TRANSFORMATIONS" section.
+</p>
+
+<p>
+To understand how a transformation will affect the three camera
+options, imagine a triangle in three-dimensional space (similar to
+a polygon item with three vertices). The values of the
+-cameralocation and -cameracenter options make up two of the
+triangles vertices. The third is found by adding the -cameraup
+vector to the -cameralocation vertex. When a transformation is
+applied to the camera, this triangle is created and  transformed in
+three-dimensional space. After the transformation, the
+-cameralocation, -cameracenter and -cameraup options are set based
+on the transformed vertices of the triangle.
+</p>
+
+<p>
+To transform the camera, pass the -camera switch to the
+        [{$widget} transform] command. Passing a value for the "search"
+parameter of [{$widget} transform] allows scene elements to be
+transformed along with the camera. For example, if the camera is
+viewing a scene illuminated by care headlights from inside the
+automobile, then the scene light sources and three dimensional
+scene primitives comprising the car dashboard may all be
+transformed together as follows:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+$widget transform -camera lights||dashboard &lt;transformation spec&gt;
+</pre></div>
+
+
+<p>
+(assuming dashboard elements are associated with the tag group
+"dashboard").
+</p>
+
+
+<h3 id="section23">Camera Shortcut Transformations</h3>
+
+
+<p>
+In order to make camera transformations more intuitive, the
+following shortcut transforms are available. These may be used in
+any transformation specification along with "move", "rotate" and
+"scale". They are described here because they are probably only
+useful in the context of transforming the camera.
+</p>
+
+
+
+      <p>
+      lookat &lt;search&gt;
+      </p>
+  <div style="margin-left:8ex"><p>
+"lookat" is unique among transform primitives as it takes a
+search parameter as an argument (see the ITEM SEARCHES
+section below).
+</p>
+
+<p>
+If the search parameter returns no items, then this
+transformation has no effect. Otherwise, the center and
+radius of a sphere encompassing all returned items is
+calculated, using the same algorithm as the
+[{$widget} boundingsphere] command.
+</p>
+
+<p>
+Once a sphere has been determined, the camera is rotated in
+place until it points at the center of the sphere. It then
+moves away from or toward the center until the projection
+sphere exactly fills the viewport in either the x or y
+direction (whichever is smaller).
+</p>
+
+<p>
+After this transformation is applied to the camera, the
+-cameracenter option is set to the center of the calculated
+sphere. The -cameralocation value is determined by the
+procedure described in the above paragraph.
+</div>
+
+
+
+
+      <p>
+      orbitup    &lt;angle&gt;<br>orbitdown  &lt;angle&gt;<br>orbitright &lt;angle&gt;<br>orbitleft  &lt;angle&gt;
+      </p>
+  <div style="margin-left:8ex"><p>
+The orbit transforms are used to rotate the camera around
+the scene center (the -cameracenter option value), keeping
+the value of the -cameracenter option constant. This is
+similar to a satellite orbiting a planet, with the camera
+located on the satellite always pointed down at the center
+of the planet.
+</p>
+
+<p>
+The &lt;angle&gt; parameter specifies the angle of rotation, in
+degrees.
+</p>
+
+<p>
+The 'orbitup' transformation rotates the camera around the
+scene center such that the initial direction of movement is
+directly upwards, from the point of view of the viewer.
+Similarly the 'orbitdown', 'orbitright' and 'orbitleft'
+transformations rotate the camera such that the initial
+directions of movement are respectively downwards, to the
+right or to the left from the point of view of the view.
+</div>
+
+
+
+
+      <p>
+      panup    &lt;angle&gt;<br>pandown  &lt;angle&gt;<br>panright &lt;angle&gt;<br>panleft  &lt;angle&gt;
+      </p>
+  <div style="margin-left:8ex"><p>
+The pan transforms are used to rotate the camera center
+around the camera location. This is similar to (for
+example) moving your head to look over your shoulder.
+</p>
+
+<p>
+The &lt;angle&gt; parameter specifies the angle of rotation, in
+degrees.
+</p>
+
+<p>
+The 'panup' transformation rotates the camera to look
+upwards, from the perspective of the viewer. The 'pandown',
+'panright' and 'panleft' transformations rotate the camera
+to look downwards, to the right or to the left, from the
+viewers perspective.
+</div>
+
+
+
+
+      <p>
+      twistright &lt;angle&gt;<br>twistleft  &lt;angle&gt;
+      </p>
+  <div style="margin-left:8ex"><p>
+The twist transforms rotate the camera around the line of
+sight. A twist transform leaves the -cameracenter and
+-cameralocation values constant and modifies the -cameraup
+vector.
+</p>
+
+<p>
+The &lt;angle&gt; parameter specifies the angle of rotation, in
+degrees.
+</p>
+
+<p>
+A 'twistright' rotation produces the same effect as tipping
+the top of your head to the right, the -cameraup vector is
+rotated clockwise from the point of view of the viewer.
+Naturally, a 'twistleft' rotation naturally produces the
+opposite effect.
+</div>
+
+
+
+
+      <p>
+      movein &lt;scale&gt;
+      </p>
+  <div style="margin-left:8ex"><p>
+A movein transformation moves the camera location closer
+to, or further away from the scene center, keeping the
+-cameracenter and -cameraup vectors constant.
+</p>
+
+<p>
+The distance between the scene center and camera location
+is multiplied by the &lt;scale&gt; parameter.
+</p>
+
+<p>
+For example, a "movein 0.9" transform moves the camera 10%
+closer to the scene center. The transform "movein 1.1111"
+can be used to move it back (0.9 * 1.1111 = 1.0).
+</div>
+
+
+
+<h2 id="section24">Tags and Unique Ids</h2>
+
+<p>
+Each item stored by the widget has a unique integer id assigned
+when the item is created. Item ids are returned by the
+[{$widget} create] command when an item is first created. They may
+also be obtained via the [{$widget} find] command.
+</p>
+
+<p>
+Each is associated with zero or more named tag-groups or tags. Tag-
+groups are identified by name. Legal tag names are any string that
+does not begin with a digit except for the search keyword "all".
+Multiple items may be associated with a single tag.
+</p>
+
+<p>
+Tags may be added to or removed from items using the
+[{$widget} addtag] and [{$widget} dtag] commands, or by setting the
+-tags item option. The tags attached to an item may be queried
+using [{$widget} gettags] or by querying the -tags item option.
+</p>
+
+
+<h2 id="section25">Item Searches</h2>
+
+<p>
+Some of the widget commands described above operate on sets of
+items identified by a 'search' parameter. Item searches may return
+(or not return) items based on the following:
+</p>
+
+
+<ul><li>
+The unique item id,
+<li>
+Tags associated with an item,
+<li>
+The type of the item,
+<li>
+Whether or not the two dimensional projection of the item
+includes a point on the viewport.
+<li>
+Logical (&&, ||, ^, !) combinations of the above.
+</ul>
+
+
+<p>
+The syntax of a search parameter is:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+&lt;search&gt; = all                    (matches all items)
+&lt;search&gt; = &lt;id&gt;                   (the item with unique id &lt;id&gt;)
+&lt;search&gt; = &lt;tagname&gt;              (items associated with tag &lt;tagname&gt;)
+&lt;search&gt; = type(&lt;type&gt;)           (matches items of type &lt;type&gt;)
+&lt;search&gt; = viewport(&lt;x&gt;, &lt;y&gt;)     (viewport search)
+&lt;search&gt; = hidden()               (matches all items with -hidden set)
+</p>
+
+<p>
+&lt;search&gt; = ( &lt;search&gt; )           (grouping operator)
+&lt;search&gt; = ! &lt;search&gt;             (logical NOT operator)
+&lt;search&gt; = &lt;search&gt; ^ &lt;search&gt;    (logical XOR operator)
+&lt;search&gt; = &lt;search&gt; && &lt;search&gt;   (logical AND operator)
+&lt;search&gt; = &lt;search&gt; || &lt;search&gt;   (logical OR operator)
+</pre></div>
+
+
+<p>
+The operators above are listed in order of precedence.
+</p>
+
+
+<h3 id="section26">Examples</h3>
+
+
+
+
+      <p>
+      {cubes}
+      </p>
+  <div style="margin-left:8ex"><p>
+All items associated with the tag "cubes".
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      {45 || cubes}
+      </p>
+  <div style="margin-left:8ex"><p>
+All items associated with the tag "cubes" or with unique
+id "45".
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      {solid && cubes}
+      </p>
+  <div style="margin-left:8ex"><p>
+All items associated with both of the tags "cubes" and
+"solid".
+</div>
+<p>
+ 
+</p>
+
+      <p>
+      {viewport(45, 80) && !cubes}
+      </p>
+  <div style="margin-left:8ex"><p>
+All items not associated with the tag "cubes" for which
+the projection includes the viewport pixel (45, 80).
+</div>
+
+
+
+<h3 id="section27">Optimization</h3>
+
+
+<p>
+When large numbers of items are present, some item searches, for
+example when the search parameter consists of a single id or tag
+can be much faster than other searches. Such searches can use an
+index instead of a linear scan of all items.  Currently, search
+expressions of the following forms can use a built in index to
+speed up the search:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+&lt;tagname&gt;
+&lt;tagname&gt; && &lt;search&gt;
+&lt;id&gt;
+&lt;id&gt; && &lt;search&gt;
+type(light)
+type(light) && &lt;search&gt;
+</pre></div>
+
+
+
+<h2 id="section28">Shapes</h2>
+
+<p>
+This section describes the "canvas3d shapes library", a library of
+Tcl code that can be used to create higher level three-dimensional
+shapes such as spheres or cylinders for display in canvas3d
+widgets. The shapes library is packaged with the canvas3d code,
+but it's use is entirely optional; the widget as described above
+works fine whether or not the shapes library is present.
+</p>
+
+<p>
+The shapes library provides Tcl procedures that return lists of
+polygon faces that can be passed to the
+[pathName create polygon] command. For example, the
+[::canvas3d::sphere] returns a list of polygon faces that
+approximate the surface of a sphere. Hence, the following command
+creates a sphere in widget .win:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+# Create a sphere.
+.win create polygon [::canvas3d::sphere] -smooth true
+</pre></div>
+
+
+<p>
+By default, [::canvas3d::sphere] returns a sphere centered at
+the origin with a radius of 1.0. The options described below under
+the available shapes library commands may be used to change this.
+</p>
+
+
+
+      <p>
+      ::canvas3d::sphere ?options?
+      </p>
+  <div style="margin-left:8ex"><p>
+This command returns a list of polygon faces that
+approximate a sphere. The following options are available:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+-radius           &lt;float&gt;                   (1.0)
+-center           &lt;vertex&gt;                  (0.0 0.0 0.0)
+-detail           &lt;integer&gt;                 (3)
+</pre></div>
+
+
+<p>
+The -radius option sets the radius of the sphere returned,
+which is centered at the vertex defined by the value of the
+-center option.
+</p>
+
+<p>
+The value of the -detail option is used to determine the
+number of triangle faces used to approximate the sphere.
+The higher the integer value, the more triangles used. In
+the current implementation the exact number of triangles is
+(2 ^ (2N + 3)), where N is the value of -detail. Negative
+values for -detail are treated as 0.
+</div>
+
+
+
+
+      <p>
+      ::canvas3d::cylinder ?options?
+      </p>
+  <div style="margin-left:8ex"><p>
+This command returns a list of polygon faces that
+approximate the curved surface of a cylinder. The following
+options are available:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+-radiusone        &lt;float&gt;                   (1.0)
+-radiustwo        &lt;float&gt;                   (1.0)
+-center           &lt;vertex&gt;                  (0.0 0.0 0.0)
+-height           &lt;float&gt;                   (1.0)
+-normal           &lt;vector&gt;                  (0.0 0.0 1.0)
+-detail           &lt;integer&gt;                 (3)
+</pre></div>
+
+
+<p>
+The -radiusone and -radiustwo options define the radii of
+the circles at either end of the cylinder (A cone can be
+drawn by setting one option to 0.0 and the other to a
+non-zero value). The -center option is set to the vertex
+that lies at the center of the cylinder, defined as the
+midpoint of the line between the centers of the circles at
+either end of the cylinder.
+</p>
+
+<p>
+The -height option is set to the distance between the
+centers of the two circles, and the -normal option
+indicates the direction of that vector.
+</p>
+
+<p>
+The value of the -detail option is used to determine the
+number of quadralaterals used to approximate the surface.
+Currently the exact number of quadralaterals is
+(2 ^ (N + 2)), where N is the value of the -detail option.
+</div>
+
+
+
+
+      <p>
+      ::canvas3d::disc ?options?
+      </p>
+  <div style="margin-left:8ex"><p>
+This command returns vertices for a single polygon face
+that approximates a flat disc. The following options are
+available:
+</p>
+
+
+<div style="margin-left:8ex"><pre><p>
+-radius           &lt;float&gt;                   (1.0)
+-center           &lt;vertex&gt;                  (0.0 0.0 0.0)
+-normal           &lt;vector&gt;                  (0.0 0.0 1.0)
+-detail           &lt;integer&gt;                 (3)
+</pre></div>
+
+
+<p>
+The radius of the disc is determined by the value of the
+-radius option. The -center option defines the vertex that
+lies at the center of the returned shape. The -normal
+option is set to a vector normal to the surface of the
+disc.
+</p>
+
+<p>
+The value of the -detail option is used to determine the
+number of vertices used to approximate the curved edge.
+Currently the exact number of vertices is
+(2 ^ (N + 2)), where N is the value of the -detail option.
+</div>
+
+
+<p>
+Contributions of new shapes (or better implementations of the ones
+in c3dshapes.tcl) to the shapes library are very welcome. Please
+refer to http://3dcanvas.tcl.tk for contact details.
+</p>
+
+
+<h2 id="section29">Bindings</h2>
+
+<p>
+In the current implementation, new 3d-canvases are not given any
+default behavior: you'll have to execute explicit Tcl commands
+to give the 3d-canvas its behavior.
+</p>
+
+
+<h2 id="section30">Credits</h2>
+
+<p>
+Some text in this manpage was copied directly from the Tk canvas
+manpage.
+</p>
+
+
+<h2 id="section31">Keywords</h2>
+
+<p>
+canvas3d, 3dcanvas, 3d-canvas, widget
+
+       <h1 id="TOC">canvas3d (n) - Table Of Contents</h1>
+       <ul id="index"><li><a href="#section1">Name</a><li><a href="#section2">Synopsis</a><li><a href="#section3">Standard Options</a><li><a href="#section4">Widget Specific Options</a><li><a href="#section5">Introduction</a><li><a href="#section6">Widget Command</a><li><a href="#section7">Item Types</a><ul><li><a href="#section8">Polygon Items</a><li><a href="#section9">Line Items</a><li><a href="#section10">Point Items</a><li><a href="#section11">Light Items</a><li><a href="#section12">2dtext Items</a><li><a href="#section13">2dline Items</a><li><a href="#section14">2dpolygon Items</a></ul><li><a href="#section15">Colors and Lighting</a><ul><li><a href="#section16">Specifying Colors</a><li><a href="#section17">Determining Display Colors</a><li><a href="#section18">Lighting Calculations</a></ul><li><a href="#section19">Transformations</a><li><a href="#section20">Camera Configurations</a><ul><li><a href="#section21">Camera Configuration By Widget Options</a><li><a href="#section22">Camera Configuration By Transformations</a><li><a href="#section23">Camera Shortcut Transformations</a></ul><li><a href="#section24">Tags and Unique Ids</a><li><a href="#section25">Item Searches</a><ul><li><a href="#section26">Examples</a><li><a href="#section27">Optimization</a></ul><li><a href="#section28">Shapes</a><li><a href="#section29">Bindings</a><li><a href="#section30">Credits</a><li><a href="#section31">Keywords</a></ul>
+       </body>
+       </html>
+    

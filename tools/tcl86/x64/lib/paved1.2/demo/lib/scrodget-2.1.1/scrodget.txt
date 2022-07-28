@@ -1,0 +1,132 @@
+* NAME 
+  scrodget - scrolled-widget: generic scrolled widget 
+
+* VERSION
+  2.0
+
+* SYNOPSIS 
+  scrodget pathName ?options? 
+
+* INTRODUCTION 
+  Scrodget enables user to create easily a widget with its scrollbars.
+  The widget should be a a scrollable widget, i.e. have the options 
+  xscrollcommand/yscrollcommand and the command xview/yview, 
+  such as canvas or text.
+  
+  scrodget was inspired by ScrolledWidget (BWidget).
+     
+* SCRODGET OPTIONS
+  -autohide    _value_
+    Specifies wether scrollbars should be automatically hidden if not necessary.
+    Default is "false" (i.e. "none")
+    Valid values are:
+      none (or any boolean value equivalent to 0) 
+      vertical
+      horizontal
+      both (or any boolean value equivalent to 1)
+  -scrollsides _sides_
+    Specifies where to place the scrollbars.
+    Valid values are:
+      "" meaning no scrollbar
+      or a combination of 'e' 'w' 's' 'n' (east/west/south/north)
+    Default is "se".
+    Note that "news" means all 4 scrollbars together!
+
+* SCRODGET COMMANDS
+   pathName cget option
+   
+    Returns the current value of the configuration option given by option.
+         
+   pathName configure ?option? ?value option value ...?
+   
+    Query or modify the configuration options of the widget
+    
+   pathName associate widget 
+   
+    Associate widget to the the scrollbars. 
+    widget is packed in with option expand to yes and fill to both. 
+    widget must be a scrollable widget, i.e. have the options 
+     xscrollcommand/yscrollcommand and the command xview/yview, 
+     such as canvas or text.
+    'widget' can be {} (i.e. de-associate widget)
+    If 'associate' method is invoked without arguments, then the currently
+     associated widget is returned.
+ 
+   pathName _component_ configure ...
+   pathName _component_ cget ...
+   
+    where _component_ is one of the following:
+     frame
+     northScroll
+     southScroll
+     eastScroll
+     westScroll
+     
+   These commands lets you acces the internal components.
+    Example:
+     # change the "width" option of the 'west' scrollbar.
+     #   ( Let's suppose $w is an instance of the scrodget widget .. )
+    $w westScroll configure -width 10
+     # change the "padding" space around the frame.
+    $w frame configure -padx 10 -pady 10      
+    
+* BINDINGS
+   .. bindings should be set as usual for the 'associated' widget,
+   ..  not for the scrodget
+
+   Example:
+     # On click, print canvas coordinates ...
+     scrodget .mc
+     .mc associate [canvas .c]
+     bind .c  <Button-1> { puts "X:[%W canvasx %x] Y:[%W canvasy %y]" }
+
+* EXAMPLE *
+
+  package require scrodget
+  scrodget .mc -autohide true
+  .mc associate [canvas .c]
+   .c configure -scrollregion { -100 -100 100 100 }
+   .c configure -bd 5 -relief sunken
+  .mc configure -scrollsides ew
+   # note that you should not directly 'pack' the canvas.
+  pack .mc -fill both -expand true
+  .c create line -90 -90 90 90 
+  bind .c <Button-1> { puts "X:[%W canvasx %x] Y:[%W canvasy %y]" }
+
+
+* NOTES *
+
+ Valid values for -autohide option:
+  Other than "vertical" and "horizontal", this option allows any 'boolean' value,
+  i.e. value $v should match [string is boolean $v].
+  The following are valid boolean values:
+   0  false  no  off .. plus any abbreviation, case insensitive (deprecated)
+   1  true   yes on  .. plus any abbreviation, case insensitive (deprecated)  
+
+ 
+** Notes about 'destroying' scrodgets **
+
+   ** Just to confirm the standard Tk mechanism **
+   
+   Q: What happens to associated widgets a scrodget is destroyed ?
+   A: it depends on the hierarchical relationship between the scrodget and 
+      its associated widget.
+      If associated-widget is a descendant of scrodget,
+       when scrodget is destroyed, all its descendant are destroyed.
+       ** Example :
+       scrodget .mc
+       .mc associate [canvas .mc.cvs -bg red]
+       pack .mc
+       destroy .mc
+       # note that canvas has been destroyed
+      If associated-widget is not a descendant of scrodget, 
+       when the scrodget is destroyed, it is not destroyed 
+       (of course it disappears from the screen).
+       ** Example :
+       scrodget .mc
+       .mc associate [canvas .mycvs -bg red]
+       pack .mc
+       destroy .mc
+       # note that canvas .mycvs still exists !
+
+

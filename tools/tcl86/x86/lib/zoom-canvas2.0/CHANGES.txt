@@ -1,0 +1,29 @@
+zoom-canvas
+===========
+
+0.9 - First public version
+
+0.9.1 - bugfixing
+* Fix for MouseWheel event handling on Unix/linux (x11)
+* Workaround patch for Bug "MouseWheel on Mac" 
+* Fix for MouseWheel event handling on "win32" for tcltk 8.6b2 and later
+
+1.0 - point item-type
+* added -pointbmp option and ability to specify/change single point's bitmap.
+* documentation updated
+
+1.0.1 - fixed (mitigated) "zoomfit" bug
+* "zoomfit" method was inherently imprecise due to underlying bbox command 
+  whose "return value may overestimate the actual bounding box by a few pixel".
+  Now "zoomfit" method is simply "less" imprecise
+  Now "zoomfit" takes care of canvas border and highlightthickness, too.
+  
+1.0.2 - Added missing C2V and V2C methods !
+
+1.0.3 - BUG-Fix : MouseWheel error on x11 (Linux)
+
+----
+
+2.0 - New Branch - Not compatible with 1.x
+* Fully compatible with (tk) canvas PLUS
+* extra options and methods.

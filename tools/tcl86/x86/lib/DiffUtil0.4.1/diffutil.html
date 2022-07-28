@@ -1,0 +1,276 @@
+<!DOCTYPE html><html><head>
+<title>DiffUtil - Comparision Utilities</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'diffutil.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; 2010, Peter Spjuth
+   -->
+<!-- DiffUtil.n
+   -->
+<body><div class="doctools">
+<h1 class="doctools_title">DiffUtil(n) 0.4.1 diffutil &quot;Comparision Utilities&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>DiffUtil - Compare Stuff</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section3">EXAMPLES</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.6</b></li>
+<li>package require <b class="pkgname">DiffUtil <span class="opt">?0.4.1?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::DiffUtil::diffFiles</b> <span class="opt">?<i class="arg">options</i>?</span> <i class="arg">file1</i> <i class="arg">file2</i></a></li>
+<li><a href="#2"><b class="cmd">::DiffUtil::diffLists</b> <span class="opt">?<i class="arg">options</i>?</span> <i class="arg">list1</i> <i class="arg">list2</i></a></li>
+<li><a href="#3"><b class="cmd">::DiffUtil::compareFiles</b> <span class="opt">?<i class="arg">options</i>?</span> <i class="arg">file1</i> <i class="arg">file2</i></a></li>
+<li><a href="#4"><b class="cmd">::DiffUtil::compareStreams</b> <span class="opt">?<i class="arg">options</i>?</span> <i class="arg">ch1</i> <i class="arg">ch2</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides utilites for comparisons of strings, lists
+and files.
+The base comparison is a Longest Common Substring algorithm based
+on J. W. Hunt and M. D. McIlroy, &quot;An algorithm for differential
+file comparison,&quot; Comp. Sci. Tech. Rep. #41, Bell Telephone
+Laboratories (1976). Available on the Web at the second
+author's personal site: http://www.cs.dartmouth.edu/~doug/</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::DiffUtil::diffFiles</b> <span class="opt">?<i class="arg">options</i>?</span> <i class="arg">file1</i> <i class="arg">file2</i></a></dt>
+<dd><p>Compare two files line by line.
+The return value depends on the <i class="arg">-result</i> option, see below.</p>
+<dl class="doctools_options">
+<dt><b class="option">-nocase</b></dt>
+<dd><p>Ignore case.</p></dd>
+<dt><b class="option">-i</b></dt>
+<dd><p>Ignore case.</p></dd>
+<dt><b class="option">-b</b></dt>
+<dd><p>Ignore space changes. Any sequence of whitespace is treated as a single
+space, except at beginning of line where it is completely ignored.</p></dd>
+<dt><b class="option">-w</b></dt>
+<dd><p>Ignore all spaces.</p></dd>
+<dt><b class="option">-noempty</b></dt>
+<dd><p>Ignore empty lines in initial compare step. I.e. empty lines are considered
+not equal at first. Multiple equal lines gives longer runtimes and by avoiding
+the very common empty line, runtimes are improved. With <i class="arg">-b</i> or <i class="arg">-w</i>,
+all-space lines are considered empty. This is similar to having a <i class="arg">-pivot</i>
+value of 1 just for empty lines.</p></dd>
+<dt><b class="option">-pivot</b> <i class="arg">value</i></dt>
+<dd><p>Ignore common lines in initial compare step. Multiple equal lines gives longer
+runtime and by avoiding them runtime is improved.  The pivot <i class="arg">value</i>
+says how many equal lines there at most may be in <i class="arg">file2</i> for those
+lines to be regarded. The default is 10.</p></dd>
+<dt><b class="option">-nodigit</b></dt>
+<dd><p>Consider any sequence of digits equal.</p></dd>
+<dt><b class="option">-align</b> <i class="arg">list</i></dt>
+<dd><p>Align lines. The argument is a list with an even number of elements. Each
+pair is line numbers in the first and second file. Those lines are considered
+equal and matching, regardless of their contents.</p></dd>
+<dt><b class="option">-range</b> <i class="arg">list</i></dt>
+<dd><p>Diff only a range of the files. The list is {first1 last1 first2 last2}</p></dd>
+<dt><b class="option">-regsub</b> <i class="arg">list</i></dt>
+<dd><p>Apply a search/replace regular expression before comparing. The list consists
+of an even number of elements. Each pair is a regular expression and a
+substitution, as used in <b class="cmd">regsub -all</b>. Multiple pairs are allowed
+and multiple <i class="arg">-regsub</i> are allowed. All patterns will be applied in order
+on each line.</p></dd>
+<dt><b class="option">-regsubleft</b> <i class="arg">list</i></dt>
+<dd><p>Like <i class="arg">-regsub</i> but only applied to the first file.</p></dd>
+<dt><b class="option">-regsubright</b> <i class="arg">list</i></dt>
+<dd><p>Like <i class="arg">-regsub</i> but only applied to the second file.</p></dd>
+<dt><b class="option">-result</b> <i class="arg">style</i></dt>
+<dd><p>Select result style. The default is <i class="arg">diff</i>.</p>
+<dl class="doctools_definitions">
+<dt><b class="const">diff</b></dt>
+<dd><p>Returns a list of differences, each in a four element list.
+{LineNumber1 NumberOfLines1 LineNumber2 NumberOfLines2}
+The first line in a file is number 1.</p></dd>
+<dt><b class="const">match</b></dt>
+<dd><p>The return value is a list of two lists of equal length. The first
+sublist is of line numbers in <i class="arg">file1</i>, and the second sublist is
+of line numbers in <i class="arg">file2</i>.  Each corresponding pair of line numbers
+corresponds to equal lines in the files.</p></dd>
+</dl></dd>
+<dt><b class="option">-encoding</b> <i class="arg">encoding</i></dt>
+<dd><p>Apply encoding when reading files. This works as for <b class="cmd">fconfigure</b>.</p></dd>
+<dt><b class="option">-translation</b> <i class="arg">value</i></dt>
+<dd><p>Apply translation when reading files. This works as for <b class="cmd">fconfigure</b>.</p></dd>
+<dt><b class="option">-gz</b></dt>
+<dd><p>Apply gunzip decompression when reading files. Requires zlib.</p></dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">::DiffUtil::diffLists</b> <span class="opt">?<i class="arg">options</i>?</span> <i class="arg">list1</i> <i class="arg">list2</i></a></dt>
+<dd><p>Compare two lists element by element.
+The return value depends on the <i class="arg">-result</i> option, see below.</p>
+<dl class="doctools_options">
+<dt><b class="option">-nocase</b></dt>
+<dd><p>Ignore case.</p></dd>
+<dt><b class="option">-i</b></dt>
+<dd><p>Ignore case.</p></dd>
+<dt><b class="option">-b</b></dt>
+<dd><p>Ignore space changes.</p></dd>
+<dt><b class="option">-w</b></dt>
+<dd><p>Ignore all spaces.</p></dd>
+<dt><b class="option">-noempty</b></dt>
+<dd><p>Ignore empty elements in initial compare step. I.e. empty elements are considered
+not equal at first. Multiple equal elements give longer runtimes and by avoiding
+the very common empty element, runtimes are improved. With <i class="arg">-b</i> or <i class="arg">-w</i>,
+all-space elements are considered empty.
+Empty elements that obviously matches are noted as equal in a post processing
+step, but empty elements within change blocks will be reported as changes.</p></dd>
+<dt><b class="option">-nodigit</b></dt>
+<dd><p>Consider any sequence of digits equal.</p></dd>
+<dt><b class="option">-result</b> <i class="arg">style</i></dt>
+<dd><p>Select result style. The default is <i class="arg">diff</i>.</p>
+<dl class="doctools_definitions">
+<dt><b class="const">diff</b></dt>
+<dd><p>Returns a list of differences, each in a four element list.
+{ElementIndex1 NumberOfElements1 ElementIndex2 NumberOfElements2}</p></dd>
+<dt><b class="const">match</b></dt>
+<dd><p>The return value is a list of two lists of equal length. The first
+sublist is of indices in <i class="arg">list1</i>, and the second sublist is
+of indices in <i class="arg">list2</i>.  Each corresponding pair of indices
+corresponds to equal elements in the sequences.</p></dd>
+</dl></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">::DiffUtil::compareFiles</b> <span class="opt">?<i class="arg">options</i>?</span> <i class="arg">file1</i> <i class="arg">file2</i></a></dt>
+<dd><p>Compare two files.
+The return value is a boolean which is true when equal.</p>
+<dl class="doctools_options">
+<dt><b class="option">-nocase</b></dt>
+<dd><p>Ignore case.</p></dd>
+<dt><b class="option">-ignorekey</b></dt>
+<dd><p>Ignore keyword substitutions. This is limited to the first 60k of the file.</p></dd>
+<dt><b class="option">-encoding</b> <i class="arg">enc</i></dt>
+<dd><p>Read files with this encoding. (As in fconfigure -encoding.)</p></dd>
+<dt><b class="option">-translation</b> <i class="arg">trans</i></dt>
+<dd><p>Read files with this translation. (As in fconfigure -translation.)</p></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">::DiffUtil::compareStreams</b> <span class="opt">?<i class="arg">options</i>?</span> <i class="arg">ch1</i> <i class="arg">ch2</i></a></dt>
+<dd><p>Compare two channel streams.
+The return value is a boolean which is true when equal.</p>
+<dl class="doctools_options">
+<dt><b class="option">-nocase</b></dt>
+<dd><p>Ignore case.</p></dd>
+<dt><b class="option">-ignorekey</b></dt>
+<dd><p>Ignore keyword substitutions. This is limited to the first 60k read.</p></dd>
+<dt><b class="option">-binary</b></dt>
+<dd><p>Treat stream as binary data. Normally this means it is configured
+with -translation binary.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">EXAMPLES</a></h2>
+<pre class="doctools_example">
+% DiffUtil::diffFiles $file1 $file2
+{{3 2 3 4}}
+</pre>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p>diff, lcs, longest common substring</p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2010, Peter Spjuth</p>
+</div>
+</div></body></html>

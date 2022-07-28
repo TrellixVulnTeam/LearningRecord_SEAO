@@ -1,0 +1,30 @@
+Package kettle 1
+Meta author       {Andreas Kupries}
+Meta build::by    ashok
+Meta build::date  2022-06-10
+Meta category     Builder/Developer support
+Meta description  Kettle is a system to make building Tcl packages quick
+Meta description  and easy. More importantly, possibly, to make writing
+Meta description  the build system for Tcl packages easy. As such kettle
+Meta description  is several things: (1) A DSL helping you to write build
+Meta description  systems for your packages. (2) A package implementing
+Meta description  this DSL. (3) An application which can serve as the
+Meta description  interpreter for a build file containing commands in the
+Meta description  above DSL.
+Meta entrysource  kettle.tcl
+Meta included     kettle.tcl app.tcl atexit.tcl benchmarks.tcl critcl.tcl
+Meta included     depend.tcl doc.tcl figures.tcl gui.tcl invoke.tcl
+Meta included     io.tcl lambda.tcl mdref.tcl meta.tcl options.tcl
+Meta included     ovalidate.tcl path.tcl recipes.tcl special.tcl
+Meta included     standard.tcl status.tcl stream.tcl strutil.tcl tcl.tcl
+Meta included     tclapp.tcl testsuite.tcl tool.tcl try.tcl testmain.tcl
+Meta included     testutilities.tcl benchmain.tcl benchutilities.tcl
+Meta location     https://core.tcl.tk/akupries/kettle
+Meta platform     tcl
+Meta require      {Tcl 8.5-}
+Meta subject      {build support} critcl teapot {meta data} doctools
+Meta subject      diagram
+Meta summary      Build support package.
+Meta vc::revision fatal: No annotated tags can describe
+Meta vc::revision 'f6f1b090bb32a39a62e141574284332848892f07'.
+Meta vc::system   git

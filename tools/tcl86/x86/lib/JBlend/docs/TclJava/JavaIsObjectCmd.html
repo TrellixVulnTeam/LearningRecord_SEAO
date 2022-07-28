@@ -1,0 +1,63 @@
+<HTML>
+<TITLE>
+The java::isobject Command
+</TITLE>
+
+<BODY>
+<HR>
+
+<H3>
+The java::isobject Command
+</H3>
+
+<HR>
+
+
+<DL>
+
+<H3>
+Usage:
+</H3>
+
+<DD><B>java::isobject</B> <I>object</I>
+
+<P>
+The <B>java::isobject</B> command is used to determine if <I>object</I> is a valid Java object,
+If the <I>object</I> argument is a Java object <B>java::isobject</B> will return 1. 
+Otherwise, <B>java::isobject</B> returns 0.
+<P>
+
+</DL>
+
+<DL>
+
+<H3>
+Examples:
+</H3>
+
+<DD>
+<code>
+<pre>
+% set obj [java::new String mystring]
+% java::isobject $obj
+1
+% set obj [java::null]
+% java::isobject $obj
+1
+% set obj "java0x999999" ;# fake java object
+% java::isobject $obj
+0
+</pre>
+</code>
+
+</DL>
+
+<PRE>
+Based on TclBlend <A HREF="../license.html">Copyright</A> &#169; 1997-1998 Sun Microsystems, Inc.
+</PRE>
+<pre>JBlend is Copyright &copy; 2016 - Irrational Numbers.<br></pre>
+
+
+</BODY>
+</HTML>
+

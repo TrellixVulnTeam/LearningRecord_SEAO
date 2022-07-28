@@ -1,0 +1,959 @@
+package require TTXN
+
+ # Software Under testing is package Bezier 1.0
+ #
+package require Bezier 1.1
+
+
+    # ====================================================
+    # INIT: 
+    # ====================================================
+    
+     set TESTDIR [file normalize [file dirname [info script]]]
+
+     proc resetApproxError {} { set ::ApproxError 0.01 ;# default }
+     resetApproxError
+     
+     tcltest::customMatch approx approxCompare     
+     proc approxCompare {expected actual} {
+    	expr {abs($expected - $actual) <= $::ApproxError ?true:false} 
+     }      
+
+     tcltest::customMatch approxPoint approxComparePoint     
+     proc approxComparePoint {expectedPoint actualPoint} {
+        foreach expected $expectedPoint actual $actualPoint {
+    	   if { abs($expected - $actual) > $::ApproxError } {return false}
+        }
+        return true    	   
+     }      
+          
+     proc compareList {A B} {
+        foreach a $A b $B {
+            if { $a != $b } {return false}
+        }
+        return true
+     }    
+             
+
+Name: defaults.get
+Description: { get the defaults }
+Test: {
+    lsort [array names Bezier::Default]
+}
+Expected: {-flatness.tolerance -length.tolerance}
+
+
+Name: defaults.set
+Description: { change the defaults }
+Setup: { set oldval $Bezier::Default(-length.tolerance) }
+Test: {
+    set Bezier::Default(-length.tolerance) [expr {2.0*$oldval}]
+    return done
+}
+Cleanup: { set Bezier::Default(-length.tolerance) $oldval ; unset oldval}
+Expected: done
+
+
+
+Name: create.1
+Description: { create a new Bezier's curve (with a list of parameters) }
+Test: {
+   set pts {{0.0 0.0} {100.00 100.00} {550.0 200.0}} 
+   set f [Bezier::new $pts]
+   set pts1 [$f points]
+   compareList $pts $pts1
+}
+Cleanup: { $f destroy  }
+Expected: true
+
+
+Name: create.2
+Description: { create a new Bezier's curve (with a sequence of parameters) }
+Test: { 
+   set pts {{0.0 0.0} {100.00 100.00} {550.0 200.0}} 
+   set f [Bezier::new {*}$pts]
+   set pts1 [$f points]
+   compareList $pts $pts1
+}
+Cleanup: { $f destroy  }
+Expected: true
+
+
+Name: create.1.NEG.1
+Description: { try to create a Bezier's curve with empty parameter list }
+Test: { 
+   set f [Bezier::new {}]
+}
+Expected: error glob {Malformed Points: * is not a Point}
+
+
+Name: create.1.NEG.2
+Description: { try to create a Bezier's curve with point of different dimension }
+Test: { 
+   set f [Bezier::new {1 2} {3}]
+}
+Expected: error glob {Dimension of point * different from dimension of previous points}
+
+
+Name: create.1.NEG.3
+Description: { try to create a Bezier's curve with bad parameters }
+Test: { 
+   set f [Bezier::new {1 2} {xxx 3}]
+}
+Expected: error glob {Malformed Points: * is not a Point}
+
+
+Name: create.1.NEG.4
+Description: { try to create a Bezier's curve with bad parameters }
+Test: { 
+   set f [Bezier::new {{1 2} {3 4} {xxx} {5} {6}} ]
+}
+Expected: error glob {Malformed Points: * is not a Point}
+
+
+Name: create.2.NEG.1
+Description: { try to create a Bezier's curve without parameters }
+Test: { 
+   set f [Bezier::new]
+}
+Expected: error glob {Malformed Points: * is not a Point}
+
+
+Name: create.2.NEG.2
+Description: { try to create a Bezier's curve with points of different dimension }
+Test: { 
+   set f [Bezier::new {1} {2 3}]
+}
+Expected: error glob {Dimension of point * different from dimension of previous points}
+
+
+Name: create.2.NEG.3
+Description: { try to create a Bezier's curve with bad parameters }
+Test: { 
+   set f [Bezier::new {1 2} {xxx 3}]
+}
+Expected: error glob {Malformed Points: * is not a Point}
+
+
+Name: create.3
+Description: { check fully qualified name }
+Test: {
+    namespace eval ::BezierTest { 
+        set nf [Bezier::new {1 2} {3 4} ]
+    }        
+    return ${BezierTest::nf}
+}
+Cleanup: { ${BezierTest::nf} destroy }
+Expected: glob ::BezierTest::bezier_* 
+
+
+Name: create.4
+Description: { [Bezier::new {x y}] should create a Bezier_0 object }
+Test: {
+    set f [Bezier::new {1 2} ]
+    $f info class
+}
+Cleanup: { $f destroy }
+Expected: ::Bezier_0
+
+
+Name: create.5
+Description: { [Bezier::new {x y} {x y}] should create a Bezier_1 object }
+Test: {
+    set f [Bezier::new {1 2} {3 4}]
+    $f info class
+}
+Cleanup: { $f destroy }
+Expected: ::Bezier_1
+
+
+Name: create.6
+Description: { [Bezier::new {x y} {x y} ...] should create a (superclass) Bezier object }
+Test: {
+    set f [Bezier::new {1 2} {3 4} {4 6}]
+    $f info class
+}
+Cleanup: { $f destroy }
+Expected: ::Bezier
+
+
+
+Name: spaceDim
+Description: { space-dimension of a curve }
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6} {7 8} {9 10}]
+   $f spaceDim
+}
+Cleanup: { $f destroy }
+Expected: 2
+
+
+
+Name: PZero
+Description: { return {0 0 ... 0 } }
+Setup: { set ::ApproxError 1e-9 }
+Test: { 
+   set f [Bezier::new {1 2 3 4} {5 6 7 8}]
+   $f PZero
+}
+Cleanup: { $f destroy ; resetApproxError }
+Expected: approxPoint {0 0 0 0}
+
+
+
+Name: degree
+Description: { degree of a Bezier's curve }
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6} {7 8} {9 10}]
+   $f degree
+}
+Cleanup: { $f destroy }
+Expected: 4
+
+
+
+Name: points
+Description: { Bezier's curve control points }
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6} {7 8} {9 10}]
+   $f points
+}
+Cleanup: { $f destroy }
+Expected: {{1 2} {3 4} {5 6} {7 8} {9 10}}
+
+
+Name: point.get.1
+Description: { Get the last point }
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6}]
+   $f point end
+}
+Cleanup: { $f destroy }
+Expected: {5 6}
+
+
+Name: point.get.NEG.1
+Description: { Get the a point out of index }
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6}]
+   $f point end+1
+}
+Cleanup: { $f destroy }
+Expected: error {list index out of range}
+
+
+Name: point.set.1
+Description: { Change the 0-th control-point }
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6}]
+   $f point 0 {1.1 2.2}
+   compareList [$f points] {{1.1 2.2} {3 4} {5 6}}
+}
+Cleanup: { $f destroy }
+Expected: true
+
+
+Name: point.set.2
+Description: { Change the last control-point }
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6}]
+   $f point end {5.5 6.6}
+   compareList [$f points] {{1 2} {3 4} {5.5 6.6}}
+}
+Cleanup: { $f destroy }
+Expected: true
+
+
+Name: point.set.NEG.1
+Description: { Change a control point - out of range}
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6}]
+   $f point end+1 {1 1}
+}
+Cleanup: { $f destroy }
+Expected: error {list index out of range}
+
+
+Name: point.set.NEG.2
+Description: { Change a control point - bad point}
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6}]
+   $f point 0 {one two}
+}
+Cleanup: { $f destroy }
+Expected: error glob {Malformed Points: * is not a Point}
+
+
+Name: point.set.NEG.2
+Description: { Change a control point - wrong dimension}
+Test: { 
+   set f [Bezier::new {1 2} {3 4} {5 6}]
+   $f point 0 {1 2 3}
+}
+Cleanup: { $f destroy }
+Expected: error glob {Dimension of point * different from dimension of previous points}
+
+
+
+Name: clone.1
+Description: { create a clone: check if polygon points are equal }
+Test: {
+    set c1 [Bezier::new {0.0 0.0} {100.00 100.00} {550.0 200.0}]
+    set c2 [$c1 clone]
+    compareList [$c1 points] [$c2 points]
+}
+Cleanup: { $c1 destroy ; $c2 destroy }
+Expected: true
+
+
+Name: clone.2
+Description: { create a clone: check if they are the same (sub)class }
+Test: {
+    set pts {{0.0 0.0} {100.00 100.00}} 
+    set c1 [Bezier::new $pts]        ; # this should be a Bezier_1 object
+    set c2 [$c1 clone]
+    compareList \
+        [list ::Bezier_1 [$c1 info class]] \
+        [list [$c2 info class] ::Bezier_1]
+}
+Cleanup: { $c1 destroy ; $c2 destroy }
+Expected: true
+
+
+Name: clone.3
+Description: { create a clone: check if it's in the caller's namespace }
+Test: {
+    namespace eval ::BezierTestX {
+        set ::c1 [Bezier::new {0.0 0.0} {100.00 100.00}]
+    }
+    namespace eval ::BezierTestY {        
+        set ::c2 [$::c1 clone]
+    }
+    namespace qualifiers $::c2
+}
+Cleanup: { $::c1 destroy ; $::c2 destroy }
+Expected: ::BezierTestY
+
+
+
+Name: polylength
+Description: { length of the control-points polyline }
+Setup: { set ::ApproxError 1e-3 }
+Test: { 
+    set f [Bezier::new {100 100}  {100 200}  {200 250}]
+    $f polylength
+}
+Cleanup: { $f destroy ; resetApproxError }
+Expected: approx 211.803
+
+
+
+Name: baselength
+Description: { length of the control-points polyline }
+Setup: { set ::ApproxError 1e-3 }
+Test: {
+    set f [Bezier::new {100 100}  {100 200}  {200 250}]
+    $f baselength
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 180.277
+
+
+
+Name: at.1
+Description: { evaluate a curve at t=0 }
+Test: { 
+    set f [Bezier::new {100 100}  {100 200}  {200 250}]
+    return [$f at 0.0]
+}
+Cleanup: { $f destroy }
+Expected: approxPoint {100 100} 
+
+
+Name: at.2
+Description: { evaluate a curve at t=1 }
+Test: { 
+    set f [Bezier::new {100 100}  {100 200}  {200 250}]
+    return [$f at 1.0]
+}
+Cleanup: { $f destroy }
+Expected: approxPoint {200 250} 
+
+
+Name: at.3
+Description: { evaluate a curve at t=0.35 }
+Setup: { set ::ApproxError 1e-4 }
+Test: { 
+    set f [Bezier::new {100 100}  {100 200}  {200 250}]
+    return [$f at 0.35]
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approxPoint {112.25 163.8749999} 
+
+
+
+Name: derivative.0
+Description: { derivative of a 0-degree curve }
+Test: {
+    set f [Bezier::new {100 200}]
+    set df [$f derivative]
+    $df points
+}
+Cleanup: { $f destroy ; $df destroy }
+Expected: {{0.0 0.0}}
+
+
+Name: derivative.1
+Description: { derivative of a 1-degree curve }
+Test: {
+    set f [Bezier::new {10.0 10.0} {15.0 20.0}]
+    set df [$f derivative]
+    $df points
+}
+Cleanup: { $f destroy ; $df destroy }
+Expected: {{5.0 10.0}}
+
+
+Name: derivative.N
+Description: { derivative of a N-degree curve }
+Setup: { set ::ApproxError 0 }
+Test: {
+    set f [Bezier::new {10 10} {15 20} {50 60} {100 0}]
+    set df [$f derivative]
+    $df points
+}
+Cleanup: { $f destroy ; $df destroy; resetApproxError }
+Expected: {{15 30} {105 120} {150 -180}}
+
+
+Name: internal_derivative.delete
+Description: { deleting a curve, also deletes its internal derivative }
+Test: {
+    set instances_T0 [lsort [itcl::find object -isa Bezier]]
+    set f [Bezier::new {10 10} {15 20}]
+    set df [$f derivative]
+     # at this point, other than $f and $df there should be a another instance (the internal derivative)
+    $f destroy ; $df destroy
+     # after deleting $f (with its internal derivative) and $df,
+     # there should be no other instances
+    set instances_T1 [lsort [itcl::find object -isa Bezier]]  
+    compareList $instances_T0 $instances_T1
+}
+Expected: true
+
+
+
+Name: tangent_at.0
+Description: { tangent_at t=0 }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    $f tangent_at 0.0
+}
+Cleanup: { $f destroy }
+Expected: approxPoint {0.0 1.0} 
+
+
+Name: tangent_at.1
+Description: { tangent_at t=1 }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    $f tangent_at 1.0
+}
+Cleanup: { $f destroy }
+Expected: approxPoint {-1.0 0.0} 
+
+
+Name: tangent_at.0.2
+Description: { tangent_at t=0.35 }
+Setup: { set ::ApproxError 1e-4 }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    $f tangent_at 0.2
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approxPoint {0.7474 0.6643}
+
+
+Name: vtangent_at.0.35
+Description: { vtangent_at t=0.35 }
+Setup: { set ::ApproxError 1e-4 }
+Test: {
+    set f [Bezier::new {100 100}  {100 200}  {200 250}]
+    set V [$f vtangent_at 3.0 0.35]
+    
+    lassign $V P0 P1
+    set res0 [approxComparePoint $P0 {112.25 163.875}]
+    set res1 [approxComparePoint $P1 {113.4216 166.6367}]
+    list $res0 $res1
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: {true true}
+
+
+Name: tangent_at.cusp
+Description: { tangent_at a cusp point }
+Setup: { set ::ApproxError 1e-9 }
+Test: {
+    set f [Bezier::new {0 0} {1000 1000} {0 1000} {1000 0}] ;# curv with a cusp
+    set V [$f tangent_at 0.5]
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approxPoint {0.0 0.0}
+
+
+
+Name: normal_at.0
+Description: { normal_at t=0 }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    $f normal_at 0.0
+}
+Cleanup: { $f destroy }
+Expected: approxPoint {-1.0 0.0} 
+
+
+Name: normal_at.1
+Description: { normal_at t=1 }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    $f normal_at 1.0
+}
+Cleanup: { $f destroy }
+Expected: approxPoint {0.0 -1.0} 
+
+
+Name: normal_at.0.2
+Description: { normal_at t=0.2 }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    $f normal_at 0.2
+}
+Cleanup: { $f destroy }
+Expected: approxPoint {-0.664 0.7474} 
+ 
+
+Name: vnormal_at.0.35
+Description: { vnormal_at t=0.35 }
+Test: {
+    set f [Bezier::new {100 100}  {100 200}  {200 250}]
+    set V [$f vnormal_at 3.0 0.35] 
+    lassign $V P0 P1
+    set res0 [approxComparePoint $P0 {112.25 163.875}]
+    set res1 [approxComparePoint $P1 {109.488 165.0466}]
+    list $res0 $res1
+}
+Cleanup: { $f destroy }
+Expected: {true true}
+
+
+Name: normal_at.cusp
+Description: { normal_at a cusp point }
+Setup: { set ::ApproxError 1e-9 }
+Test: {
+    set f [Bezier::new {0 0} {1000 1000} {0 1000} {1000 0}] ;# curv with a cusp
+    set V [$f normal_at 0.5]
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approxPoint {0.0 0.0}
+
+
+
+Name: split_at.NEG.1
+Description: { split a curve - bad optional params }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    lassign [$f split_at 0.2 bbboootthh] left right
+}
+Cleanup: { $f destroy }
+Expected: error {wrong "side" parameter: must be one of left, right, both}
+
+
+Name: split_at.both-sides-explict
+Description: { split a curve at t=0.2 in two parts (explicit)}
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    lassign [$f split_at 0.2 both] left right
+     #properties: 
+     set res {}
+     lappend res [approxComparePoint [$f at 0.2]  [$left at 1.0]]
+     lappend res [approxComparePoint [$left at 0.0]  [$f at 0.0]]
+     lappend res [approxComparePoint [$right at 1.0] [$f at 1.0]]
+     lappend res [approxComparePoint [$left at 1.0]  [$right at 0.0]]
+     lappend res [approxComparePoint [$left tangent_at 1.0]  [$right tangent_at 0.0]]
+    return $res
+}
+Cleanup: { $f destroy; $left destroy; $right destroy }
+Expected: {true true true true true}
+
+
+Name: split_at.both-sides-implicit
+Description: { split a curve at t=0.2 int two parts (implicit) }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    lassign [$f split_at 0.2] left right
+     #properties: 
+     set res {}
+     lappend res [approxComparePoint [$f at 0.2]  [$left at 1.0]]
+     lappend res [approxComparePoint [$left at 0.0]  [$f at 0.0]]
+     lappend res [approxComparePoint [$right at 1.0] [$f at 1.0]]
+     lappend res [approxComparePoint [$left at 1.0]  [$right at 0.0]]
+     lappend res [approxComparePoint [$left tangent_at 1.0]  [$right tangent_at 0.0]]
+    return $res
+}
+Cleanup: { $f destroy; $left destroy; $right destroy }
+Expected: {true true true true true}
+
+
+Name: split_at.left-side
+Description: { split a curve at t=0.2 }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    set left [$f split_at 0.2 left]
+     #properties: 
+     set res {}
+     lappend res [approxComparePoint [$f at 0.0]  [$left at 0.0]]
+     lappend res [approxComparePoint [$f at 0.2]  [$left at 1.0]]
+     lappend res [approxComparePoint [$f tangent_at 0.2]  [$left tangent_at 1.0]]
+    return $res
+}
+Cleanup: { $f destroy; $left destroy }
+Expected: {true true true}
+
+
+Name: split_at.right-side
+Description: { split a curve at t=0.2 }
+Test: {
+    set f [Bezier::new {10 10} {10 20} {40 20} {-20 20}]
+    set right [$f split_at 0.2 right]
+     #properties: 
+     set res {}
+     lappend res [approxComparePoint [$f at 0.2]  [$right at 0.0]]
+     lappend res [approxComparePoint [$f at 1.0]  [$right at 1.0]]
+     lappend res [approxComparePoint [$f tangent_at 0.2]  [$right tangent_at 0.0]]
+    return $res
+}
+Cleanup: { $f destroy; $right destroy }
+Expected: {true true true}
+
+
+
+Name: length.exact
+Description: { compute length (cubic) }
+Setup: { set ::ApproxError 0.1 }
+Test: {
+     # length of a cubic with control points on a SQUARE is 2*A
+    set f [Bezier::new {0 0} {0 500} {500 500} {500 0}]
+    $f length -tolerance 0.1
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 1000.0
+
+
+Name: length.cubic.cusp
+Description: { compute length (cubic with cuspide) }
+Setup: { set ::ApproxError 1e-3 }
+Test: {
+  # values grabbed from https://stackoverflow.com/questions/31600441/bezier-curve-arc-lengths/38626906#38626906
+  # as returned by the SVG engine of the browser
+  # expected result is 5.981128692626953
+    set f [Bezier::new {0 0} {2 0} {2 4} {4 4}]
+    $f length -tolerance 0.001
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 5.981128692626953
+
+
+Name: length.cubic.lace
+Description: { compute length (cubic with a lace) }
+Setup: { set ::ApproxError 1e-2 }
+Test: {
+    set f [Bezier::new {20 0} {100 100} {0 100} {80 0}]
+    $f length -tolerance 0.01
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 170.58167123371223
+
+
+Name: length.NEG.0
+Description: { compute length (cubic with cuspide) - bad options }
+Test: {
+    set f [Bezier::new {0 0} {2 0} {2 4} {4 4}]
+    $f length -badarg 0.001
+}
+Cleanup: { $f destroy }
+Expected: error glob "bad option *"
+
+
+Name: length.NEG.1
+Description: { compute length (cubic with cuspide) - incomplete options }
+Test: {
+    set f [Bezier::new {0 0} {2 0} {2 4} {4 4}]
+    $f length -tolerance
+}
+Cleanup: { $f destroy }
+Expected: error glob "Missing value *"
+
+
+Name: length.NEG.2
+Description: { compute length (cubic with cuspide) - bad options }
+Test: {
+    set f [Bezier::new {0 0} {2 0} {2 4} {4 4}]
+    $f length -tolerance no
+}
+Cleanup: { $f destroy }
+Expected: error glob "Wrong value *"
+
+
+Name: length.relative.tolerance
+Description: { compute length (cubic with cuspide) - relative tolerance }
+Test: {
+    set f [Bezier::new {0 0} {2 0} {2 4} {4 4}]
+    set len [$f length -tolerance -1e-5]
+    set relErr [expr {abs(5.981128692626953-$len)/5.981128692626953}]
+    return [expr {$relErr < 1e-5}]
+}
+Cleanup: { $f destroy }
+Expected: 1
+
+
+Name: length.1.NEG
+Description: { length of curve - approx error too small }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f length -tolerance 0
+}
+Cleanup: { $f destroy }
+Expected: error glob {Wrong value for "-tolerance"*}
+
+
+Name: length.tolerance.abs
+Description: { length of curve with absolute tolerance 0.0001 }
+Setup: { set ::ApproxError 1e-3 }
+Test: {
+    set f [Bezier::new {0 0} {200 200} {0 200} {200 0}]
+    $f length -tolerance  +0.0001
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 365.6854250725435
+
+
+Name: length.2.tolerance.rel
+Description: { length of curve with negative tolerance (i.e. relative to polylength}
+Test: {
+    set f [Bezier::new {0 0} {200 200} {0 200} {200 0}]
+      # error should be less than 1% of the curve length  ( a very large error )
+    set len [$f length -tolerance -0.01]
+    set relErr [expr {abs(365.685-$len)/365.685}] 
+     # len is 365.86771721417546 ... note result should be 365.685 ...
+     # absolute error is 0.18  but relative error is about 0.0004996573941382734
+     # very good !!!
+}
+Cleanup: { $f destroy }
+Expected: approx 0.01
+
+
+Name: length_at.NEG.1
+Description: { length_At - bad optional parameters }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f length_at 0.0 -badoption 777
+}
+Cleanup: { $f destroy }
+Expected: error glob {bad option "-badoption"*}
+
+
+Name: length_at.1
+Description: { length of curve from B(0) to B(0)}
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f length_at 0.0
+}
+Cleanup: { $f destroy }
+Expected: 0.0
+
+
+Name: length_at.2
+Description: { length of curve from B(0) to B(0.01)}
+Setup: { set ::ApproxError 1e-3 }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f length_at 0.001 -tolerance 1.0e-3
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 0.4236
+
+
+Name: length_at.3
+Description: { length of curve from B(0) to B(1.0)}
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    set len0 [$f length]
+    set len1 [$f length_at 1.0]
+    expr {$len0 == $len1}
+}
+Cleanup: { $f destroy }
+Expected: 1
+
+
+
+Name: invlength.NEG.1
+Description: { invlength - bad optional parameters }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f invlength 33 -badoption 777
+}
+Cleanup: { $f destroy }
+Expected: error glob {bad option "-badoption"*}
+
+
+Name: invlength.1
+Description: { find t such that length(T) = 0.0}
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f invlength 0.0
+}
+Cleanup: { $f destroy }
+Expected: approx 0.0
+
+
+Name: invlength.2
+Description: { find t such that length(T) = 183.081}
+Setup: { set ::ApproxError 1e-3 }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f invlength 183.081 -tolerance 1e-3
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 1.0
+
+
+Name: invlength.2a
+Description: { find t such that length(T) = 10000000   ( more than length )}
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f invlength 100000000
+}
+Cleanup: { $f destroy }
+Expected: 1.0
+
+
+Name: invlength.3
+Description: { find t such that length(T) = 170.0}
+Setup: { set ::ApproxError 1e-4 }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f invlength 170.0 -tolerance 1e-4
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 0.96823
+
+
+Name: invlength.4
+Description: { prove invlen is the inverse of length_at}
+Setup: { set ::ApproxError 1e-3 }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    set len [$f length_at 0.123 -tolerance 1e-3]
+    $f invlength $len -tolerance 1e-3
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approx 0.123
+
+
+ # BUGFIX for 1.0.4
+Name: invlength.x.degenerate
+Description: {invlength of a degenerate Bezier_1 (line)}
+Test: {
+    set f [Bezier::new {100 200} {100 200}]
+    $f invlength 0.0
+}
+Cleanup: { $f destroy }
+Expected: 0.0
+
+
+
+Name: t_split_uniform.0
+Description: { returns list of t splitting curve in part of equal length (classic way)}
+Setup: { set ::ApproxError 1e-2 }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    $f t_splitUniform 50.5
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approxPoint { 0.0 0.15017858202214868 0.6753006299624065 0.9159385827995253 }
+
+
+Name: t_split_uniform.1
+Description: { returns list of t splitting curve in part of equal length }
+Setup: { set ::ApproxError 1e-2 }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+     # when you add options, you mustexplicit all the default params.
+    $f t_splitUniform 50.5 0.0 -tolerance 1e-2
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approxPoint { 0.0 0.15017858202214868 0.6753006299624065 0.9159385827995253 }
+
+
+Name: t_split_uniform.2
+Description: { t_splitUniform: prove curve length between points is 50 }
+Setup: { set ::ApproxError 0.1 }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    set lengths {}
+    foreach t [$f t_splitUniform 50.0 0.0 -tolerance 0.1] {
+        lappend lengths [$f length_at $t -tolerance 1e-3]    
+    }
+    return $lengths
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: approxPoint { 0 50 100 150 }
+
+
+Name: t_split_uniform.3
+Description: { t_splitUniform: pLen and splitLeftOver ... }
+Setup: { set ::ApproxError 0.01 }
+Test: {
+    set f [Bezier::new {100 100} {200 200} {100 200} {200 100}]
+    set lengths {}
+     # split curve in segments of length 50, skipping an initial segment having length=10
+    foreach t [$f t_splitUniform 50.0 10.0 -tolerance 0.01] {
+        lappend lengths [$f length_at $t -tolerance 1e-4]    
+    }
+     # note that the expected list is equal to the expectedlist of previous
+     # testcase, with +10 added to each element
+    set res {}
+    lappend res [approxComparePoint $lengths { 10 60 110 160 }]
+     # leftOver should be totalLength-160 = 22.842
+    lappend res [approxCompare [$f splitLeftOver] 22.842]
+    return $res
+}
+Cleanup: { $f destroy; resetApproxError }
+Expected: {true true}
+
+
+ # BUGFIX for 1.0.4
+Name: t_split_uniform.x.degenerate
+Description: {t_split_uniform of a degenerate Bezier_1 (line)}
+Test: {
+    set f [Bezier::new {100 200} {100 200}]
+    $f t_splitUniform 10
+}                                   
+Cleanup: { $f destroy }
+Expected: {0.0}
+
+ # --------------------------------------------------------
+
+Name: memory-leaks
+Description: { check if all created objects were properly destroyed }
+Test: {
+    itcl::find object -isa Bezier
+}    
+Expected: {}
+
+
+# =========================================================
+# =========================================================
+
+::tcltest::cleanupTests
+  

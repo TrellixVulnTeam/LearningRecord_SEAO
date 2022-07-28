@@ -1,0 +1,115 @@
+'''BContour 1.1''' '' BContour ''
+
+a BContour is a sequences of connected Bezier curves, not necessarily a closed contour.
+
+
+**SYNOPSIS**
+
+
+package require '''Itcl'''
+
+package require '''Bezier ?1.1?'''
+
+package require '''BContour ?1.1?'''
+
+   * '''::BContour::new''' ''point''
+
+   * ''bcObj'' '''append''' ''point'' ''...''
+
+   * ''bcObj'' '''destroy'''
+
+   * ''bcObj'' '''strokes''' ''i''
+
+   * ''bcObj'' '''strokes'''
+
+   * ''bcObj'' '''isclosed'''
+
+   * ''bcObj'' '''isContinuityC1''' ''i''
+
+   * ''bcObj'' '''length''' ?'''-tolerance''' ''tolerance''?
+
+   * ''bcObj'' '''onUniformDistance''' ''dl'' ''kind'' ?'''-tolerance''' ''tolerance''?
+
+   * ''bzObj'' '''flatnesstolerance'''
+
+   * ''bzObj'' '''flatnesstolerance''' ''val''
+
+
+
+
+**DESCRIPTION**
+
+
+
+**INTRODUCTION**
+
+A BContour is a sequences of connected Bezier curves. Aim of this package is to provide a method for splitting the contour in sub-curves with the same length. A BContour is built by appending contiguos Bezier curves (also called ''strokes''); In order to be able to split the contour in uniform-length sub-curves, and also to be able to preserve its 'shape', this package introduces the notion of C1-continuity: if two contiguos strokes have, in their joining point, the same prime derivative, then the two strokes are grouped, so that they could be split better.
+
+**COMMANDS**
+
+A '''BContour''' is built by first setting its initial point, then by repeatedly '''append'''ing all the control-points of the Bezier curves, without repeating the control-points in common.
+
+   '''::BContour::new''' ''point'':    returns the (fully qualified) name of a new object representing a BContour. Object is created in the caller's namespace.   
+
+**METHODS**
+
+The following commands are possible for a BContour-object:
+
+   ''bcObj'' '''append''' ''point'' ''...'':    adds to the BContour a new Bezier curve, i.e all its control-points BUT the first (since it is already stored). All points of a BContour must have the same dimension. 
+======
+
+   # creates a new contour: set the initial point  (this is a 2D contour)"
+   set f [BContour::new {1 2} ]
+   $f append {3 4} {5 6}  ;# a degree:2 curve  (Quadratic Bezier)
+   $f append {20 0}       ;# a degree:1 curve  (straight segment)
+   $f append {25 -9} {0 -15} {-1 33.3} {-15.32 3.0} ;# a degree:4 curve
+
+======
+
+
+   ''bcObj'' '''destroy''':    destroys the object, including its storage space and associated command. 
+
+   ''bcObj'' '''strokes''' ''i'':    returns the list of control-points of the ''i''-th stroke. Argument ''i'' can be a an integer, as well as "end", "end-1", ... 
+
+   ''bcObj'' '''strokes''':    returns the list of all the strokes, i.e. a list of list of control-points. 
+
+   ''bcObj'' '''isclosed''':    returns true if the contour is closed. 
+
+   ''bcObj'' '''isContinuityC1''' ''i'':    returns true if the ''i''-th stroke and next stroke are C1-continuos (prime derivate collinear). If ''i'' is the last stroke and the contour is closed, then the first stroke is used as the ''next'' stroke. 
+
+   ''bcObj'' '''length''' ?'''-tolerance''' ''tolerance''?:    returns the (approximated) length of the contour. Approximation is controlled by the ''tolerance'' value. You can change the default value for ''tolerance'' by setting the global variable '''BContour::Default(-tolerance)'''. 
+
+   ''bcObj'' '''onUniformDistance''' ''dl'' ''kind'' ?'''-tolerance''' ''tolerance''?:    splits the whole contour in sub-curves each having a curve-length of (about) ''dL''. Note that the initial ''dL'' is internally 'rounded', so that it divides each sequence of curves with C1-continuity in N parts of length dL*  WARNING: the last point (t=1) is NOT returned.  Result depends on the ''kind'' parameter: For ''kind'' '''at''','''tangent_at''','''normal_at''', result is a list of points and the last point is NOT returned.  For ''kind'' '''vtangent_at''','''vnormal_at''', result is a list of segments (pairs of points), each of lenght ''dL''/2  Approximation is controlled by the ''tolerance'' value. You can change the default value for ''tolerance'' by setting the global variable '''BContour::Default(-tolerance)'''.   
+
+**DEPRECATED METHODS**
+
+Method '''flatnesstolerance''' is still supported but deprecated; You should use the '''-tolerance''' option when calling the '''length''' or '''onUniformDistance''', or change the default value by setting the '''Bezier::Default(-tolerance)''' variable.
+Method '''flatnesstolerance''' may still be called, but it has no effect.
+
+   ''bzObj'' '''flatnesstolerance''':    
+
+   ''bzObj'' '''flatnesstolerance''' ''val'':         
+
+**SEE ALSO**
+
+
+'''Bezier'''
+
+
+**KEYWORDS**
+
+
+'''Itcl''', math
+
+
+**CATEGORY**
+
+
+math
+
+
+**COPYRIGHT**
+
+ Copyright (c) 2014, by A.Buratti
+
+

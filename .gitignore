@@ -26,7 +26,6 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
@@ -73,7 +72,6 @@ StyleCopReport.xml
 *.obj
 *.iobj
 *.pch
-*.pdb
 *.ipdb
 *.pgc
 *.pgd
@@ -353,7 +351,16 @@ MigrationBackup/
 tools/*
 !tools/7z.*
 !tools/wget.exe
-!tools/python27/
-!tools/python38/
+!tools/groff
+!tools/groff/bin
+!tools/jom
+!tools/ninja
+!tools/python27
+!tools/python38
+!tools/python38/x64
+!tools/python38/x86
+!tools/tcl86
+!tools/tcl86/x64
+!tools/tcl86/x86
 !Asm
 !C-C++

@@ -1,0 +1,40 @@
+# Copyright (c) 2020 Petro Kazmirchuk https://github.com/Kazmirchuk
+
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and  limitations under the License.
+
+set conn [nats::connection new]
+
+# access to a private method only for test purposes!
+test regex-1 "Check exact subjects" -body {
+    # these are valid
+    assert {[${conn}::my CheckSubject foo]}
+    assert {[${conn}::my CheckSubject FOO.ba_r]}
+    assert {[${conn}::my CheckSubject foo1.bAr2.ba-z]}
+    # JetStream uses subjects with $
+    assert {[${conn}::my CheckSubject "\$JS.API.STREAM.NAMES"]}
+        
+    # these are invalid
+    assert {![${conn}::my CheckSubject ""]}
+    assert {![${conn}::my CheckSubject .]}
+    assert {![${conn}::my CheckSubject foo..bar]}
+    assert {![${conn}::my CheckSubject "foo. .bar"]}
+    assert {![${conn}::my CheckSubject "fOo. bar"]}
+    assert {![${conn}::my CheckSubject fo*o]}
+    assert {![${conn}::my CheckSubject foo.]}
+} -result {}
+
+test regex-2 "Check subjects with wildcards" -body {
+    assert {[${conn}::my CheckWildcard foo.*]}
+    assert {[${conn}::my CheckWildcard foo.bar]}
+    assert {[${conn}::my CheckWildcard foo]}
+    assert {[${conn}::my CheckWildcard foo.>]}
+    assert {[${conn}::my CheckWildcard *.foo.*]}
+    # invalid wildcards
+    assert {![${conn}::my CheckWildcard foo*]}
+    assert {![${conn}::my CheckWildcard foo>]}
+    assert {![${conn}::my CheckWildcard foo.*bar]}
+    assert {![${conn}::my CheckWildcard *foo.*]}
+} -result {}
+
+tcltest::cleanupTests

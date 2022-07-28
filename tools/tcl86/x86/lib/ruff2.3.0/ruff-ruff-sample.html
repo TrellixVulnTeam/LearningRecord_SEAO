@@ -1,0 +1,680 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<title>Ruff!</title>
+<link rel='stylesheet' type='text/css' href='assets/ruff-min.css' />
+<script type='text/javascript' src='assets/ruff-min.js'></script>
+</head>
+<body>
+<div class='ruff-layout'>
+<header class='ruff-layout-header ruff-hd'>
+<a style='text-decoration:none;' href='ruff.html'>Ruff! (v2.3.0)</a>
+
+
+            <div id="ruffButtonBar">
+            <button id="ruffNavMove" onclick="ruffMoveNavPane()"></button>
+            <button id="ruffToggleTheme" onclick="ruffNextTheme()"></button>
+            </div>
+        </header><main class='ruff-layout-main ruff-bd'><h1 class='ruff'><a name='::ruff::sample'></a>::ruff::sample<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h1>
+<div style='clear:both;'></div>
+<h2 class='ruff'><a name='::ruff::sample-Introduction'></a>Introduction<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<p class='ruff'>The code in this namespace illustrates the various documentation features in <a href="ruff.html" >Ruff!</a>. The corresponding source is <a href="sample.tcl" >here</a> or click the <em>Show source</em> link below each procedure or method documentation to see the source from which the documentation was generated. See the main <a href="ruff-ruff.html#::ruff" title="::ruff" class='ruff_cmd'>::ruff</a> documentation for a full description.</p>
+<p class='ruff'>The documentation (such as this section) not specific to a <em>procedure</em> or <em>method</em> is placed in the variable <code>_ruff_preamble</code> within each namespace.</p>
+<h2 class='ruff'><a name='::ruff::sample-Formatting'></a>Formatting<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<p class='ruff'>The formatting elements described below may appear both within <code>_ruff_preamble</code> content as well as proc and method comments.</p>
+<h3 class='ruff'><a name='::ruff::sample-Lists'></a>Lists<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>This is an <strong>unnumbered list</strong>.</p>
+
+<figure  class='ruff-snippet ruff-figure'><pre class='ruff'>
+  * First item
+  * Second
+  item
+  across multiple lines
+  * Third item
+</pre>
+
+</figure><p class='ruff'>This is displayed as</p>
+<ul class='ruff'>
+<li>First item</li>
+<li>Second item across multiple lines</li>
+<li>Third item</li>
+</ul>
+<p class='ruff'>This is a <strong>definition list</strong>.</p>
+
+<figure  class='ruff-snippet ruff-figure'><pre class='ruff'>
+  itema - Definition of item A
+  itemb - Definition of item B
+    across multiple lines.
+</pre>
+
+</figure><p class='ruff'>Definition lists are displayed in an output-specific format.</p>
+<table class='ruff_deflist'>
+<tr><td>itema</td><td>Definition of item A.</td></tr>
+<tr><td>itemb</td><td>Definition of item B across multiple lines.</td></tr>
+</table>
+<h3 class='ruff'><a name='::ruff::sample-Inline formatting'></a>Inline formatting<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+
+<figure  class='ruff-snippet ruff-figure'><pre class='ruff'>
+Basic markdown inline formatting is supported as
+`code`, *emphasis*, **strong** and ***strong emphasis***.
+</pre>
+
+</figure><p class='ruff'>Basic markdown inline formatting is supported as <code>code</code>, <em>emphasis</em>, <strong>strong</strong> and <strong><em>strong emphasis</em></strong>.</p>
+<h3 class='ruff'><a name='::ruff::sample-Links'></a>Links<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+
+<figure  class='ruff-snippet ruff-figure'><pre class='ruff'>
+Links may be references to program elements, e.g. [Derived], to
+external resources, e.g. [example](https://www.example.com) or
+explicit, e.g. &lt;https://ruff.magicsplat.com&gt;.
+</pre>
+
+</figure><p class='ruff'>Links may be references to program elements, e.g. <a href="ruff-ruff-sample.html#::ruff::sample::Derived" title="Derived" class='ruff_cmd'>Derived</a>, to external resources, e.g. <a href="https://www.example.com" >example</a> or explicit, e.g. <a href="https://ruff.magicsplat.com">https://ruff.magicsplat.com</a>.</p>
+<h3 class='ruff'><a name='::ruff::sample-Fenced blocks'></a>Fenced blocks<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+
+<figure  class='ruff-snippet ruff-figure'><pre class='ruff'>
+``` -caption &quot;A fenced block&quot;
+Lines consisting of *3* or more backquotes can be used
+to bracket unformatted content
+like
+this paragraph.
+```
+</pre>
+
+</figure>
+<figure id='::ruff::sample-A fenced block' class='ruff-snippet ruff-figure'><pre class='ruff'>
+Lines consisting of *3* or more backquotes can be used
+to bracket unformatted content
+like
+this paragraph.
+</pre>
+
+<figcaption class='ruff-caption'>Figure 3. A fenced block</figcaption>
+</figure><p class='ruff'>The <code>-caption</code> option is optional. If specified, it is shown below the output and can be linked to using the value of the option. For example <code>[A fenced block]</code> will link as <a href="ruff-ruff-sample.html#::ruff::sample-A fenced block" title="Figure 3. A fenced block" >Figure 3. A fenced block</a>.</p>
+<p class='ruff'>In the HTML formatter, captions are automatically prefixed as <em>Figure 1</em>, <em>Figure 2</em> etc.. The numbering is across the entire document set, not per page, by design.</p>
+<h3 class='ruff'><a name='::ruff::sample-Diagrams'></a>Diagrams<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>Diagrams can be embedded in several formats such as <code>ditaa</code>,</p>
+
+<figure  class='ruff-snippet ruff-figure'><pre class='ruff'>
+``` -caption &quot;A ditaa diagram&quot; diagram ditaa
++--------+   +-------+    +-------+
+|        | --+ ditaa +--&gt; |       |
+|  Text  |   +-------+    |diagram|
+|Document|   |!magic!|    |       |
+|     {d}|   |       |    |       |
++---+----+   +-------+    +-------+
+:                         ^
+|       Lots of work      |
++-------------------------+
+```
+</pre>
+
+</figure>
+<figure id='::ruff::sample-A ditaa diagram' class='ruff-figure'>
+<img src='assets/A-ditaa-diagram.svg'></img>
+<figcaption class='ruff-caption'>Figure 4. A ditaa diagram</figcaption>
+</figure><p class='ruff'>or PlantUML,</p>
+
+<figure  class='ruff-snippet ruff-figure'><pre class='ruff'>
+``` -caption &quot;A PlantUML diagram generated by kroki&quot; diagram kroki plantuml
+@startuml
+Alice -&gt; Bob: Authentication Request
+Bob --&gt; Alice: Authentication Response
+
+Alice -&gt; Bob: Another authentication Request
+Alice &lt;-- Bob: Another authentication Response
+@enduml
+```
+</pre>
+
+</figure>
+<figure id='::ruff::sample-A PlantUML diagram generated by kroki' class='ruff-figure'>
+<img src='assets/A-PlantUML-diagram-generated-by-kroki.svg'></img>
+<figcaption class='ruff-caption'>Figure 5. A PlantUML diagram generated by kroki</figcaption>
+</figure><p class='ruff'>and several others. You can link to a diagram using the string specified with its <code>-caption</code> option.</p>
+<h3 class='ruff'><a name='::ruff::sample-Images'></a>Images<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>Images can be specified using either Markdown or HTML:</p>
+<ul class='ruff'>
+<li><img src="assets/ruff-logo.png" alt="alt img" /> <code>![alt img](assets/ruff-logo.png)</code></li>
+<li><img src='assets/ruff-logo.png' alt='logo'/> <code>&lt;img src='assets/ruff-logo.png' alt='logo'/&gt;</code></li>
+<li><img src="assets/ruff-logo.png" alt=""/> <code>&lt;img src=&quot;assets/ruff-logo.png&quot; alt=&quot;&quot;/&gt;</code></li>
+</ul>
+<p class='ruff'><!-- The empty alt above is for testing bugfix #49 --></p>
+<p class='ruff'>The remaining sections show how commands and classes are documented. Click on the <em>Show source</em> link to see the underlying source code for the procedure or method from which the documentation was generated.</p>
+<h2 class='ruff'><a name='::ruff::sample-Commands'></a>Commands<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<h3 class='ruffproc'><a name='::ruff::sample::character_at'>character_at</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>Get the character from a string.</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>character_at</span> <span class='ruff_arg'>text ?pos?</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>text</code></td><td>Text string.</td></tr>
+<tr><td><code>pos</code></td><td>Character position. Optional, default <code>0</code>.</td></tr>
+</table>
+<h5 class='ruff'>Description</h5><p class='ruff'>The command will treat negative values of <code>$pos</code> as offset from the end of the string.</p>
+<p class='ruff'>Note the use of <code>Returns:</code> as opposed to <code>Returns</code> (i.e. with a colon) in the source comments. See docs for the difference.</p>
+<p class='ruff'>An error exception is raised if <code>$pos</code> is not within bounds.</p>
+<h5 class='ruff'>Return value</h5><p class='ruff'>The character at index <code>$pos</code> in string <code>$text</code>.</p>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_5' href="javascript:toggleSource('5')">Show source</a></p>
+<div id='5' class='ruff_dyn_src'><pre>proc ::ruff::sample::character_at {text {pos 0}} {
+
+    # Get the character from a string.
+    #  text - Text string.
+    #  pos  - Character position.
+    # The command will treat negative values of $pos as offset from
+    # the end of the string.
+    #
+    # Note the use of `Returns:` as opposed to `Returns` (i.e. with a colon) in
+    # the source comments. See docs for the difference.
+    #
+    # Returns: The character at index $pos in string $text.
+    set n [string length $text]
+    if {[tcl::mathfunc::abs $pos] &gt;= [string length $text]} {
+        #ruff
+        # An error exception is raised if $pos is not within bounds.
+        error &quot;Index $pos out of bounds.&quot;
+    }
+    if {$pos &lt; 0} {
+        return [string index $text end$pos]
+    } else {
+        return [string index $text $pos]
+    }
+}</pre></div>
+</div></details>
+<h3 class='ruffproc'><a name='::ruff::sample::ensemble_proc'>ensemble_proc</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>A command ensemble.</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>ensemble_proc</span> <span class='ruff_arg'>subcommand ...</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Description</h5><p class='ruff'>The ensemble supports the following subcommands:</p>
+<table class='ruff_deflist'>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::ensemble_proc cmdA" title="cmdA" class='ruff_cmd'>cmdA</a></td><td>Implements cmdA for an ensemble procedure.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::ensemble_proc cmdB" title="cmdB" class='ruff_cmd'>cmdB</a></td><td>Implements cmdB for an ensemble procedure.</td></tr>
+</table>
+<p class='ruff'>Refer to the documentation of each subcommand for details.</p>
+</details>
+<h3 class='ruffproc'><a name='::ruff::sample::ensemble_proc cmdA'>ensemble_proc cmdA</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>Implements cmdA for an ensemble procedure</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>ensemble_proc cmdA</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_6' href="javascript:toggleSource('6')">Show source</a></p>
+<div id='6' class='ruff_dyn_src'><pre>proc ::ruff::sample::ensemble_proc::cmdA {} {
+
+    # Implements cmdA for an ensemble procedure
+}
+# NOTE: showing source of procedure implementing ensemble subcommand.</pre></div>
+</div></details>
+<h3 class='ruffproc'><a name='::ruff::sample::ensemble_proc cmdB'>ensemble_proc cmdB</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>Implements cmdB for an ensemble procedure</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>ensemble_proc cmdB</span> <span class='ruff_arg'>paramA paramB</span><br><span class='ruff_cmd'>ensemble_proc cmdB</span> <span class='ruff_arg'>paramX</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>paramA</code></td><td>The first param.</td></tr>
+<tr><td><code>paramB</code></td><td>The optional second param.</td></tr>
+</table>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_7' href="javascript:toggleSource('7')">Show source</a></p>
+<div id='7' class='ruff_dyn_src'><pre>proc ::ruff::sample::ensemble_proc::cmdB {args} {
+
+    # Implements cmdB for an ensemble procedure
+    #  paramA - the first param
+    #  paramB - the optional second param
+    # Synopsis: paramA paramB
+    # Synopsis: paramX
+}
+# NOTE: showing source of procedure implementing ensemble subcommand.</pre></div>
+</div></details>
+<h3 class='ruffproc'><a name='::ruff::sample::proc_full'>proc_full</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>This first line is the summary line for documentation.</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>proc_full</span> <span class='ruff_arg'>arg ?optarg? ?args?</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>arg</code></td><td>First parameter.</td></tr>
+<tr><td><code>optarg</code></td><td>An optional parameter. Optional, default <code>AVALUE</code>.</td></tr>
+<tr><td><code>-switch VALUE</code></td><td>An optional switch.</td></tr>
+</table>
+<h5 class='ruff'>Description</h5><p class='ruff'>This is the general description of the procedure composed of multiple paragraphs. It is separated from the parameter list above by one or more empty comments.</p>
+<p class='ruff'>This is the second paragraph. The next paragraph (in the <em>source</em> comments) starts with the word Returns and hence will be treated by Ruff! as describing the return value.</p>
+<p class='ruff'>A definition list has a similar form to the argument list. For example, optarg may take the following values:</p>
+<table class='ruff_deflist'>
+<tr><td>AVALUE</td><td>One possible value.</td></tr>
+<tr><td>BVALUE</td><td>Another possible value.</td></tr>
+<tr><td>CVALUE</td><td>A third value but note the intervening blank comment above in the source code.</td></tr>
+</table>
+<p class='ruff'>Bullet lists are indicated by a starting <code>-</code> or <code>*</code> character.</p>
+<ul class='ruff'>
+<li>This is a bullet list iterm</li>
+</ul>
+<ul class='ruff'>
+<li>This is also a bullet list item</li>
+</ul>
+<p class='ruff'>An optional <em>See also</em> section may be used to cross-reference other program elements. Each line of this section must be parsable as a Tcl list.</p>
+<p class='ruff'>Thanks to the #ruff marker, this paragraph will be included by Ruff! even though it is not in the initial block of comments. This is useful for putting documentation for a feature right next to the code implementing it.</p>
+<h5 class='ruff'>Return value</h5><p class='ruff'>Returns a value. Because it started with the <strong>Returns</strong> keyword, this paragraph is treated as the return value description no matter where it appears.</p>
+<h5 class='ruff'>See also</h5><p class='ruff'><a href="ruff-ruff-sample.html#::ruff::sample::proc_without_docs" title="proc_without_docs" class='ruff_cmd'>proc_without_docs</a>, <a href="ruff-ruff-sample.html#::ruff::sample::Base" title="Base" class='ruff_cmd'>Base</a>, <a href="https://www.magicsplat.com">https://www.magicsplat.com</a>, <a href="ruff-ruff-sample.html#::ruff::sample::ensemble_proc cmdA" title="ensemble_proc cmdA" class='ruff_cmd'>ensemble_proc cmdA</a>, <a href="ruff-ruff-sample.html#::ruff::sample::ensemble_proc cmdB" title="ensemble_proc cmdB" class='ruff_cmd'>ensemble_proc cmdB</a>, <a href="ruff-ruff-sample.html#::ruff::sample::proc_full" title="proc_full" class='ruff_cmd'>proc_full</a>, <a href="ruff-ruff-sample.html#::ruff::sample::character_at" title="character_at" class='ruff_cmd'>character_at</a></p>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_8' href="javascript:toggleSource('8')">Show source</a></p>
+<div id='8' class='ruff_dyn_src'><pre>proc ::ruff::sample::proc_full {arg {optarg AVALUE} args} {
+
+    # This first line is the summary line for documentation.
+    # arg - first parameter
+    # optarg - an optional parameter
+    # -switch VALUE - an optional switch
+    #
+    # This is the general description of the procedure
+    # composed of multiple paragraphs. It is separated from
+    # the parameter list above by one or more empty comments.
+    #
+    # This is the second paragraph. The next paragraph (in the *source* comments)
+    # starts with the word Returns and hence will be treated
+    # by Ruff! as describing the return value.
+    #
+    # Returns a value. Because it started with the **Returns**
+    # keyword, this paragraph is treated as the return value
+    # description no matter where it appears.
+    #
+    # A definition list has a similar form to the argument
+    # list. For example, optarg may take the following values:
+    #  AVALUE - one possible value
+    #  BVALUE - another possible value
+    #
+    #  CVALUE - a third value but note the intervening blank comment
+    #  above in the source code.
+    # Bullet lists are indicated by a starting `-` or `*` character.
+    # - This is a bullet list iterm
+    # * This is also a bullet list item
+    #
+    # An optional *See also* section may be used to
+    # cross-reference other program elements. Each line of this section
+    # must be parsable as a Tcl list.
+    #
+    # See also: proc_without_docs [Base] &lt;https://www.magicsplat.com&gt;
+    #   &quot;ensemble_proc cmdA&quot; {ensemble_proc cmdB}
+    # See also: proc_full
+    # See also: character_at
+
+
+    # This paragraph will be ignored by Ruff! as it is not part
+    # of the initial block of comments.
+
+    some code
+
+    #ruff
+    # Thanks to the #ruff marker, this paragraph will be
+    # included by Ruff! even though it is not in the initial block
+    # of comments. This is useful for putting documentation for
+    # a feature right next to the code implementing it.
+
+    some more code.
+}</pre></div>
+</div></details>
+<h3 class='ruffproc'><a name='::ruff::sample::proc_with_custom_synopsis'>proc_with_custom_synopsis</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<p class='ruff'>This is a proc with a custom synopsis</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>proc_with_custom_synopsis</span> <span class='ruff_arg'>A B C D</span><br><span class='ruff_cmd'>proc_with_custom_synopsis</span> <span class='ruff_arg'>DIFFERENT_PARAM_SIG</span><br><span class='ruff_cmd'>proc_with_custom_synopsis</span> <span class='ruff_arg'>X Y args</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>A</code></td><td>Arg A for first synopsis.</td></tr>
+<tr><td><code>B</code></td><td>Arg V for first synopsis.</td></tr>
+<tr><td><code>DIFFERENT_PARAM_SIG</code></td><td>Arg for another synopsis.</td></tr>
+</table>
+<h5 class='ruff'>Description</h5><p class='ruff'>A custom synopsis is useful when a command takes several different argument structures.</p>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_9' href="javascript:toggleSource('9')">Show source</a></p>
+<div id='9' class='ruff_dyn_src'><pre>proc ::ruff::sample::proc_with_custom_synopsis {args} {
+
+    # This is a proc with a custom synopsis
+    #  A - arg A for first synopsis
+    #  B - arg V for first synopsis
+    #  DIFFERENT_PARAM_SIG - arg for another synopsis
+    # A custom synopsis is useful when a command takes several
+    # different argument structures.
+    # Synopsis: A B
+    #   C D
+    # Synopsis: DIFFERENT_PARAM_SIG
+    # Synopsis: X Y args
+}</pre></div>
+</div></details>
+<h3 class='ruffproc'><a name='::ruff::sample::proc_without_docs'>proc_without_docs</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<div class='ruff_synopsis'><span class='ruff_cmd'>proc_without_docs</span> <span class='ruff_arg'>first_arg second_arg</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>first_arg</code></td><td>Not documented.</td></tr>
+<tr><td><code>second_arg</code></td><td>Not documented.</td></tr>
+</table>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_10' href="javascript:toggleSource('10')">Show source</a></p>
+<div id='10' class='ruff_dyn_src'><pre>proc ::ruff::sample::proc_without_docs {first_arg second_arg} {
+
+}</pre></div>
+</div></details>
+<h2 class='ruff'><a name='::ruff::sample-Classes'></a>Classes<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<h3 class='ruffclass'><a name='::ruff::sample::Base'>Base</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<h5 class='ruff'>Method summary</h5><table class='ruff_deflist'>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Base::constructor" title="constructor" class='ruff_cmd'>constructor</a></td><td>Constructor for the class.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Base::destructor" title="destructor" class='ruff_cmd'>destructor</a></td><td>Destructor for the class.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Base::&lt;tag&gt;" title="&lt;tag&gt;" class='ruff_cmd'>&lt;tag&gt;</a></td><td>An explicitly exported method looking like a html tag.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Base::base_method" title="base_method" class='ruff_cmd'>base_method</a></td><td>Base_method is defined only in the base class.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Base::fwd_method" title="fwd_method" class='ruff_cmd'>fwd_method</a></td><td>Method forwarded to string range.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Base::overridable_method" title="overridable_method" class='ruff_cmd'>overridable_method</a></td><td>This method will be overridden in the derived class.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Base::property" title="property" class='ruff_cmd'>property</a></td><td>Method with custom synopsis.</td></tr>
+</table>
+<h5 class='ruff'>Subclasses</h5><p class='ruff'><a href="ruff-ruff-sample.html#::ruff::sample::Derived" title="Derived" class='ruff_cmd'>Derived</a></p>
+<h4 class='ruffmethod'><a name='::ruff::sample::Base::constructor'>constructor</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Base" title="::ruff::sample::Base" class='ruff_cmd'>::ruff::sample::Base</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Base'>Base</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Constructs the class</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>Base create OBJNAME</span> <span class='ruff_arg'>arg</span><br><span class='ruff_cmd'>Base new</span> <span class='ruff_arg'>arg</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>arg</code></td><td>Argument to constructor.</td></tr>
+</table>
+<h5 class='ruff'>Description</h5><p class='ruff'>The constructor for the class should also include general information for the class.</p>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_11' href="javascript:toggleSource('11')">Show source</a></p>
+<div id='11' class='ruff_dyn_src'><pre>method constructor {arg} {
+
+    # Constructs the class
+    #   arg - argument to constructor
+    # The constructor for the class should also include
+    # general information for the class.
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::Base::destructor'>destructor</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Base" title="::ruff::sample::Base" class='ruff_cmd'>::ruff::sample::Base</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Base'>Base</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Releases all resources and destroys the class</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT destroy</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_12' href="javascript:toggleSource('12')">Show source</a></p>
+<div id='12' class='ruff_dyn_src'><pre>method destructor {} {
+
+    # Releases all resources and destroys the class
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::Base::&lt;tag&gt;'>&lt;tag&gt;</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Base" title="::ruff::sample::Base" class='ruff_cmd'>::ruff::sample::Base</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Base'>Base</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>An explicitly exported method looking like a html tag</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT &lt;tag&gt;</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Description</h5><p class='ruff'>Verify it also shows in <a href="ruff-ruff-sample.html#::ruff::sample::Base::base_method" title="base_method" class='ruff_cmd'>base_method</a> description as well as See also section.</p>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_13' href="javascript:toggleSource('13')">Show source</a></p>
+<div id='13' class='ruff_dyn_src'><pre>method &lt;tag&gt; {} {
+
+    # An explicitly exported method looking like a html tag
+    #
+    # Verify it also shows in [base_method] description as well
+    # as See also section.
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::Base::base_method'>base_method</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Base" title="::ruff::sample::Base" class='ruff_cmd'>::ruff::sample::Base</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Base'>Base</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>base_method is defined only in the base class</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT base_method</span> <span class='ruff_arg'>arga argb</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>arga</code></td><td>First argument.</td></tr>
+<tr><td><code>argb</code></td><td>Second argument from.</td></tr>
+</table>
+<h5 class='ruff'>Description</h5><p class='ruff'>This is method m1</p>
+<p class='ruff'>This is a reference to method <a href="ruff-ruff-sample.html#::ruff::sample::Base::&lt;tag&gt;" title="&lt;tag&gt;" class='ruff_cmd'>&lt;tag&gt;</a>.</p>
+<h5 class='ruff'>See also</h5><p class='ruff'><a href="ruff-ruff-sample.html#::ruff::sample::Base::&lt;tag&gt;" title="&lt;tag&gt;" class='ruff_cmd'>&lt;tag&gt;</a></p>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_14' href="javascript:toggleSource('14')">Show source</a></p>
+<div id='14' class='ruff_dyn_src'><pre>method base_method {arga argb} {
+
+    # base_method is defined only in the base class
+    # arga - first argument
+    # argb - second argument from
+    #
+    # This is method m1
+    #
+    # This is a reference to method [&lt;tag&gt;].
+    #
+    # See also: &lt;tag&gt;
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::Base::fwd_method'>fwd_method</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Base" title="::ruff::sample::Base" class='ruff_cmd'>::ruff::sample::Base</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Base'>Base</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Forwarded to <code>string range</code>.</p>
+<h4 class='ruffmethod'><a name='::ruff::sample::Base::overridable_method'>overridable_method</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Base" title="::ruff::sample::Base" class='ruff_cmd'>::ruff::sample::Base</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Base'>Base</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>This method will be overridden in the derived class</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT overridable_method</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Description</h5><p class='ruff'>Calls <a href="ruff-ruff-sample.html#::ruff::sample::Base::base_method" title="base_method" class='ruff_cmd'>base_method</a></p>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_15' href="javascript:toggleSource('15')">Show source</a></p>
+<div id='15' class='ruff_dyn_src'><pre>method overridable_method {} {
+
+    # This method will be overridden in the derived class
+    #
+    # Calls [base_method]
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::Base::property'>property</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Base" title="::ruff::sample::Base" class='ruff_cmd'>::ruff::sample::Base</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Base'>Base</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Method with custom synopsis</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT property</span> <span class='ruff_arg'>PROPERTYNAME</span><br><span class='ruff_cmd'>OBJECT property</span> <span class='ruff_arg'>PROPERTYNAME ?VALUE?</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>PROPERTYNAME</code></td><td>Name of property.</td></tr>
+<tr><td><code>VALUE</code></td><td>Value to set for property.</td></tr>
+</table>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_16' href="javascript:toggleSource('16')">Show source</a></p>
+<div id='16' class='ruff_dyn_src'><pre>method property {args} {
+
+    # Method with custom synopsis
+    #  PROPERTYNAME - name of property
+    #  VALUE - value to set for property
+    # Synopsis: PROPERTYNAME
+    # Synopsis: PROPERTYNAME ?VALUE?
+}</pre></div>
+</div></details>
+<h3 class='ruffclass'><a name='::ruff::sample::Derived'>Derived</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<h5 class='ruff'>Method summary</h5><table class='ruff_deflist'>
+<tr><td><code>&lt;tag&gt;</code></td><td>See <a href="ruff-ruff-sample.html#::ruff::sample::Base::&lt;tag&gt;" title="Base.&lt;tag&gt;" class='ruff_cmd'>Base.&lt;tag&gt;</a></td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Derived::added_method" title="added_method" class='ruff_cmd'>added_method</a></td><td>Method defined only in <a href="ruff-ruff-sample.html#::ruff::sample::Derived" title="Derived" class='ruff_cmd'>Derived</a>.</td></tr>
+<tr><td><code>base_method</code></td><td>See <a href="ruff-ruff-sample.html#::ruff::sample::Base::base_method" title="Base.base_method" class='ruff_cmd'>Base.base_method</a></td></tr>
+<tr><td><code>fwd_method</code></td><td>See <a href="ruff-ruff-sample.html#::ruff::sample::Base::fwd_method" title="Base.fwd_method" class='ruff_cmd'>Base.fwd_method</a></td></tr>
+<tr><td><code>mixed_in_method</code></td><td>See <a href="ruff-ruff-sample.html#::ruff::sample::Mixin::mixed_in_method" title="Mixin.mixed_in_method" class='ruff_cmd'>Mixin.mixed_in_method</a></td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Derived::overridable_method" title="overridable_method" class='ruff_cmd'>overridable_method</a></td><td>This method overrides the one defined in <a href="ruff-ruff-sample.html#::ruff::sample::Base" title="Base" class='ruff_cmd'>Base</a>.</td></tr>
+<tr><td><code>property</code></td><td>See <a href="ruff-ruff-sample.html#::ruff::sample::Base::property" title="Base.property" class='ruff_cmd'>Base.property</a></td></tr>
+</table>
+<h5 class='ruff'>Superclasses</h5><p class='ruff'><a href="ruff-ruff-sample.html#::ruff::sample::Base" title="Base" class='ruff_cmd'>Base</a></p>
+<h5 class='ruff'>Mixins</h5><p class='ruff'><a href="ruff-ruff-sample.html#::ruff::sample::Mixin" title="Mixin" class='ruff_cmd'>Mixin</a></p>
+<h4 class='ruffmethod'><a name='::ruff::sample::Derived::added_method'>added_method</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Derived" title="::ruff::sample::Derived" class='ruff_cmd'>::ruff::sample::Derived</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Derived'>Derived</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Method defined only in <a href="ruff-ruff-sample.html#::ruff::sample::Derived" title="Derived" class='ruff_cmd'>Derived</a>.</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT added_method</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_17' href="javascript:toggleSource('17')">Show source</a></p>
+<div id='17' class='ruff_dyn_src'><pre>method added_method {} {
+
+    # Method defined only in [Derived].
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::Derived::overridable_method'>overridable_method</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Derived" title="::ruff::sample::Derived" class='ruff_cmd'>::ruff::sample::Derived</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Derived'>Derived</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>This method overrides the one defined in <a href="ruff-ruff-sample.html#::ruff::sample::Base" title="Base" class='ruff_cmd'>Base</a>.</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT overridable_method</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_18' href="javascript:toggleSource('18')">Show source</a></p>
+<div id='18' class='ruff_dyn_src'><pre>method overridable_method {} {
+
+    # This method overrides the one defined in [Base].
+}</pre></div>
+</div></details>
+<h3 class='ruffclass'><a name='::ruff::sample::FunnyMethods'>FunnyMethods</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<h5 class='ruff'>Method summary</h5><table class='ruff_deflist'>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods::constructor" title="constructor" class='ruff_cmd'>constructor</a></td><td>Constructor for the class.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods::&amp;" title="&amp;" class='ruff_cmd'>&amp;</a></td><td>Method to test &amp; escaping in HTML.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods::*" title="*" class='ruff_cmd'>*</a></td><td>Method to test regexp special chars.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods::+" title="+" class='ruff_cmd'>+</a></td><td>Method to test regexp special chars.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods::&lt;" title="&lt;" class='ruff_cmd'>&lt;</a></td><td>Method to test &lt; escaping in HTML.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods::&gt;" title="&gt;" class='ruff_cmd'>&gt;</a></td><td>Method to test &gt; escaping in HTML.</td></tr>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods::_" title="_" class='ruff_cmd'>_</a></td><td>Method to test underscores.</td></tr>
+</table>
+<h4 class='ruffmethod'><a name='::ruff::sample::FunnyMethods::constructor'>constructor</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods" title="::ruff::sample::FunnyMethods" class='ruff_cmd'>::ruff::sample::FunnyMethods</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods'>FunnyMethods</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Class for testing special characters in method names</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>FunnyMethods create OBJNAME</span> <br><span class='ruff_cmd'>FunnyMethods new</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_19' href="javascript:toggleSource('19')">Show source</a></p>
+<div id='19' class='ruff_dyn_src'><pre>method constructor {} {
+
+    # Class for testing special characters in method names
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::FunnyMethods::&amp;'>&amp;</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods" title="::ruff::sample::FunnyMethods" class='ruff_cmd'>::ruff::sample::FunnyMethods</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods'>FunnyMethods</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Method to test &amp; escaping in HTML</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT &amp;</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_20' href="javascript:toggleSource('20')">Show source</a></p>
+<div id='20' class='ruff_dyn_src'><pre>method &amp; {} {
+
+    # Method to test &amp; escaping in HTML
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::FunnyMethods::*'>*</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods" title="::ruff::sample::FunnyMethods" class='ruff_cmd'>::ruff::sample::FunnyMethods</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods'>FunnyMethods</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Method to test regexp special chars</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT *</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_21' href="javascript:toggleSource('21')">Show source</a></p>
+<div id='21' class='ruff_dyn_src'><pre>method * {} {
+
+    # Method to test regexp special chars
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::FunnyMethods::+'>+</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods" title="::ruff::sample::FunnyMethods" class='ruff_cmd'>::ruff::sample::FunnyMethods</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods'>FunnyMethods</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Method to test regexp special chars</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT +</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_22' href="javascript:toggleSource('22')">Show source</a></p>
+<div id='22' class='ruff_dyn_src'><pre>method + {} {
+
+    # Method to test regexp special chars
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::FunnyMethods::&lt;'>&lt;</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods" title="::ruff::sample::FunnyMethods" class='ruff_cmd'>::ruff::sample::FunnyMethods</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods'>FunnyMethods</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Method to test &lt; escaping in HTML</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT &lt;</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_23' href="javascript:toggleSource('23')">Show source</a></p>
+<div id='23' class='ruff_dyn_src'><pre>method &lt; {} {
+
+    # Method to test &lt; escaping in HTML
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::FunnyMethods::&gt;'>&gt;</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods" title="::ruff::sample::FunnyMethods" class='ruff_cmd'>::ruff::sample::FunnyMethods</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods'>FunnyMethods</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Method to test &gt; escaping in HTML</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT &gt;</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_24' href="javascript:toggleSource('24')">Show source</a></p>
+<div id='24' class='ruff_dyn_src'><pre>method &gt; {} {
+
+    # Method to test &gt; escaping in HTML
+}</pre></div>
+</div></details>
+<h4 class='ruffmethod'><a name='::ruff::sample::FunnyMethods::_'>_</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::FunnyMethods" title="::ruff::sample::FunnyMethods" class='ruff_cmd'>::ruff::sample::FunnyMethods</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods'>FunnyMethods</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>Method to test underscores</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT _</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_25' href="javascript:toggleSource('25')">Show source</a></p>
+<div id='25' class='ruff_dyn_src'><pre>method _ {} {
+
+    # Method to test underscores
+}</pre></div>
+</div></details>
+<h3 class='ruffclass'><a name='::ruff::sample::MetaClass'>MetaClass</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<h5 class='ruff'>Method summary</h5><table class='ruff_deflist'>
+<tr><td><code>create</code></td><td>See [::oo::class.create]</td></tr>
+<tr><td><code>new</code></td><td>See [::oo::class.new]</td></tr>
+</table>
+<h5 class='ruff'>Superclasses</h5><p class='ruff'>[::oo::class]</p>
+<h3 class='ruffclass'><a name='::ruff::sample::MetaClassInstance'>MetaClassInstance</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<h5 class='ruff'>Method summary</h5><table class='ruff_deflist'>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::MetaClassInstance::amethod" title="amethod" class='ruff_cmd'>amethod</a></td><td>A method of a class created from a metaclass.</td></tr>
+</table>
+<h4 class='ruffmethod'><a name='::ruff::sample::MetaClassInstance::amethod'>amethod</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::MetaClassInstance" title="::ruff::sample::MetaClassInstance" class='ruff_cmd'>::ruff::sample::MetaClassInstance</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::MetaClassInstance'>MetaClassInstance</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>A method of a class created from a metaclass</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT amethod</span> </div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_26' href="javascript:toggleSource('26')">Show source</a></p>
+<div id='26' class='ruff_dyn_src'><pre>method amethod {} {
+
+    # A method of a class created from a metaclass
+}</pre></div>
+</div></details>
+<h3 class='ruffclass'><a name='::ruff::sample::Mixin'>Mixin</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a>]</span><span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h3>
+<div style='clear:both;'></div>
+<h5 class='ruff'>Method summary</h5><table class='ruff_deflist'>
+<tr><td><a href="ruff-ruff-sample.html#::ruff::sample::Mixin::mixed_in_method" title="mixed_in_method" class='ruff_cmd'>mixed_in_method</a></td><td>This method will be mixed into a class.</td></tr>
+</table>
+<h5 class='ruff'>Subclasses</h5><p class='ruff'><a href="ruff-ruff-sample.html#::ruff::sample::Derived" title="Derived" class='ruff_cmd'>Derived</a></p>
+<h4 class='ruffmethod'><a name='::ruff::sample::Mixin::mixed_in_method'>mixed_in_method</a><span class='ns_scope'> [<a href="ruff-ruff-sample.html#::ruff::sample::Mixin" title="::ruff::sample::Mixin" class='ruff_cmd'>::ruff::sample::Mixin</a>]</span><span class='ruff-uplink'><a href='ruff-ruff-sample.html#::ruff::sample::Mixin'>Mixin</a>, <a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h4>
+<div style='clear:both;'></div>
+<p class='ruff'>This method will be mixed into a class.</p>
+<div class='ruff_synopsis'><span class='ruff_cmd'>OBJECT mixed_in_method</span> <span class='ruff_arg'>arg</span></div>
+<details><summary class='ruff-expand'><span>Details</span></summary>
+<h5 class='ruff'>Parameters</h5><table class='ruff_deflist'>
+<tr><td><code>arg</code></td><td>An argument to the method.</td></tr>
+</table>
+<div class='ruff_source'><p class='ruff_source_link'><a id='l_27' href="javascript:toggleSource('27')">Show source</a></p>
+<div id='27' class='ruff_dyn_src'><pre>method mixed_in_method {arg} {
+
+    # This method will be mixed into a class.
+    # arg - an argument to the method
+}</pre></div>
+</div></details>
+</main><nav class='ruff-nav'><ul style='position: sticky; top: 0;'><li class='ruff-toc1'><a style='padding-top:2px;' href='ruff.html'>Start page</a></li>
+<li class='ruff-toc1'><a href='ruff-docindex.html' accesskey='i'>Index</a></li>
+<hr>
+<li class='ruff-toc1'><a href='ruff-ruff.html'>ruff</a></li>
+<li class='ruff-toc1'><a href='ruff-ruff-app.html'>ruff::app</a></li>
+<li class='ruff-toc1'><a class='ruff-highlight' href='ruff-ruff-sample.html'>ruff::sample</a></li>
+<hr><li class='ruff-toc2'><a href='#::ruff::sample-Introduction'>Introduction</a></li><li class='ruff-toc2'><a href='#::ruff::sample-Formatting'>Formatting</a></li><li class='ruff-toc3'><a href='#::ruff::sample-Lists'>Lists</a></li><li class='ruff-toc3'><a href='#::ruff::sample-Inline formatting'>Inline formatting</a></li><li class='ruff-toc3'><a href='#::ruff::sample-Links'>Links</a></li><li class='ruff-toc3'><a href='#::ruff::sample-Fenced blocks'>Fenced blocks</a></li><li class='ruff-toc3'><a href='#::ruff::sample-Diagrams'>Diagrams</a></li><li class='ruff-toc3'><a href='#::ruff::sample-Images'>Images</a></li><li class='ruff-toc2'><a href='#::ruff::sample-Commands'>Commands</a></li><li class='ruff-toc3 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::character_at'>character_at</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>character_at</span> <span class='ruff_arg'>text ?pos?</span></pre>Get the character from a string.
+</span></li><li class='ruff-toc3 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::ensemble_proc'>ensemble_proc</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>ensemble_proc</span> <span class='ruff_arg'>subcommand ...</span></pre>A command ensemble.
+</span></li><li class='ruff-toc3 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::ensemble_proc cmdA'><span style='visibility:hidden'>&nbsp;&nbsp;&nbsp;</span> cmdA</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>ensemble_proc cmdA</span> </pre>Implements cmdA for an ensemble procedure
+</span></li><li class='ruff-toc3 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::ensemble_proc cmdB'><span style='visibility:hidden'>&nbsp;&nbsp;&nbsp;</span> cmdB</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>ensemble_proc cmdB</span> <span class='ruff_arg'>paramA paramB</span>
+<span class='ruff_cmd'>ensemble_proc cmdB</span> <span class='ruff_arg'>paramX</span></pre>Implements cmdB for an ensemble procedure
+</span></li><li class='ruff-toc3 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::proc_full'>proc_full</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>proc_full</span> <span class='ruff_arg'>arg ?optarg? ?args?</span></pre>This first line is the summary line for documentation.
+</span></li><li class='ruff-toc3 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::proc_with_custom_synopsis'>proc_with_custom_synopsis</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>proc_with_custom_synopsis</span> <span class='ruff_arg'>A B C D</span>
+<span class='ruff_cmd'>proc_with_custom_synopsis</span> <span class='ruff_arg'>DIFFERENT_PARAM_SIG</span>
+<span class='ruff_cmd'>proc_with_custom_synopsis</span> <span class='ruff_arg'>X Y args</span></pre>This is a proc with a custom synopsis
+</span></li><li class='ruff-toc3 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::proc_without_docs'>proc_without_docs</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>proc_without_docs</span> <span class='ruff_arg'>first_arg second_arg</span></pre></span></li><li class='ruff-toc2'><a href='#::ruff::sample-Classes'>Classes</a></li><li class='ruff-toc3'><a href='ruff-ruff-sample.html#::ruff::sample::Base'>Base</a></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Base::constructor'>constructor</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>Base create OBJNAME</span> <span class='ruff_arg'>arg</span>
+<span class='ruff_cmd'>Base new</span> <span class='ruff_arg'>arg</span></pre>Constructs the class
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Base::destructor'>destructor</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT destroy</span> </pre>Releases all resources and destroys the class
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Base::&lt;tag&gt;'>&lt;tag&gt;</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT &lt;tag&gt;</span> </pre>An explicitly exported method looking like a html tag
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Base::base_method'>base_method</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT base_method</span> <span class='ruff_arg'>arga argb</span></pre>base_method is defined only in the base class
+</span></li><li class='ruff-toc4'><a href='ruff-ruff-sample.html#::ruff::sample::Base::fwd_method'>fwd_method</a></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Base::overridable_method'>overridable_method</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT overridable_method</span> </pre>This method will be overridden in the derived class
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Base::property'>property</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT property</span> <span class='ruff_arg'>PROPERTYNAME</span>
+<span class='ruff_cmd'>OBJECT property</span> <span class='ruff_arg'>PROPERTYNAME ?VALUE?</span></pre>Method with custom synopsis
+</span></li><li class='ruff-toc3'><a href='ruff-ruff-sample.html#::ruff::sample::Derived'>Derived</a></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Derived::added_method'>added_method</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT added_method</span> </pre>Method defined only in <a href="ruff-ruff-sample.html#::ruff::sample::Derived" title="Derived" class='ruff_cmd'>Derived</a>.
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Derived::overridable_method'>overridable_method</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT overridable_method</span> </pre>This method overrides the one defined in <a href="ruff-ruff-sample.html#::ruff::sample::Base" title="Base" class='ruff_cmd'>Base</a>.
+</span></li><li class='ruff-toc3'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods'>FunnyMethods</a></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods::constructor'>constructor</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>FunnyMethods create OBJNAME</span> 
+<span class='ruff_cmd'>FunnyMethods new</span> </pre>Class for testing special characters in method names
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods::&amp;'>&amp;</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT &amp;</span> </pre>Method to test &amp; escaping in HTML
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods::*'>*</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT *</span> </pre>Method to test regexp special chars
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods::+'>+</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT +</span> </pre>Method to test regexp special chars
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods::&lt;'>&lt;</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT &lt;</span> </pre>Method to test &lt; escaping in HTML
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods::&gt;'>&gt;</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT &gt;</span> </pre>Method to test &gt; escaping in HTML
+</span></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::FunnyMethods::_'>_</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT _</span> </pre>Method to test underscores
+</span></li><li class='ruff-toc3'><a href='ruff-ruff-sample.html#::ruff::sample::MetaClass'>MetaClass</a></li><li class='ruff-toc3'><a href='ruff-ruff-sample.html#::ruff::sample::MetaClassInstance'>MetaClassInstance</a></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::MetaClassInstance::amethod'>amethod</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT amethod</span> </pre>A method of a class created from a metaclass
+</span></li><li class='ruff-toc3'><a href='ruff-ruff-sample.html#::ruff::sample::Mixin'>Mixin</a></li><li class='ruff-toc4 ruff-tip'><a href='ruff-ruff-sample.html#::ruff::sample::Mixin::mixed_in_method'>mixed_in_method</a><span class='ruff-tiptext'><pre><span class='ruff_cmd'>OBJECT mixed_in_method</span> <span class='ruff_arg'>arg</span></pre>This method will be mixed into a class.
+</span></li></ul></nav><footer class='ruff-layout-footer ruff-ft'><div style='float: right;'>Document generated by <a href='https://ruff.magicsplat.com'>Ruff!</a></div><div>&copy; 2022 Ashok P. Nadkarni</div></footer>
+</div></body></html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<title>Ruff!</title>
+<link rel='stylesheet' type='text/css' href='assets/ruff-min.css' />
+<script type='text/javascript' src='assets/ruff-min.js'></script>
+</head>
+<body>
+<div class='ruff-layout'>
+<header class='ruff-layout-header ruff-hd'>
+<a style='text-decoration:none;' href='ruff.html'>Ruff! (v2.3.0)</a>
+
+
+            <div id="ruffButtonBar">
+            <button id="ruffNavMove" onclick="ruffMoveNavPane()"></button>
+            <button id="ruffToggleTheme" onclick="ruffNextTheme()"></button>
+            </div>
+        </header><main class='ruff-layout-main ruff-bd'><h1 class='ruff'><a name='Introduction'></a>Introduction<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h1>
+<div style='clear:both;'></div>
+<p class='ruff'>Ruff! (Runtime function formatter) is a documentation generation system for programs written in the Tcl programming language. Ruff! uses runtime introspection in conjunction with comment analysis to generate reference manuals for Tcl programs.</p>
+<p class='ruff'>Ruff! is covered by a liberal BSD open-source license that permits use for any purpose.</p>
+<h2 class='ruff'><a name='Why Ruff!'></a>Why Ruff!<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<p class='ruff'>In comparison with other source code based documentation generators, Ruff! produces documentation that not only requires less duplication of effort from the programmer, but is also more complete, more accurate and more maintainable.</p>
+<ul class='ruff'>
+<li>Comments in source code do not have to be reproduced for documentation purposes.</li>
+<li>Ruff! requires minimal markup in the comments making it lightweight as well as reducing clutter.</li>
+<li>Supports inline formatting using Markdown syntax.</li>
+<li>Embedded diagrams in multiple formats</li>
+<li>Program elements like command arguments, defaults and class relationships like inheritance are automatically derived.</li>
+<li>Maintenance is less of a burden as documentation is automatically updated with source modification such as changes to defaults, addition of mix-ins etc.</li>
+</ul>
+<p class='ruff'>On the output side,</p>
+<ul class='ruff'>
+<li>Ruff! supports multiple formats (currently HTML, Markdown and nroff).</li>
+<li>Generated documentation can optionally be split across multiple pages.</li>
+<li>Hyperlinks between program elements, and optionally source code, make navigation easy and efficient.</li>
+<li>A table of contents and optional searchable index permits quick location of command and class documentation.</li>
+<li>Class relationships are extracted and the full API for a class, with inherited and mixed-in methods, is flattened and summarized.</li>
+<li>The HTML formatter includes multiple themes switchable by the end-user.</li>
+</ul>
+<p class='ruff'>The Ruff! documentation itself is produced with Ruff!. Examples of other packages documented with Ruff! include <a href="https://iocp.magicsplat.com" >iocp</a>, <a href="https://cffi.magicsplat.com" >cffi</a>, <a href="http://www.cawt.tcl3d.org/download/CawtReference.html" >CAWT</a>, <a href="https://aplsimple.github.io/en/tcl/pave/apave.html" >apave</a>, <a href="https://aplsimple.github.io/en/tcl/baltip/baltip.html" >baltip</a>, <a href="https://aplsimple.github.io/en/tcl/hl_tcl/hl_tcl.html" >hl-tcl</a>, <a href="https://tcl-promise.magicsplat.com" >promise</a>, <a href="https://tcl-obex.magicsplat.com" >obex</a>, <a href="http://woof.sourceforge.net/woof-ug-0.5/html/_woof/woof_manual.html" >Woof!</a> and <a href="https://tcl-vix.magicsplat.com/" >tcl-vix</a>.</p>
+<h2 class='ruff'><a name='Documentation'></a>Documentation<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<p class='ruff'>The <a href="ruff-ruff.html#::ruff" title="::ruff" class='ruff_cmd'>::ruff</a> reference page describes the Ruff! documentation generation API. The <a href="ruff-ruff-sample.html#::ruff::sample" title="::ruff::sample" class='ruff_cmd'>::ruff::sample</a> page shows some sample output for some of the Ruff! features along with the associated source code from which it was generated.</p>
+<h2 class='ruff'><a name='Downloads'></a>Downloads<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<p class='ruff'>Download the Ruff! distribution from <a href="https://sourceforge.net/projects/magicsplat/files/ruff/">https://sourceforge.net/projects/magicsplat/files/ruff/</a>. The source code repository is at <a href="https://github.com/apnadkarni/ruff">https://github.com/apnadkarni/ruff</a>.</p>
+<h2 class='ruff'><a name='Installation'></a>Installation<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<p class='ruff'>To install, extract the distribution to a directory listed in your Tcl <code>auto_path</code> variable.</p>
+<h2 class='ruff'><a name='Credits'></a>Credits<span class='ruff-uplink'><a href='#top'>Top</a>, <a href='ruff.html'>Main</a>, <a href='ruff-docindex.html#'>Index</a></span></h2>
+<div style='clear:both;'></div>
+<p class='ruff'>Ruff! is authored by <a href="https://www.magicsplat.com" >Ashok P. Nadkarni</a>.</p>
+<p class='ruff'>It uses the <code>textutil</code> package from <a href="https://core.tcl-lang.org/tcllib" >tcllib</a>, a modified version of the Markdown inline parser from the <a href="http://caiusproject.com/" >Caius</a> project, and portions of the <code>nroff</code> generator from Tcllib's <code>doctools</code> package.</p>
+</main><nav class='ruff-nav'><ul style='position: sticky; top: 0;'><li class='ruff-toc1'><a class='ruff-highlight' style='padding-top:2px;' href='ruff.html'>Start page</a></li>
+<li class='ruff-toc1'><a href='ruff-docindex.html' accesskey='i'>Index</a></li>
+<hr>
+<li class='ruff-toc1'><a href='ruff-ruff.html'>ruff</a></li>
+<li class='ruff-toc1'><a href='ruff-ruff-app.html'>ruff::app</a></li>
+<li class='ruff-toc1'><a href='ruff-ruff-sample.html'>ruff::sample</a></li>
+<hr><li class='ruff-toc2'><a href='#Why Ruff!'>Why Ruff!</a></li><li class='ruff-toc2'><a href='#Documentation'>Documentation</a></li><li class='ruff-toc2'><a href='#Downloads'>Downloads</a></li><li class='ruff-toc2'><a href='#Installation'>Installation</a></li><li class='ruff-toc2'><a href='#Credits'>Credits</a></li></ul></nav><footer class='ruff-layout-footer ruff-ft'><div style='float: right;'>Document generated by <a href='https://ruff.magicsplat.com'>Ruff!</a></div><div>&copy; 2022 Ashok P. Nadkarni</div></footer>
+</div></body></html>

@@ -1,0 +1,291 @@
+[comment {-*- tcl -*- doctools manpage}]
+
+[comment {
+
+ Source file for doctools
+
+ Usage:
+ tclsh c:\tcl\lib\dtp.kit doc html bezier.man > bezier.html
+ tclsh c:\tcl\lib\dtp.kit doc wiki bezier.man > bezier.wiki.txt
+
+}]
+
+
+[manpage_begin Bezier n 1.1]
+[copyright {2014-2020, by A.Buratti}]
+[moddesc { Bezier }]
+[titledesc  {Create and manipulate Bezier curvers. }]
+[category  {math}]
+[require Itcl]
+[require Bezier [opt 1.1]]
+
+[description]
+[section INTRODUCTION]
+
+[para]
+This package provides methods for manipulating Bezier's curves 
+(see [uri http://en.wikipedia.org/wiki/Bezier_curve {Wikipedia}] for a thorough introduction) 
+[para]
+A Bezier curve is represented by an [package Itcl] object and manipulated by various methods.
+Other than basic methods for basic operations, you can find more elaborated
+methods for computing the curve lenght, the tangent and the normal vector, and for subdiving the curves in equally spaced segments.
+[para]
+With this package you can represent curves of any degree in a n-dimensional space.
+
+[comment =====================================================================]
+[section {COMMANDS}]
+
+Given a list of [emph {control-points}] (each control-point represented as a list of real-numbers), 
+the [cmd {::Bezier::new}] command returns the (fully qualified) name of a new object
+representing a Bezier curve.
+Object is created in the caller's namespace
+[para]
+The [cmd {Bezier::new}] command accepts both a [arg {list-of-points}] as well as a [arg {sequence-of-points}]
+
+[list_begin definitions]
+[call [cmd Bezier::new] [arg point] [opt "[arg point] ..."]]
+as well as
+[call [cmd Bezier::new] \{[arg point] [opt "[arg point] ..."]\}]
+
+[list_end]
+
+All points must have the same dimension.
+[para]
+The following example
+[example {
+set bzObj1 [Bezier::new {0.0 0.0} {0.5 0.7} {2.5 3.6}]
+}] creates a curve made of three 2D control-points.
+[para]
+Note that
+[example {
+set bzObj1 [Bezier::new {1.0 2.0 3.0}]
+}] 
+is a (degenerated) curve made of one 3D key-point {1.0 2.0 3.0}, whilst
+[example {
+set bzObj1 [Bezier::new 1.0 2.0 3.0]
+}]
+is a curve made of  three 1D control-points {1.0} {2.0} {3.0}
+
+[comment =====================================================================]
+[section {METHODS}]
+The following commands are possible for a Bezier-object:
+[list_begin definitions]
+  
+
+[call [arg bzObj] [method destroy]] 
+destroys the object, including its storage space and associated command.
+
+
+[call [arg bzObj] [method spaceDim]] 
+returns the dimension of each control-points of the curve (all points in a given curve MUST have the same dimension)
+
+
+[call [arg bzObj] [method degree]] 
+returns the the curve degree (i.e. the number of control-points less one).
+Often referred as [arg {curve's order}]
+
+
+[call [arg bzObj] [method points]] 
+returns the list of control-points
+
+
+[call [arg bzObj] [method PZero]] 
+returns the Point-Zero (as a list of real numbers) with dimension equal to the curve dimension.
+e.g if [arg bzObj] is a curve of 3D points, [lb]bzObj PZero[rb] returns {0.0 0.0 0.0}
+
+
+[call [arg bzObj] [method point] [arg i]] 
+returns the [arg i]-th control-point
+
+
+[call [arg bzObj] [method point] [arg i] [arg point]] 
+replaces the [arg i]-th control-point with the new [arg point].
+[para]
+Note that you can also use expressions like "end" "end-1" as indexes
+If [arg i] is out of range or new [arg point]'s dimension is different from the dimension of the other points of the curve,
+then an error is raised.
+
+
+[call [arg bzObj] [method clone]]  
+creates a new clone of this curve.
+The new curve is created in the caller's namespace.
+It's caller responsability to delete it after use.
+
+
+[call [arg bzObj] [method polylength]] 
+returns the length of the control-polygon 
+
+
+[call [arg bzObj] [method baselength]] 
+returns the distance between the first and the last control-point
+
+
+[call [arg bzObj] [method at] [arg t]]
+evaluates B(t)   (0.0<=[arg t]<=1.0) 
+[para]
+B(t) is the parametric form of the Bezier's curve
+
+
+[call [arg bzObj] [method derivative]]
+returns a new Bezier's curve of degree n-1.
+Derivative of a degenerate 0-degree curve is still a 0-degree curve
+[para]
+NOTE: it's caller responsability to delete it after use
+
+
+[call [arg bzObj] [method tangent_at] [arg t]]
+returns the (normalized) tangent-vector at B(t) (0.0<=[arg t]<=1.0)
+[para] 
+NOTE: degree-0 curves have no tangent (nor normal); in such cases an 
+arbitrary normalized vector is returned.
+
+
+[call [arg bzObj] [method vtangent_at] [arg len] [arg t]]
+returns a segment (a list of two points) whose length is [arg len], with origin in
+[lb][arg bzObj] [method at] [arg t][rb] and the same direction of
+[lb][arg bzObj] [method tangent_at] [arg t][rb].
+[para]
+Difference between  [method tangent_at] and [method vtangent_at]:
+[example {
+ set bObj [Bezier::new {1 1} {2 2} {3 1}]
+ set tg [$bObj tangent_at 0.5]
+ # tg is  the vector {1.0 0.0}
+ set vtg [$bObj vtangent_at 2 0.5]
+ # vtg is the segment {{2.0 1.5} {4.0 1.5}}  i.e. a segment with origin in {2.0 1.5}, length 2 and direction {1.0 0.0}
+}]
+
+
+[call [arg bzObj] [method normal_at] [arg t]]
+returns the normal-vector at B(t) (0.0<=[arg t]<=1.0).
+[para]  
+NOTE: meaningful only for 2D curves; in other cases it returns Point-Zero.
+
+
+[call [arg bzObj] [method vnormal_at] [arg len] [arg t]]
+returns a segment (a list of two points) whose length is [arg len], with origin in
+[lb][arg bzObj] [method at] [arg t][rb] and the same direction of
+[lb][arg bzObj] [method normal_at] [arg t][rb].
+[para]
+NOTE: meaningful only for 2D curves; in other cases result is Point-Zero.
+
+
+[call [arg bzObj] [method split_at] [arg t]  [opt [arg side]]]
+splits the curve at B([arg t]) (0.0<=[arg t]<=1.0) and returns the [const left]
+or the [const right] or [const both] sides, based on the optional parameter [arg mode] (default is [const both]).
+[para]
+The returned value is a new Bezier curve, or a list with two curves.
+It's caller's responsability to delete the returned curve(s) curves after use.
+[para]
+NOTE: Algorithm adapted from Earl Boeber's work:
+    "Computing the arc length of cubic bezier curves"
+
+
+[call [arg bzObj] [method length] [opt "[const -tolerance] [arg tolerance]"]]
+returns the approximated length of the curve, accordling to the algorithm by J.Gravesen.
+Approximation is controlled by the [arg tolerance] value; a positive value is used as an absolute tolerance;
+a negative value will determine an absolute tolerance as [arg L0]*abs([arg tolerance]) where [arg L0] is a first simple approximation of the curve's length.
+
+You can change the default value for [arg tolerance] by setting the global
+variable [const Bezier::Default(-length.tolerance)].
+
+
+[call [arg bzObj] [method length_at] [arg t] [opt "[const -tolerance] [arg tolerance]"]]   
+returns the approximated length of the curve from B(0) to B([arg t])  (0.0<=[arg t]<=1.0).
+[para]
+If [arg t] < 0.0 then [lb][arg bzObj] [method length_at] [arg t]] == [lb][arg bzObj] [method length_at] 0.0] == 0.0.
+[para]
+If [arg t] > 1.0 then [lb][arg bzObj] [method length_at] [arg t]] == is [lb][arg bzObj] [method length_at] 1.0] == [lb][arg bzObj] [method length]].
+[para]
+Approximation is controlled by the [arg tolerance] value. See method [method length].
+
+[example {
+Properties:
+-----------
+  [$bzObj length_at 0.0] == 0.0
+  [$bzObj length_at 1.0] == [$bzObj length]
+  [$bzObj length_at $t0] < [$bzObj length_at $t1]   <==>   $t0 < $t1 
+}]
+
+
+[call [arg bzObj] [method almostFlat] [arg tolerance]] 
+returns [const true] if all control-points are close (<=[arg tolerance]) to the curve's chord segment.
+
+
+[call [arg bzObj] [method invlength] [arg len] [opt "[const -tolerance] [arg tolerance]"]]
+is the inverse of [lb][arg bzObj] [method length_at] [arg t][rb].
+Given a [arg len], returns a value [arg t] such that [lb][arg bzObj] [method length_at] [arg t][rb] == [arg len].
+Approximation is controlled by the [arg tolerance] value. See method [method length].
+[example {
+Properties:
+-----------
+  [$bzObj length_at [$bzObj invlength [arg len]]] == [arg len]
+  [$bzObj invlength [$bzObj length_at [arg t]]] == [arg t]
+  [$bzObj invlength 0.0] == 0.0
+  [$bzObj invlength [$obj length]] == 1.0
+  [$bzObj invlength [arg $len0]] < [$bzObj invlength [arg $len1]]  <==> [arg len0] < [arg len1]
+ Degenerated cases:
+   If [arg len] < 0  ==>  [$bzObj invlength [arg $len]] == 0.0
+   If [arg len] > [$bzObj length]  ==>  [$bzObj invlength [arg $len]] == 1.0
+}]
+
+
+[call [arg bzObj] [method t_splitUniform] [arg dl] [opt "[arg pLen]"] [opt "[const -tolerance] [arg tolerance]"]] 
+returns a list of [arg t] ([arg t] is parameter of curve B(t))
+subdividing the curve in subcurves of length [arg dL].
+Optional parameter [arg pLen] (default is 0.0) is the length of the initial part  of the curve to be skipped before the subdivision.
+[para]
+Approximation is controlled by the [arg tolerance] value. 
+You can change the default value for [arg tolerance] by setting the global
+variable [const Bezier::Default(-flatness.tolerance)].
+Note that after the subdivision there may remain the last part of the curve, whose length is less than [arg dL].
+You can get the length of the last part by calling the [method splitLeftOver] method.
+[para]  
+Once you get a list of [arg t], then you can get a list of equally spaced points, tangents, normals,
+by simply calling [method at], [method tangent_at], [method normal_at] methods.
+
+
+[call [arg bzObj] [method t_splitLeftOver]]
+returns the length of the last part of the curve subdivision after calling the [method t_splitUniform] method.
+
+ 
+[list_end]
+
+[comment =====================================================================] 
+[section {DEPRECATED METHODS}]
+Method [method flatnesstolerance] is still supported but deprecated; You should use
+the  [const -tolerance] option when calling the [method length], [method length_at], 
+[method invlength] or [method t_splitUniform], or change the default value by setting
+the [const Bezier::Default(-length.tolerance)] variable.
+[para]
+Method [method flatnesstolerance] may still be called, but it has no effect.
+[list_begin definitions]
+[call [arg bzObj] [method flatnesstolerance]]
+[call [arg bzObj] [method flatnesstolerance] [arg val]]
+[list_end]
+
+[comment =====================================================================] 
+[section {LIMITATIONS}]
+[list_begin itemized]
+[item]
+Only curves up to degree 10 (just a practical limit)
+[item]
+Methods [method normal_at] and [method vnormal_at]  are meaningful only for 2D curves ([lb][arg bzObj] [method spaceDim][rb] ==2);
+for curves having dimension <> 2 result is unpredictable.
+[list_end]
+
+
+[comment =====================================================================] 
+[section {BUGS, IDEAS, FEEDBACK}]
+[list_begin itemized]
+[item]
+[package Bezier]-1.0.1 fixes a bug with [package Itcl]-4.0 (i.e. with TclTk-8.6.1)
+[item]
+-
+[list_end]
+
+[comment =====================================================================]
+
+[see_also  [package BContour]]
+[keywords [package Itcl]]
+[keywords math]
+[manpage_end]   

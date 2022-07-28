@@ -1,0 +1,231 @@
+Glyphs 1.2
+==========
+
+Glyphs is a pure-tcl library for digging into TrueType font-files.
+Glyphs is able to extract the vectorial paths of each glyph - points, lines, curves.
+
+
+** Opening and closing
+
+This is our first quick trip; just open a .ttf, look inside and close
++--------------------------------------
+|> package require Glyphs
+|> set fObj [Glyphs::new "arial.ttf"]
+|> set ng [$fObj get numGlyphs]
+|> puts "found $ng glyphs"
+|> $fObj destroy
++--------------------------------------
+
+** Inspecting font file's properties
+
+Reopen the .ttf file
++----------
+|> set fObj [Glyphs::new "arial.ttf"]
++----------
+we already know how to get the number-of-glyphs
++----------
+|> set res1 [$fObj get numGlyphs]
+|1674
++----------
+and we can also get the overall-bounding box, or where the descender-line is placed
++----------
+|> set res2 [$fObj get bbox]
+|-1361 -665 4096 2060
+|>set res3 [$fObj get descender]
+|-434
++----------
+but there're a lot of properties and the better way to know which properties are set is:
+
++--------------------
+|> set props [$fObj get]
+|fontPath numGlyphs bbox unitsPerEm fontRevision ascender descender .....
++---------------------
+
+Other font properties can be retrieved from the internal 'name' table:
++--------------------
+|> foreach {id name} [$fObj nameinfo] {
+|>    lassign [$fObj nameinfo $id] id name value
+|>    puts "$id - $name\n$value\n"
+|> }
+|1 - Font Family name
+|Arial
+|
+|2 - Font Subfamily name
+|Regular
+|
+|3 - Unique font identifier
+|Monotype:Arial Regular:Version 3.00 (Microsoft)
+|
+|4 - Full font name
+|Arial
+| ....
++---------------------
+
+** Working with OpenType Collections
+An OpenTypeCollection (*.ttc) contains more than one font.
+If you dont' specify any, the first font is selected
++--------------------------------------
+|> set mfObj [Glyphs::new "AmericanTypewriter.ttc"]
+|> set ng [$mfObj get numGlyphs]
+|> puts "found $ng glyphs"
++--------------------------------------
+You can also get the list of included fonts
++--------------------------------------
+|> foreach subFont [$mfObj get subFonts] {
+|>    puts $subFont"
+|> }
++--------------------------------------
+If you want to work with a specific subFont, then specify its index ( 0..n )
+when opening the fontfile
++--------------------------------------
+|> $mfObj close
+|> set mfObj [Glyphs::new "AmericanTypewriter.ttc" 3]
+|>  ...
++--------------------------------------
+
+
+
+** Locating the single glyph
+The quickest way to locate a single glyph is through its glyph-index.
+We know that "arial.ttf" has 1674 glyphs, therefore we can get all glyphs from 0 to 1674.
+
+now let's take the 144th glyph
++---------------------
+|> set g144 [$fObj glyph 144]
++---------------------
+As with fObj's properties, we can get some specific glyph's properties:
++---------------------
+|> $g144 get index  ;#   -->  144 
+|> $g144 get bbox   ;#   -->  1 0 1936 1466
++---------------------
+In order to list all the available properties
++---------------------
+|> $g144 get  ;#   -->  index bbox points instructions pathLengths paths  ...
++---------------------
+Forget about the "instructions" property it's a binary string and "Glyphs" is not
+ currently able to decode. (Probably it will removed in the next revision)
+The most important properties are "points" and "paths".
+Let's take a glyph simpler than 144
++---------------------
+|> set g103 [$fObj glyph 103]
+|> set L [$g103 get points]
++---------------------
+{99 714 1 99 1079 0 ...} {299 711 1 299 446 0 ...} {516 1556 1 516 1761 1 ...} {889 1556 1 ...}
+Result looks like a list of 4 lists (4 contours). 
+Each contour is made of a sequence of triples  x y flag. 
+Flag "1" means that point (x,y) is on-curve, 
+Flag "0" means point (x,y) is the control point of a Quadratic Bezier curve.
+
+But, how to translate these "points" in a parametric curve ?
+
++---------------------
+|> set L [$g103 get paths]
++---------------------
+
+{{M 99 714} {Q 99 1079 295.0 1285.5} ...} 
+{{M 299 711} {Q 299 446 441.5 293.5} ... }
+{{M 516 1556} {L 516 1761} ... }
+{{M 889 1556} {L 889 1761} ...}
+Result is a list of (4) contours. 
+Each contour is made of a sequence of simple abstract commands:
+  M  x y   --   set (x,y) as the current point
+  L  x y   --   draw a line from current point to (x,y).
+                (x,y) then becomes the current point
+  Q  x1 y1 x2 y2 -- draw a quadratic bezier from current point, to (x1,y1) (control point) and to (x2,y2) (end-point).
+            (x2,y2) then becomes the current point
+  C x1 y1 x2 y2 x3 y3 - draw a cubic bezier from current point, to (x1,y1) (control point), (x2,y2) (control point) and to (x3,y3) (end-point).
+            (x3,y3) then becomes the current point
+It's your app's responsability to translate these 'abstract commands' in real
+drawing commands.
+A naive implementation for the standard canvas-widget could be:
+
+proc Paths2Canvas { cvs paths } {
+    foreach path $paths {
+         # first command should be M (MOVETO)
+        foreach pCmd $path {
+            set points [lassign $pCmd cmd]
+            switch -- $cmd {
+                M { ;# MOVETO
+                    ;
+                }
+                L { ;# LINETO
+                    $cvs create line $lastX $lastY {*}$points
+                }
+                Q { ;# QUADTO
+                    $cvs create line $lastX $lastY {*}$points -smooth true
+                }
+                C { ;# CUBICTO
+                    $cvs create line $lastX $lastY {*}$points -smooth raw
+                }
+                default { error "unrecognized path command \"$cmd\"" }            
+            }
+            set lastX [lindex $points end-1]
+            set lastY [lindex $points end]            
+        }
+    }
+}
+
+A better implementation should take care to join consecutive segments in a
+single polyline ....
+Look at "glyph-demo" code for a more complete example
+
+
+* Converting a glyph in a polyline, tangents, normals and more ...
+===================================================================
+The "onUniformDistance" method is the last, more powerful method acting on a glyph.
+
+We can 'split' the whole glyphs in a series of 2D points equally spaced..
++---------------------
+|> $g103 onUniformDistance 100.0 "at"
++---------------------
+returns N (long) lists (one list for each glyph's countour) made of x y pairs;
+ each (x,y) is a point on the glyph, and all these points are equally spaced 
+(with some arrangements for dealing with the curves extremities ...)
+
+We can also get the tangent or normal *versors* for these points
++---------------------
+|> $g103 onUniformDistance 100.0 "tangent_at"
+|> $g103 onUniformDistance 100.0 "normal_at"
++---------------------
+and finally we can get the tangent or normal *vectors* (i.e. a segment starting
+from point "at" having the tangent/normal direction)
++---------------------
+|> $g103 onUniformDistance 100.0 "vtangent_at"
+|> $g103 onUniformDistance 100.0 "vnormal_at"
++---------------------
+
+We suggest to do some experiment with the "glyph-demo" app.
+
+  ---
+
+There's no much more to do with a single-glyph.
+Since it's a dynamic object, we can free space when it's no more useful
++---------------------
+|>  $g133 destroy
++---------------------
+  but, you are not required to do it. In fact, when the 'font-file' is destroyed
++---------------------
+|>  $fObj destroy ;#  -- THIS frees space also for all the (related) extracted glyphs
++---------------------
+all space used for its allocated glyphs is freed. 
+
+
+
+* More on accessing glyphs *
+============================
+
+We've seen the standard way to access a glyph by-index.
+The major part of TTF holds a table for converting "character" (unicode) to index.
+
+$fObj unicode2glyphIndex "A"
+$fObj unicode2glyphIndex "ß"    ; # unicode char \u03B2 (greek letter "Beta")
+$fObj unicode2glyphIndex \u03B2 ; # unicode char \u03B2 (greek letter "Beta")
+$fObj numcode2glyphIndex 946    ; # it's always the greek letter "Beta" !
+$fObj numcode2glyphIndex 0x03B2 ; # it's always the greek letter "Beta" !
+
+For your convenience, you can access a glyph, with two new methods
+
+$fObj glyphByUnicode  "ß"  ; # glyph by Unicode
+$fObj glyphByNumcode 946   ; # glyph by Numcode
+$fObj glyphByNumcode 0x03B2 ; # glyph by Numcode (hexadecimal)
+

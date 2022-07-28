@@ -1,0 +1,134 @@
+<HTML>
+<TITLE>
+How to use the tclJBlend package
+</TITLE>
+
+<style type="text/css"><!--
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+--></style>
+
+<BODY>
+<HR/>
+<H3>
+How to use the tclJBlend package
+</H3>
+<HR/>
+
+<H4>Before starting..</H4>
+
+What you need:
+<UL>
+<LI>Of course a Tcl interpreter : <B>tclsh</B> or <B>wish</B>, or even <B>tclkit</B> (see note below for valid versions)
+<LI>(optional, yet recommended) A JavaVM: just a JRE, a JDK is not required.
+</UL>
+
+<P>
+Supported Tcl versions are <B>8.5.X</B> and <B>8.6.X</B> (and further ..) , <B>excluding Tcl versions from 8.6.1 to 8.6.5</B>>
+( see <A HREF=https://core.tcl.tk/tcl/tktview?name=07d13d99b0>Ticket 07d13d99b0</A> for full details).
+<P>
+About the JavaVM, you can use any JRE already 'present' on your system ; it's not required JRE be 'installed' i.e. you don't need java.exe be in PATH,
+nor other special variable such as JAVA_HOME need to be set 
+(nor the JRE need to be registered in the Windows Registry').
+
+
+<H4>Download JBlend or JBlend+JVM</H4>
+
+Download from <A HREF=https://sourceforge.net/projects/irrational-numbers/files/JBlend/>Sourceforge</A> 
+the last public release.
+You can choose among the following variants:
+<UL>
+<LI><B>JBlend-2.x.zip</B> - a multiplatform package (Win/Mac/Linux). It requires an external JRE.
+<LI><B>JBlend+JVM-win-x64-2.x.zip</B> - JBlend plus an embedded JVM for Windows x64
+<LI><B>JBlend+JVM-linux-x64-2.x.zip</B> - JBlend plus an embedded JVM for Linux x64
+<LI><B>JBlend+JVM-darwin-x64-2.x.zip</B> - JBlend plus an embedded JVM for MacOS x64
+</UL>
+
+Please note that the os (win/linux/darwin) and the architecture (x32/x64) of the JBlend+JVM distro must match with the os/architecture of your Tcl Interpreter,
+and so the os/architecture of the optional, external JVM you choose to 'link' to JBlend.
+
+
+<H4>Install and configure</H4>
+<P>
+Unzip the downloaded package and place it as a subdirectory of one of the Tcl 'lib' directories.
+Alternatively, you can leave it 'out of Tcl'  (e.g. in a temporary directory just for testing), provided later you tell Tcl where JBlend is placed.
+</P>
+<P>
+If you downloaded and installed (unzip) a JBlend+JVM distro, you are ready to run, <BR/>
+otherwise you should tell JBlend where your JRE is located, or more precisely, 
+where the Java dynamic library <B>jvm.dll</B> ( or <B>libjvm.so</B> (Linux) or <B>libjvm.dylib</B> (MacOS) ) is located.
+<BR/>
+There are two ways to configure JBlend, as explained in the next section.
+</P>
+
+
+<H4>Configuring JBlend</H4>
+<P>
+<I>You can skip this section if you downloaded JBlend+JVM, or if you are not interested in using an external JRE</I>
+</P>
+<P>
+There are two ways to configure JBlend, that is, to link JBlend with an external JRE: 
+</P>
+
+<UL>
+<LI> <B>On-fly configuration</B><BR/>
+<P>
+In a running Tcl interpreter, before loading the JBlend package,
+set the global variable <B>::JBlend_JVM</B> pointing to the jvm.dll (or libjvm.so ...).
+</P>
+Example:
+<PRE class=example>
+ # always specify pathnames in Unix notation.
+set ::JBlend_JVM Z:/myJRE/lib/amd64/server/jvm.dll
+....
+package require JBlend 2.1
+
+</PRE>
+
+<LI> <B>Hard-coded configuration</B><BR/>
+<P>
+Edit the <B>JBLend/JVMcfg.tcl</B> file 
+<I>(if it does not exist yet, copy <B>JBlend/__JVMcfg.tcl</B> to <B>JBlend/JVMcfg.tcl</B>)</I>
+and insert the full pathname of jvm.dll (or libjvm.so ...). You can read detailed instructions within the file itself.
+</P>
+
+</UL>
+
+<P>
+Now you are ready to run ..
+</P>
+
+
+<H4>Running JBlend</H4>
+<P>
+Once you properly installed and (optionally) configured <B>JVMcfg.tcl</B>, you just need
+<PRE class=example>
+   # Uncomment and adapt the following line if JBlend is not placed in a directory
+   #  referenced by the auto_path variable.
+   #
+   # lappend auto_path ...where-is-JBlend..
+   #
+   package require JBlend
+
+....
+</PRE>
+that's all!
+</P>
+<P>
+Note that even if the special global variable <B>::JBlend_JVM</B> is hard-coded in the configuration file <B>JBlend/JVMcfg.tcl</B>,
+if you set this variable somewhere before loading the JBlend package, this new value takes the precedence
+over the hard-coded configuration.<BR/>
+If you want to be sure to use the hard-coded configuration, unset the variable before loading the package
+</P>
+
+
+<P><P>
+<hr>
+<pre>Based on TclBlend <a href="license.html">Copyright</a> &copy; 1994-1998 Sun Microsystems, Inc.<br></pre>
+<pre>JBlend is Copyright &copy; 2016 - Irrational Numbers.<br></pre>
+
+</BODY>
+</HTML>

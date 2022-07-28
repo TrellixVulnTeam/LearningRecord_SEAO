@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>Tcl Web Services</TITLE>
+<META NAME="Generator" CONTENT="TextPad 4.6">
+<META NAME="Author" CONTENT="Gerald W. Lester">
+<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+</HEAD>
+
+<BODY>
+<H1>Tcl Web Services</H1>
+
+<h2>Summary</h2>
+
+<p>
+The distribution provides both client side access to Web Services and server
+side creation of Web Services. Currently only document/literal and rpc/encoded
+with HTTP Soap transport are supported on the client side. The server side
+currently works only with TclHttpd or embedded into an application.
+The server side provides all services as document/literal
+over HTTP Soap transport. Documentation for the package, including examples can
+be found here.
+</p>
+
+<UL>
+    <LI> <A HREF="Calling_a_Web_Service.html">Calling a Web Service from Tcl</A></LI>
+    <LI> <A HREF="Creating_a_Tcl_Web_Service.html">Creating a Tcl Web Service</A></LI>
+    <LI> <A HREF="Creating_a_Web_Service_Type.html">Creating a Web Service Type</A></LI>
+	<LI> <A HREF="Rest_flavor_service_response.html">REST flavor service response</A></LI>
+    <LI> <A HREF="Dictionary_Representation_of_XML_Arrays.html">Dictionary Representation of XML Arrays</A></LI>
+    <LI> <A HREF="Using_Options.html">Using Web Service Options</A></LI>
+    <LI> <A HREF="Embedded_Web_Service.html">Embeding a Web Service into an application</A></LI>
+    <LI> <A HREF="Tcl_Web_Service_Example.html">Tcl Web Service Example</A></LI>
+    <LI> <A HREF="Tcl_Web_Service_Math_Example.html">Tcl Web Service Math Example</A></LI>
+</UL>
+
+<p>
+The client is known to work with #C and Java based Web Services (your mileage
+may very).
+</p>
+
+<h2>License</h2>
+
+<p>
+Standard BSD.
+<h1>Web Servers</h1>
+
+<p>
+ The server side works with the following web servers:
+</p><ul> 
+<li> <a href="https://core.tcl-lang.org/tclhttpd">TclHttpd</a>
+ </li><li> <a href="http://tcl.apache.org/rivet">Rivet</a>
+ </li><li> <a href="http://www.aolserver.com/">AOLserver</a>
+ </li><li> <a href="http://code.google.com/p/wub/">WUB</a>
+ </li><li> <a href="http://wiki.tcl-lang.org/23626">wibble</a>
+  </li><li> Embedded mode (see <a href="Embedded_Web_Service.html">Embedding</a>)
+</li></ul>
+</p>
+
+<h2>Packages Required</h2>
+
+<p>
+The following packages are used:
+</p>
+
+<UL>
+<li> <a href="http://www.tcl-lang.org/">Tcl 8.6</a> 
+ </li><li> <a href="http://www.tdom.org/">tdom 0.8.1</a>
+ </li><li> <a href="http://core.tcl-lang.org/tcltls/">tcltls</a>  or <a href="https://www.magicsplat.com/tcl-docs/doctoc_twapi.html">TWAPI 4.4.0</a> for client and embedded server TLS support
+ </li><li> log from <a href="https://core.tcl-lang.org/tcllib">TclLib</a>
+ </li><li> uri from <a href="https://core.tcl-lang.org/tcllib">TclLib</a>
+ </li><li> struct::set from <a href="https://core.tcl-lang.org/tcllib">TclLib</a>
+ </li><li> http from <a href="http://www.tcl-lang.org/">Tcl</a> itself 
+ </li><li> yajl-tcl from <a href="https://github.com/flightaware/yajl-tcl">flightaware github</a> (only for rest-flavour requests)
+</li></ul>
+
+
+<p>
+If you are running the TclHttpd on Windows, it is highly recommended that you use the iocpsock extension.
+</p>
+
+<p>
+The following packages are additionally used in Embedded Server mode:
+</p><ul>
+ <li> base64 from <a href="https://core.tcl-lang.org/tcllib">TclLib</a> (also channel server)
+ </li><li> html from <a href="https://core.tcl-lang.org/tcllib">TclLib</a> (also channel server)
+ </li><li> ncgi from <a href="https://core.tcl-lang.org/tcllib">TclLib</a>
+ </li><li> fileutil from <a href="https://core.tcl-lang.org/tcllib">TclLib</a>
+</li></ul>
+</BODY>
+</HTML>

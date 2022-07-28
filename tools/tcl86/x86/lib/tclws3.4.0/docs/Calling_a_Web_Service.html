@@ -1,0 +1,568 @@
+<HTML lang=en dir=ltr xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>Calling a Web Service from Tcl</TITLE>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+</HEAD>
+
+<BODY>
+<H1 class=firstHeading>Calling a Web Service from Tcl</H1>
+
+<HR>
+
+<TABLE class=toc id=toc>
+  <TR>
+    <TD>
+      <H2>Contents</H2></DIV>
+      <UL>
+        <LI class=toclevel-1><A href="#Overview"><SPAN class=tocnumber>1</SPAN> <SPAN class=toctext>Overview</SPAN></A>
+        <LI class=toclevel-1><A href="#Loading_the_Webservices_Client_Package"><SPAN
+        class=tocnumber>2</SPAN> <SPAN class=toctext>Loading the Webservices
+        Client Package</SPAN></A>
+        <LI class=toclevel-1><A href="#Quering_a_remote_Web_Services_Server_for_its_WSDL_and_parsing_it"><SPAN
+        class=tocnumber>3</SPAN> <SPAN class=toctext>Quering a remote Web
+        Services Server for its WSDL and parsing it</SPAN></A>
+        <LI class=toclevel-1><A href="#Parsing_a_saved_WSDL"><SPAN
+        class=tocnumber>4</SPAN> <SPAN class=toctext>Parsing a saved
+        WSDL</SPAN></A>
+        <LI class=toclevel-1><A href="#Loading_a_pre-parsed_WSDL"><SPAN
+        class=tocnumber>5</SPAN> <SPAN class=toctext>Loading a pre-parsed
+        WSDL</SPAN></A>
+        <LI class=toclevel-1><A href="#Defining_a_REST_service"><SPAN
+        class=tocnumber>6</SPAN>
+        <SPAN class=toctext>Defining a REST based service by hand</SPAN></A>
+        <LI class=toclevel-1><A href="#Transforms"><SPAN
+        class=tocnumber>7</SPAN>
+        <SPAN class=toctext>Defining Transforms</SPAN></A>
+        <LI class=toclevel-1><A href="#Synchronous_Call_returning_a_dictionary_object"><SPAN
+        class=tocnumber>8</SPAN> <SPAN class=toctext>Synchronous Call returning
+        a dictionary object</SPAN></A>
+        <LI class=toclevel-1><A href="#Asynchronous_Call_with_separate_success_and_error_callbacks"><SPAN
+        class=tocnumber>9</SPAN> <SPAN class=toctext>Asynchronous Call with
+        separate success and error callbacks</SPAN></A>
+        <LI class=toclevel-1><A href="#Creation_of_stub_Tcl_procedures_to_make_synchronous_calls"><SPAN
+        class=tocnumber>10</SPAN> <SPAN class=toctext>Creation of stub Tcl
+        procedures to make synchronous calls</SPAN></A>
+        <LI class=toclevel-1><A href="#Synchronous_Call_returning_the_raw_XML"><SPAN
+        class=tocnumber>11</SPAN> <SPAN class=toctext>Synchronous Call returning
+        the raw XML</SPAN></A> </li>
+        <li class="toclevel-1"><a href="#Config"><span class="tocnumber">12</span>
+        <span class="toctext">Configuring Services</span></a> </LI>
+        <li class="toclevel-1"><a href="#TypeCasting"><span class="tocnumber">13</span>
+        <span class="toctext">Dealing With Casting Abstract Types to Concrete Types</span></a> </LI>
+      </UL></TD></TR></TBODY></TABLE>
+<P>
+
+</P>
+<A name=Overview></A>
+<H2>Overview </H2>
+<P>The Webservices Client package provides a several ways to define what
+operations a remote Web Services Server provides and how to call those
+operations. It also includes several ways to call an operation. </P>
+<P>The following ways are provided to define remote operations: </P>
+<UL>
+  <LI>Loading a pre-parsed WSDL
+  </li><li>Quering a remote Web Services Server for its WSDL and parsing it
+  </li><li>Parsing a saved WSDL </li></ul>
+  <ul><li>Defining a REST based service by hand </li></ul>
+<P>The parsed format is much more compact than the XML of a WSDL. </P>
+<P>The following ways are provided to directly call an operation of a Web
+Service Server: </P>
+<UL>
+  <LI>Synchronous Call returning a dictionary object
+  <LI>Synchronous Call returning the raw XML
+  <LI>Asynchronous Call with separate success and error callbacks
+  <LI>Creation of stub Tcl procedures to make synchronous calls </LI></UL>
+
+<p>This package makes use of the <b>log</b> package from <b>TclLib</b>.  In particular the following levels are used:
+</p><ul>
+  <li>error/warning -- errors encountered when parsing a WSDL.  Actual level depends on options that are set in the <b>::WS::Utils</b> package.
+  </li><li>info -- HTTP calls, including the XML, made to invoke operations and the replies received. <i>Introduced in 2.2.8.</i>
+  </li><li>debug -- detailed internal information.  This should only be used if you want to code dive into the TclWs package internals.
+</li></ul>
+
+<A name=Loading_the_Webservices_Client_Package></A>
+<H2>Loading the Webservices Client Package </H2>
+<P>To load the webservices server package, do: </P><PRE> package require WS::Client
+</PRE>
+<P>This command will only load the utilities the first time it is used, so it
+causes no ill effects to put this in each file using the utilties. </P>
+<HR>
+
+
+<A name=Quering_a_remote_Web_Services_Server_for_its_WSDL_and_parsing_it></A>
+<H2>Quering a remote Web Services Server for its WSDL and parsing it </H2>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::GetAndParseWsdl</I></B> </P>
+<P><B>Description&nbsp;: Fetch the WSDL file from the given URL, aprse it and create the service.</B> </P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>
+     <I>url</I>     - The url of the WSDL
+     <I>headers</I> - Extra headers to add to the HTTP request. This
+     <I></I>          is a key value list argument. It must be a list with
+     <I></I>          an even number of elements that alternate between
+     <I></I>          keys and values. The keys become header field names.
+     <I></I>          Newlines are stripped from the values so the header
+     <I></I>          cannot be corrupted.
+     <I></I>          This is an optional argument and defaults to {}.
+     <I>serviceAlias</I> - Alias (unique) name for service.
+     <I></I>               This is an optional argument and defaults to the name of the
+     <I></I>               service in serviceInfo.
+     <I>serviceNumber</I> - Number of service within the WSDL to assign the
+     <I></I>                serviceAlias to. Only recognized with a serviceAlias.
+     <I></I>                First service (default) is addressed by value "1".
+</PRE>
+<p>The following example WSDL snipped defines two services:</p>
+<pre>
+  &gt;definitions ...&lt;
+    &gt;service name="service1"&lt;
+      ...
+    &gt;/service&lt;
+    &gt;service name="service1"&lt;
+      ...
+    &gt;/service&lt;
+  &gt;/definitions&lt;
+</pre>
+
+<p>Using an empty or no <I>serviceAlias</I> would result in the creation of the services "service1" and "service2".</p>
+<p>Using <i>serviceAlias</i>="SE" and <i>serviceNumber</i>=2 would result in the creation of the service "SE" containing the "service2" of the WSDL.</p>
+
+<P><B>Returns&nbsp;: The parsed service definition</B> </P>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;: None</B> </P>
+<P><B>Pre-requisite Conditions&nbsp;: None</B> </P>
+<HR>
+
+<A name=Parsing_a_saved_WSDL></A>
+<H2>Parsing a saved WSDL </H2>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::ParseWsdl</I></B> </P>
+<P><B>Description&nbsp;: Parse a WSDL and create the service. Create also the stubs if specified.</B> </P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>     <I>wsdlXML</I> - XML of the WSDL
+</PRE>
+<P><B>Optional Arguments:</B> </P>
+<PRE>
+     <i>-createStubs</i> 0|1 - create stub routines for the service
+     <i>-headers</i>         - Extra headers to add to the HTTP request. This
+     <i></i>                   is a key value list argument. It must be a list with
+     <i></i>                   an even number of elements that alternate between
+     <i></i>                   keys and values. The keys become header field names.
+     <i></i>                   Newlines are stripped from the values so the header
+     <i></i>                   cannot be corrupted.
+     <i></i>                   This is an optional argument and defaults to {}.
+     <i>-serviceAlias</i>    - Alias (unique) name for service.
+     <i></i>                   This is an optional argument and defaults to the name of the
+     <i></i>                   service in serviceInfo.
+     <I>serviceNumber</I> - Number of service within the WSDL to assign the
+     <I></I>                serviceAlias to. Only recognized with a serviceAlias.
+     <I></I>                First service (default) is addressed by value "1".
+</PRE>
+
+<p>The arguments are position independent.</p>
+<p>For an example use of <i>serviceAlias</i> and <i>serviceNumber</i>, see <a href="#Quering_a_remote_Web_Services_Server_for_its_WSDL_and_parsing_it">the chapter above</a>.</p>
+<P><B>Returns&nbsp;: The parsed service definition</B> </P>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;:None</B> </P>
+<P><B>Pre-requisite Conditions&nbsp;: None</B> </P>
+<HR>
+
+
+<A name=Loading_a_pre-parsed_WSDL></A>
+<H2>Loading a pre-parsed WSDL </H2>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::LoadParsedWsdl</I></B> </P>
+<P><B>Description&nbsp;: Load a saved service definition in</B> </P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>     <I>serviceInfo</I> - parsed service definition, as returned from
+                   <I>::WS::Client::ParseWsdl</I> or <I>::WS::Client::GetAndParseWsdl</I>
+     <I>headers</I>     - Extra headers to add to the HTTP request. This
+                     is a key value list argument. It must be a list with
+                     an even number of elements that alternate between
+                     keys and values. The keys become header field names.
+                     Newlines are stripped from the values so the header
+                     cannot be corrupted.
+                     This is an optional argument and defaults to {}.
+     <I>serviceAlias</I> - Alias (unique) name for service.
+                     This is an optional argument and defaults to the name of the
+                     service in serviceInfo.
+</PRE>
+<P><B>Returns&nbsp;: The name of the service loaded</B> </P>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;: None</B> </P>
+<P><B>Pre-requisite Conditions&nbsp;: None</B> </P>
+<HR>
+
+<A name=Defining_a_REST_service></A>
+<H2>Defining a REST based service by hand </H2>
+<BR>
+<H3>Service Definition</H3>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::CreateService</I></B> </P>
+<P><B>Description&nbsp;: Define a REST service</B> </P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>
+     <I>serviceName</I> - Service name to add namespace to
+     <I>type</I>        - The type of service, currently only <B>REST</B> is supported.
+     <I>url</I>          - URL of namespace.
+     <I>args</I>         - Optional arguments:
+                            This is an optional argument and defaults to the name of the
+                                <I>-header</I> httpHeaderList.
+</PRE>
+<P><B>Returns&nbsp;: The local alias (tns)</B> </P>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;: None</B> </P>
+<P><B>Pre-requisite Conditions&nbsp;: None</B> </P>
+
+<H3>Method Definition</H3>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::DefineRestMethod</I></B> </P>
+<P><B>Description&nbsp;: Define a method on a REST service</B> </P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>
+     <I>serviceName</I> - Service name to add namespace to
+     <I>methodName</I>  - The name of the method to add.
+     <I>returnType</I>  - The type, if any returned by the procedure.  Format is:
+                           xmlTag <I>typeInfo</I>.
+     <i>inputArgs</i>   - List of input argument definitions where each argument
+                           definition is of the format: name typeInfo.
+
+    where, <I>typeInfo</I> is of the format <B>{</B>type typeName comment commentString<B>}</B>
+</PRE>
+<P><B>Returns&nbsp;: The current service definition </B> </P>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;: None</B> </P>
+<P><B>Pre-requisite Conditions&nbsp;: None</B> </P>
+<HR>
+
+
+<A name=Transforms></A>
+<H2>Defining Transforms </H2>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::SetServiceTransforms</I></B> </P>
+<P><B>Description&nbsp;: Define a service's transforms</B>
+<PRE>
+               Transform signature is:
+                   cmd serviceName operationName <I>transformType</I> xml {url {}} {argList {}}
+               where <I>transformType</I> is <B>REQUEST</B> or <B>REPLY</B>
+               and url and argList will only be present for <I>transformType</I> == <B>REQUEST</B>
+</PRE> </P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>
+     <I>serviceName</I>  - The name of the Webservice
+     <I>inTransform</I>  - Input transform <I>cmd</I>, defaults to {}.
+     The inTransform is the proc which allows to transform the SOAP output message, which will be input in the server.
+     <I>outTransform</I> - Output transform<I>cmd</I>, defaults to {}.
+     The outTransform is the proc which allows to transform the SOAP input message, which is the answer of the server.
+</PRE>
+<P><B>Returns&nbsp;: None</B></P>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;: None</B> </P>
+<P><B>Pre-requisite Conditions&nbsp;: Service must have been defined.</B> </P>
+<HR>
+
+<A name=Synchronous_Call_returning_a_dictionary_object></A>
+<H2>Synchronous Call returning a dictionary object </H2>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::DoCall</I></B> </P>
+<P><B>Description&nbsp;: Call an operation of a web service</B> </P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>     <I>serviceName</I>     - The name of the Webservice
+     <I>operationName</I>   - The name of the Operation to call
+     <I>argList</I>         - The arguements to the operation as a dictionary object
+                       This is for both the Soap Header and Body messages.
+     <I>headers</I>         - Extra headers to add to the HTTP request. This
+                       is a key value list argument. It must be a list with
+                       an even number of elements that alternate between
+                       keys and values. The keys become header field names.
+                       Newlines are stripped from the values so the header
+                       cannot be corrupted.
+                       This is an optional argument and defaults to {}.
+</PRE>
+<P><B>Returns&nbsp;:</B> </P>
+<PRE>     The return value of the operation as a dictionary object.
+       This includes both the return result and any return headers.
+</PRE>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;:</B> </P><PRE>     <B>WSCLIENT HTTPERROR</B>      - if an HTTP error occured
+     others                  - as raised by called Operation
+</PRE>
+<P><B>Pre-requisite Conditions&nbsp;: Service must have been defined.</B> </P>
+<HR>
+
+<A name=Asynchronous_Call_with_separate_success_and_error_callbacks></A>
+<H2>Asynchronous Call with separate success and error callbacks </H2>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::DoAsyncCall</I></B> </P>
+<P><B>Description&nbsp;: Call an operation of a web service asynchronously</B>
+</P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>     <I>serviceName</I>     - The name of the Webservice
+     <I>operationName</I>   - The name of the Operation to call
+     <I>argList</I>         - The arguements to the operation as a dictionary object
+                       This is for both the Soap Header and Body messages.
+     <I>succesCmd</I>       - A command prefix to be called if the operations
+                       does not raise an error.  The results, as a dictionary
+                       object are concatinated to the prefix. This includes
+                       both the return result and any return headers.  Leave
+                       empty to not call any function.
+
+     <I>errorCmd</I>        - A command prefix to be called if the operations
+                       raises an error.  The error code, stack trace and
+                       error message are concatinated to the prefix.  Leave
+                       empty to not call any function.
+     <I>headers</I>         - Extra headers to add to the HTTP request. This
+                       is a key value list argument. It must be a list with
+                       an even number of elements that alternate between
+                       keys and values. The keys become header field names.
+                       Newlines are stripped from the values so the header
+                       cannot be corrupted.
+                       This is an optional argument and defaults to {}.
+</PRE>
+<P><B>Returns&nbsp;: Nothing.</B> </P>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;:</B> </P><PRE>     WSCLIENT HTTPERROR      - if an HTTP error occured
+     others                  - as raised by called Operation
+</PRE>
+<P><B>Pre-requisite Conditions&nbsp;: Service must have been defined.</B> </P>
+<HR>
+
+<A name=Creation_of_stub_Tcl_procedures_to_make_synchronous_calls></A>
+<H2>Creation of stub Tcl procedures to make synchronous calls </H2>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::CreateStubs</I></B> </P>
+<P><B>Description&nbsp;: Create stubs routines to make calls to Webservice
+Operations.</B> </P><PRE>             All routines will be create in a namespace that is the same
+             as the service name.  The procedure name will be the same
+             as the operation name.
+</PRE><PRE>             <B>NOTE</B> -- Webservice arguments are position independent, thus
+                     the proc arguments will be defined in alphabetical order.
+</PRE>
+<P><B>Arguments&nbsp;:</B> </P><PRE>     <I>serviceName</I>     - The service to create stubs for
+</PRE>
+<P><B>Returns&nbsp;: A string describing the created procedures.</B> </P>
+<P><B>Side-Effects&nbsp;: Existing namespace is deleted.</B> </P>
+<P><B>Exception Conditions&nbsp;: None</B> </P>
+<P><B>Pre-requisite Conditions&nbsp;: Service must have been defined.</B> </P>
+<HR />
+
+<A name=Synchronous_Call_returning_the_raw_XML></A>
+<H2>Synchronous Call returning the raw XML </H2>
+<P><B>Procedure Name&nbsp;: <I>::WS::Client::DoRawCall</I></B> </P>
+<P><B>Description&nbsp;: Call an operation of a web service</B> </P>
+<P><B>Arguments&nbsp;:</B> </P><PRE>     <I>serviceName</I>     - The name of the Webservice
+     <I>operationName</I>   - The name of the Operation to call
+     <I>argList</I>         - The arguements to the operation as a dictionary object
+                       This is for both the Soap Header and Body messages.
+     <I>headers</I>         - Extra headers to add to the HTTP request. This
+                       is a key value list argument. It must be a list with
+                       an even number of elements that alternate between
+                       keys and values. The keys become header field names.
+                       Newlines are stripped from the values so the header
+                       cannot be corrupted.
+                       This is an optional argument and defaults to {}.
+</PRE>
+<P><B>Returns&nbsp;:</B> </P><PRE>     The XML of the operation.
+</PRE>
+<P><B>Side-Effects&nbsp;: None</B> </P>
+<P><B>Exception Conditions&nbsp;:</B> </P><PRE>     <B>WSCLIENT HTTPERROR</B>      - if an HTTP error occured
+</PRE>
+<P><B>Pre-requisite Conditions&nbsp;: Service must have been defined.</B> </P>
+
+<HR />
+
+<p><a name="Template"></a>
+</p><h2>Generating a Template Dictionary</h2>
+<p><b>Procedure Name&nbsp;: <i>::WS::Utils::GenerateTemplateDict</i></b> </p>
+<p><b>Description&nbsp;: Generate a template dictionary object for a given type.</b> </p>
+<p><b>Arguments&nbsp;:</b> </p>
+<pre>
+     <i>mode</i>            - The mode, <b>Client</b> or <b>Server</b>
+     <i>serviceName</i>     - The name of the Webservice
+     <i>type</i>            - The name of the type
+     <i>arraySize</i>       - Number of elements to generate in an array.  Default is 2
+<ul>
+</pre>
+<p><b>Returns&nbsp;:</b> </p><pre>A dictionary object for a given type.  If any circular references exist, they will have the value of &lt;** Circular Reference **&gt;
+<p><b>Side-Effects&nbsp;: None</b> </p>
+<p><b>Exception Conditions&nbsp;&nbsp;: None</b> </p>
+<p><b>Pre-requisite Conditions&nbsp;: Service must have been defined.</b> </p></pre><p></p>
+
+<HR />
+
+<p><a name="Config"></a>
+</p><h2>Configuring a Service </h2>
+
+There are two procedures to configure a service:
+<ul>
+	<li>::WS::Client::SetOption</li>
+	<li>::WS::Client::Config</li>
+</ul>
+
+<p>The first procedure contains the default options of the package.
+The default options are used on service creation and are then copied to the service.</p>
+
+<p>The second procedure contains the options of each service.
+They are copied on service creation from the default options.</p>
+
+<p>Most option items may be accessed by both functions.
+Some options are only used on service creation phase, which do not exist as service option.
+Other options do not exist as default option, as they are initialized from the WSDL file.</p>
+
+<p>In the following, first the two access routines are described.
+Then, a list of options for both functions are given, with remarks, if they are only valid for one of the two procedures.</p>
+
+<p><b>Procedure Name&nbsp;: <i>::WS::Client::SetOption</i></b> </p>
+<p><b>Description&nbsp;: Get or set the default options of the package</b> </p>
+<p><b>Arguments&nbsp;:</b> </p>
+<pre>
+     <i>-globalonly</i>   - Return a list of global-only options and their values.
+     <i></i>                Global-only options are not copied to the service.
+     <i>-defaultonly</i>  - Return a list of default-only options and their values.
+     <i></i>                default-only options are copied to the service.
+     <i>--</i>            - End of options
+     <i>item</i>          - The option item to get or configure.
+     <i></i>                Return a list of all item/value pairs if ommitted. 
+     <i>value</i>         - The value to set the option item to.
+     <i></i>                Return current value if omitted.
+</pre>
+
+<p><b>Procedure Name&nbsp;: <i>::WS::Client::Config</i></b> </p>
+<p><b>Description&nbsp;: Get or set the options local to a service definition</b> </p>
+<p><b>Arguments&nbsp;:</b> </p>
+<pre>
+     <i>serviceName</i> - The name of the Webservice.
+     <i></i>              Return a list of default items/values paires if not given.
+     <i>item</i>        - The option item to get or configure.
+     <i></i>              Return a list of all item/value pairs, if not given. 
+     <i>value</i>       - The value to set the option item to.
+     <i></i>              Return current value if omitted.
+</pre>
+
+<p><b>Option List:</b> </p>
+
+<ul>
+<li><pre>allowOperOverloading</pre>
+	<p>An overloaded operation is an operation with the same name but different  may exist with different input parameter sets.</p>
+	<p>This option throws an error, if a WSDL is parsed with an overloaded operation.</p>
+	Default: 1</li>
+
+<li><pre>contentType</pre>
+	The http content type of the http request sent to call the web service.<br />
+	Default: "text/xml;charset=utf-8"</li>
+
+<li><pre>errorOnRedefine</pre>
+	<p>Throw an error, if a service is created (CreateService etc) for an already existing service.</p>
+	<p>Default value: 0</p>
+	<p>This item may not be used with <i>::WS::Client::Config</i>.</p>
+	</li>
+
+<li><pre>genOutAttr</pre>
+	generate attributes on outbound tags, see <A HREF="Using_Options.html#genOutAttr">here</A> for details</li>
+
+<li><pre>inlineElementNS</pre>
+	<p>Namespace prefixes for types may be defined within the WSDL root element.</p>
+	<p>This item may not be used with <i>::WS::Client::Config</i>.</p>
+	<p>Activate this option, to also search namespace prefixes in the type definition.
+	As those are seen as global prefixes, there might be a double-used prefix which will cause a processing error, if different URI's are assigned.</p>
+
+	<p>The error would be caused by a WSDL as follows</p>
+	<pre>
+	&lt;wsdl:definitions targetNamespace="http://www.webserviceX.NET/"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/
+		xmlns:q1="myURI1"
+		...&gt;
+	    ...
+	    &lt;xs:element xmlns:q1="myURI2" type="q1:MessageQ1"/&gt;
+	</pre>
+	</li>
+<li><pre>location</pre>
+	<p>The URL of the service. This is initialized on the value in the WSDL file, when the WSDL file is parsed. The value may be overwritten setting this option.</p>
+	<p>This item may not be used with <i>::WS::Client::SetOption</i>.</p>
+	</li>
+
+<li><pre>noTargetNs</pre>
+	The target namespace URI is normally included twice in the envelope of the webservice call:<br />
+	<pre>
+&lt;SOAP-ENV:Envelope
+	...
+	xmlns="http://targeturi.org/"
+	xmlns:tns1="http://targeturi.org/"
+	...&gt;
+	</pre>
+	Setting this option to 1 suppresses the line with "xmlns=".
+	<br />This option was set to call a service published by SAP.
+	<br />Default value: 0</li>
+<li><pre>nsOnChangeOnly</pre>
+	only put namespace prefix when namespaces change</li>
+<li><pre>parseInAttr</pre>
+	parse attributes on inbound tags, see <A HREF="Using_Options.html#parseInAttr">here</A> for details</li>
+<li><pre>queryTimeout</pre>
+	Timeout to any network query in ms. Default value: 60000 (1 minuite).
+	The <A HREF="Using_Options.html#queryTimeout">utility package</a> has an option with the same functionality, which is used, when there is no call option context.
+	</li>
+<li><pre>skipHeaderLevel</pre>
+	boolean indicating the first level of the XML in a request header <i><b>shall be</b></i> skipped.  Derived from options.  Default is 0 (do not skip). <i>(Introduced in 2.2.8)</i></li>
+<li><pre>skipLevelOnReply</pre>
+	boolean indicating the first level of the XML in a reply <i><b>may be</b></i> skipped.  Derived from options.  Default is 0 (do not skip). <i>(Introduced in 2.2.8)</i></li>
+<li><pre>skipLevelWhenActionPresent</pre>
+	boolean indicating if the first level of the XML is to be skipped.  Derived from options.  Default is 0 (do not skip).</li>
+<li><pre>suppressNS (default: empty string)</pre>
+	do not put a particular namespace prefix</li>
+<li><pre>suppressTargetNS</pre>
+	<p>Do not add the Target Namespace URI prefix "tns1" to all parameters in the webservice call XML.</p>
+	<p>As an example, the XML is modified from (option not set):
+	<pre>
+&lt;SOAP-ENV:Envelope ...
+    xmlns:tns1="http://targeturi.org/"
+    ... &gt;
+  &lt;SOAP-ENV:Body&gt;
+    &lt;tns1:CalledMethod&gt;
+      &lt;tns1:Parameter1&gt;Value;/tns1:Parameter1&gt;
+    &lt;/tns1:CalledMethod&gt;
+  &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;
+	</pre>
+	to (option set)
+	<pre>
+&lt;SOAP-ENV:Envelope ...
+    xmlns:tns1="http://targeturi.org/"
+    ... &gt;
+&lt;SOAP-ENV:Envelope ...
+  &lt;SOAP-ENV:Body&gt;
+    &lt;tns1:CalledMethod&gt;
+      &lt;Parameter1&gt;Value;/Parameter1&gt;
+    &lt;/tns1:CalledMethod&gt;
+  &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;
+	</pre>
+	</p>
+	Derived from options.
+	<br />Internally, this option sets the option "suppressNS" to "tns1".
+	<br />This option was set to call a service published by SAP.
+	<br />This option made a call to a certain MS Web Service fail with the error message: "Input parameter 'Parameter1' can not be NULL or Empty.". 
+	<br />Default is 0 (do not suppress).
+	</li>
+<li><pre>targetNamespace (default: empty string)</pre>
+	<p>the target namespace of the service, derived from the WSDL.</p>
+	<p>This item may not be used with <i>::WS::Client::SetOption</i>.</p>
+	</li>
+<li><pre>UseNS (default: empty string)</pre>
+	See <A HREF="Using_Options.html#UseNS">here</A>
+	</li>
+<li><pre>useTypeNS (default: empty string)</pre>
+	use type's namespace prefix as prefix of elements</li>
+<li><pre>valueAttrCompatiblityMode (default: 1)</pre>
+	If this and genOutAttr/parseInAttr are set, then values are specified in the dictionary as {}.  Otherwise if genOutAttr/parseInAttr is set this is not set, then the values are specified in the dictionary as ::value.</li>
+</ul>
+<pre>
+     <i>value</i>         - Optional, the new value.
+</pre>
+<p><b>Returns&nbsp;:</b> </p><pre>     The value of the item.
+<p><b>Side-Effects&nbsp;: None</b> </p>
+<p><b>Exception Conditions&nbsp;&nbsp;: None</b> </p>
+<p><b>Pre-requisite Conditions&nbsp;: Service must have been defined.</b> </p></pre><p></p>
+
+
+<p><a name="TypeCasting"></a>
+</p><h2>Dealing With Casting Abstract Types to Concrete Types </h2>
+<p>
+    If you turn on <i>parseInAttr</i> and <i>genOutAttr</i>, the system will
+    semi-automatically deal with casting of elements declared as a being of a
+    type that is an abstract type to/from the concrete type actually to be used
+    in a message.  On an element that is decleared to be a type which is an
+    abstract type, the value of the <b>::type</b> key in the dictionary will
+    specify the concrete type to be actually used (or for a reply message the
+    concrete type that was actually used).
+</p>
+<p>
+    <B>NOTE:</B> While in the WSDL the concreate type must be an extention
+    of the abstract type, the package does not enforce this restriction, so
+    caution must be taken.
+</p>
+
+</div>
+</BODY>
+</HTML>

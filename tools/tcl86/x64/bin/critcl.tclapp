@@ -1,0 +1,14 @@
+#!/bin/sh
+# -*-tcl -*-
+# hide next line from tcl \
+exec "D:/src/tcl-installer/win/dist/x64/bin/tclsh.exe" "$0" ${1+"$@"}
+
+set libpath [file join [file dirname [file dirname [
+		file normalize [file join [info script] ...]]]] .. lib]
+set libpath [file join $libpath tcl8.6]
+if {[lsearch -exact $auto_path $libpath] < 0} {
+		set auto_path [linsert $auto_path[set auto_path {}] 0 $libpath]
+}
+
+package require critcl::app
+critcl::app::main $argv

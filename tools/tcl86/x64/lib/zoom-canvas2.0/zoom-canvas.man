@@ -1,0 +1,302 @@
+[comment {-*- tcl -*- doctools manpage}]
+
+[comment {
+
+ Source file for doctools
+
+ Usage:
+  tclsh c:\tcl\apps\dtplite.tcl  -o .                     html zoom-canvas.man
+  tclsh c:\tcl\apps\dtplite.tcl  -o zoom-canvas.wiki.txt  wiki zoom-canvas.man
+}]
+
+
+[manpage_begin zoom-canvas n 2.0]
+[copyright {2021, by A.Buratti}]
+[moddesc {Canvas with Zoom}]
+[titledesc  {a canvas-widget extension}]
+[category  {widgets}]
+[require Tk 8.6]
+[require zoom-canvas 2.0]
+
+[description]
+[cmd zoom-canvas] is an extension of the standard canvas-widget.
+[para]
+[para]
+[cmd zoom-canvas] is fully compatible with canvas and adds new subcommands to change the [emph zoom-factor]
+of the whole scene.
+In this way, users are no more forced to scale in advance the coordinates of their [emph world-model]
+so that it fits in the visible part of the canvas.
+[para]
+[para]
+Users can create,change,move all the graphical primitives (lines, polygons, ovals, ....)
+by simply specifying coordinates and distances based on their [emph {world coordinate-system}],
+and then they can control how zoom-canvas scales and translates the whole scene.
+[para]
+[para]
+It is important to remark that, independently of this [emph {apparent scaling}],
+all the zoom-canvas items maintain their original size and position.
+[para]
+[para]
+Example
+[example {
+  package require zoom-canvas 2.0
+  
+  zoom-canvas .zc
+  pack .zc -expand true -fill both
+  
+    # create two huge discs
+  .zc create oval -1e6 -1e6  1e6 1e6 -tag DISC_1 -outline red
+  .zc create oval -1e7 -1e7  1e7 1e7 -tag DISC_2 -outline green
+  ....
+    # let zoom-canvas scale/translate the whole scene within the window  
+   .zc zoomfit
+   ...
+    # get the coords of DISC_1
+   set disc1_coords [.zc coords DISC_1] 
+    # disc1_coords is  {-1e6 -1e6 1e6 1e6}  
+  
+}]
+[para] 
+[para]
+That's all about [cmd zoom-canvas]. Users create and change all the graphical primitives using [emph {their world-coordinates}] and then control how [cmd zoom-canvas] scales and translates the whole scene.
+
+[comment =====================================================================]
+[section {Coordinates and Transformations}]
+
+Normally the origin of the zoom-canvas coordinate-system is at the upper-left corner
+of the window containing the canvas (i.e. the Viewport).
+By default the y-axis of zoom-canvas is downwards oriented (as for the standard canvas),
+but it can set upwards oriented (as in mathematics) by setting the [option -yaxis] option.
+to [const up].
+[para]
+[para]
+As for the standard canvas-widget, it is possible to adjust the origin of 
+the zoom-canvas coordinate-system relative to the Viewport coordinate-system
+using the [method xview]/[method yview] subcommands or the [method scan] [const mark]/[const moveto] subcommands; this is typically used for scrolling. 
+[para]
+[para]
+[cmd zoom-canvas] also support scaling of the whole scene using the [method zoom]/[method rzoom]/[method zoomfit] subcommands.
+[para]
+[para]
+The [method canvasx]/[method canvasx] subcommands map the x/y coordinates of the Viewport to the x/y coordinates of zoom-canvas
+(i.e. from the Viewport coordinate-system to the World coordinate-System).
+[para]
+[para]
+The [method W2V] subcommand does the inverse map, from World coordinates to Viewport coordinates.
+
+[comment =====================================================================]
+[section {WIDGET OPTIONS}]
+
+[widget zoom-canvas] supports [emph all] [widget canvas] options plus the following
+
+[subsection {zoom-canvas specific options}]
+[list_begin options]
+
+[opt_def -zoommode [arg mode]]
+by default it is set to [const xy], meaning that x and y coords will be equally zoomed. 
+When this option is set to [const x] or [const y], then only the x (or the y) coordinate will be zoomed.
+This may be useful if you have a long horizontal (or vertical) axes you want to zoom keeping the other dimension unchanged.
+
+[opt_def -zmultiplier [arg coeff]]
+Specifies a coefficient used for relative zoom (see [method rzoom]). It should be greater than 1.0. Default is [const 1.4142..]. (square root of two)
+
+[opt_def -yaxis [arg orientation]]
+Specifies the orientation of the y-axis. [arg orientation] can be [const up] or [const down]. Default value is [const down] as for the standard canvas-widget.
+This option can be set only at creation-time, it cannot changed with the [method configure]
+widget command.
+
+[opt_def -pointbmp [arg xxx]]
+Specifies the default bitmap used for the (new) point items.
+Note that argument should be the name of a predefined bitmap (e.g. a bitmap like
+"hourglass", "info", "quest_head" ... see [cmd Tk_GetBitmap]), or the name
+of a file containing a bitmap, in standard X11 or X10 bitmap format.
+Filenames must be prefixed by [emph @] (e.g. @/mybmps/start.xbm). The predefined
+bitmap is @/.../point.xbm, bundled within the package. 
+
+[opt_def -userdata [arg data]]
+it can be used for storing any kind of data (for storing multiple values, a dictionary data is recommended) 
+
+[list_end]
+
+[comment =====================================================================]
+[section {WIDGET COMMANDS}]
+
+[list_begin definitions]
+[call [cmd zoom-canvas] [arg pathName] [opt [arg options]]]
+The [cmd zoom-canvas] command creates a new widget (given by the [arg pathName] argument).
+Additional options, described above, may be specified on the command line or in the option database to configure default aspects of the zoom-canvas.
+At the time this command is invoked, there must not exist a window named [arg pathName], but [arg pathName]'s parent must exist. 
+The [cmd zoom-canvas] command returns its [arg pathName] argument. 
+[list_end]
+
+Once created, [arg pathName] may be used to invoke all the standard canvas-widget subcommands
+plus the following
+
+[subsection {zoom-canvas specific commands}]
+[list_begin definitions]
+
+[call [arg pathName] [method create] [const point] x y  [opt "[arg option] [arg value]..."]]
+Create a point (actually a small bitmap) located at (x,y)
+Options are those of canvas-bitmap-item-type. If you omit the [option -bitmap]
+option, the default-bitmap is used (see [option -pointbmp] option).
+
+[example {
+  # create a point at WorldCoord (11,22)
+ .zc create point 11 22
+  # create a point with a new bitmap
+ .zc create point 100 200 -bitmap @/mybmps/special.xbm
+  # create a RED point (with default bmp) and then change it to yellow
+ set id [.zc create point 200 200 -foreground red]
+ .zc itemconfigure $id -foreground yellow
+}]
+
+[call [arg pathName] [method zoom]]
+Get the current zoom-factor
+
+[call [arg pathName] [method zoom] [arg zf] [opt "[arg Wx] [arg Wy]"]]
+Set the current zoom-factor. [arg zf] can even be negative (axis directions will be inverted)
+but it cannot be 0 (or very close to 0).
+[para]
+[para]
+([arg Wx],[arg Wy]) is the fixed-point of the zoom transformation, i.e. its [emph {apparent position}] does not change. 
+If ([arg Wx],[arg Wy]) is not specified, the fixed-point is the point related to the center of the window.
+[para]
+[para]
+When this subcommand complets, it generates a virtual event [const <<Zoom>>] for
+the purpose of notification, carrying  the actual zoom factor as user_data.
+ Binding scripts can access this user_data as the value of the %d substitution. 
+
+[call [arg pathName] [method zoomfit] [opt [arg mode]] [opt "[arg Wx0] [arg Wy0] [arg Wx1] [arg Wy1]"]]
+Find and set the best zoom-factor so that all the canvas items (or those enclosed by [arg Wx0] [arg Wy0] [arg Wx1] [arg Wy1]) will be visible.
+[arg mode] can be [const "x"] (best-width) [const "y"] (best-height) [const "xy"] (best fit).
+Default is [const xy] (best-fit.) 
+[para]
+[para]
+As for the [method zoom] subcommand, this subcommand generates a [const <<Zoom>>] virtual event.
+
+[call [arg pathName] [method rzoom] [arg delta] [opt "[arg Wx] [arg Wy]"]]
+If [arg delta] is positive, the current zoom-factor is multiplied by the [option -zmultiplier] option's value.
+If [arg delta] is negative, the current zoom-factor is divided by the [option -zmultiplier] option's value.
+If [arg delta] is 0, no zoom is performed.
+[para]
+[para]
+([arg Wx],[arg Wy]) is the fixed-point of the zoom transformation, i.e. its [emph {apparent position}] does not change. 
+If ([arg Wx],[arg Wy]) is not specified, the fixed-point is the point related to the center of the window.
+[para]
+As for the [method zoom] subcommand, this subcommand generates a [const <<Zoom>>] virtual event.
+
+[call [arg pathName] [method overlap] [arg Wx] [arg Wy] [arg Vx] [arg Vy]]
+Collimate World-Point [arg (Wx,Wy)] with Viewport-Point [arg (Vx,Vy)]. (Viewport coordinates must be integers).
+Items don't change their intrinsic coordinates; it's only a viewport scrolling.
+
+
+[call [arg pathName] [method canvasxy] [arg Point]]
+Point is a list of two integers, i.e. a Viewport's point. Result is the corresponding
+point in World coords. (this is just a convenience subcommand based on [method canvasx] and [method canvasy]).
+
+[call [arg pathName] [method W2V] [arg "x y [opt [arg "x y ..."]]"]]
+[call [arg pathName] [method W2V] [arg [arg coordlist]]]
+Convert a sequence of x y coords (or a list of x y coords), expressed as WorldCoords,
+returning a list with the corresponding Viewport coords.
+This may be useful for finding if a point (expressed in world-cordinate) is within the Viewport (i.e. the canvas visibile areaa).
+Just test if the returned x-coord is between 0 and [lb]winfo width .zc[rb]
+and the returned y.coord is between 0 and [lb]winfo height .zc[rb]
+
+[list_end]
+
+[comment =====================================================================]
+[section {BINDINGS}]
+
+[widget zoom-canvas] does not provide built-in bindings, 
+but it's easy to add mouse bindings for zooming and panning.
+[example {
+ bind ZoomCanvas <Button-1> { %W scan mark %x %y }
+ bind ZoomCanvas <B1-Motion> { %W scan dragto %x %y 1 }
+}]
+
+If your app is alreading using <Button-1> and <B1-Motion> on canvas,
+consider using alternatives mouse-bindings like
+<Control-Button-1> <Control-B1-Motion>
+or ...  use the scrollbars ! (scrollbars are old-fashioned)
+[para]
+[para]
+IMPORTANT NOTE on scrolling the viewport (panning):
+[para]
+[para]
+If no scrollregion is set, then you could move the viewport with no limits. 
+If you want to limit the scrolling, you should set the scrollregion
+AND be sure the [option -confine] option is set to 1 (this is the default),
+like in the following example:
+[example {
+ .zc configure -scrollregion [.zc bbox all]  
+}]
+
+
+The following command binds the <MouseWheel> event with the [cmd rzoom] subcommand.
+Note that zoom is centered on the cursor position and that the zoom 
+coefficient may by adjusted with the [option -zmultiplier]
+configuration option.  
+[example {
+ bind ZoomCanvas <MouseWheel> { %W rzoom %D [%W canvasx %x] [%W canvasy %y] }
+}]
+
+[comment =====================================================================]
+[section {EVENTS}]
+Event [const <<Zoom>>] is generated when zoom changes.
+This virtual-event carries some data that may be caught in binding script by the [const %d] substitution keyword.
+Parameter [const %d] holds the new zoom factor
+
+  
+[comment =====================================================================]
+[section {Examples}]
+[example {
+ zoom-canvas .zc -background orange
+ pack .zc -fill both -expand true
+  #  set the zoom-factor to 0.1x
+ .zc zoom 0.1
+  # Draw a circle and a rectangle
+ .zc create oval 0 0 3000 3000
+ .zc create rectangle 0 0 3000 3000
+  # Move all items by (500,200) (in world coords)
+ .zc move all 500 200
+  # note that the 'apparent translation' is only 0.1*(500,200)
+  
+  # add a binding on mouse movement and print the position (in world-coords)
+ bind .zc <Button-1> { puts "You picked [%W canvasxy [list %x %y]]" }
+}]
+
+You can find many other examples within the "demo" directory of the zoom-canvas package.
+[list_begin itemized]
+[item]
+demo/demo.tcl - a basic interactive demo showing the corrispondence between Viewport coordinates and World coordinates.
+[item]
+demo/toy_planet_demo.tcl  - here the 'world model' is the solar system; planets and their orbits are expressed in kilometers (these are still huge measures..).
+[item]
+demo/timeline_demo.tcl - here a huge timeline from year 1900 to 2020 can be interactively zoomed, just in the horizontal dimension.
+[list_end]
+[comment =====================================================================]
+[section {Limitations}]
+[list_begin itemized]
+[item]
+Item-text, item-images and item-windows won't zoom ! (but this could be a benefical limitation, e.g. when drawing a map, text and small images (icons) won't zoom !)
+[item]
+Line's width (thickness) won't zoom.  (.. same as above)
+[item]
+Coordinates and distances should be specified as simple numbers; no c,i,m,p suffix is allowed
+[list_end]
+ 
+[comment =====================================================================] 
+[section {BUGS, IDEAS, FEEDBACK}]
+[list_begin itemized]
+[item]
+-
+[item]
+-
+[list_end]
+
+[comment =====================================================================]
+
+
+[keywords Snit]
+[keywords widget canvas]
+[manpage_end]

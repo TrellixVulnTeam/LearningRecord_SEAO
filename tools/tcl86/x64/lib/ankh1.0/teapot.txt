@@ -1,0 +1,25 @@
+Package ankh 1.0
+Meta platform win32-x86_64
+Meta build::date 2022-06-10
+Meta generated::by {critcl 3.1.18} ashok
+Meta generated::date critcl
+Meta require critcl::cutil {Tcl 8.5}
+Meta license Under a BSD license.
+Meta author {Andreas Kupries}
+Meta summary Commands for using a variety of cryptographically secure
+Meta summary hash functions
+Meta description This package provides a number of commands giving
+Meta description access to a variety of cryptographically secure hash
+Meta description functions, old and new.
+Meta subject hash {cryptographically secure hash} {secure hash} md4 md5
+Meta subject sha1 sha2 sha3 haval ripemd
+Meta included tcl/policy_1.tcl critcl-rt.tcl win32-x86_64/ankh.dll
+Meta entrytclcommand {eval [list ::apply {dir {
+    source [file join $dir critcl-rt.tcl]
+    set path [file join $dir [::critcl::runtime::MapPlatform]]
+    set ext [info sharedlibextension]
+    set lib [file join $path "ankh$ext"]
+    load $lib Ankh
+    ::critcl::runtime::Fetch $dir policy_1.tcl
+    package provide ankh 1.0
+}} $dir]}

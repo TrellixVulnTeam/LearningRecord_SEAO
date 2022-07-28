@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" TYPE="text/css" HREF="style.css">
+<TITLE>Paved::label - 1.2</TITLE>
+</HEAD><BODY BGCOLOR="white" TEXT="black">
+<P ALIGN="center"><CENTER><H1>Paved::label - 1.2</H1>
+<FONT SIZE="4">
+<I>an extension of the label widget </I><BR>
+</FONT></CENTER>
+
+<H4>Table Of Contents</H4>
+    <UL>
+    <LI><A HREF="#toc1">NAME</A>
+    <LI><A HREF="#toc2">SYNOPSIS</A>
+    <LI><A HREF="#toc3">INTRODUCTION</A>
+    <LI><A HREF="#toc4">STANDARD OPTIONS</A>
+    <LI><A HREF="#toc5">PAVED-SPECIFIC OPTIONS</A>
+    <LI><A HREF="#toc6">WIDGET COMMANDS</A>
+    <LI><A HREF="#toc7">EXTENDED COMMANDS</A>
+    <LI><A HREF="#toc8">BINDINGS</A>
+    <LI><A HREF="#toc9">EXAMPLE</A>
+    <LI><A HREF="#toc10">NOTES</A>
+    <LI><A HREF="#toc11">HISTORY</A>
+    </UL>
+
+<P></P>
+<A NAME="toc1"></A>
+<H2>NAME</H2>
+<P>
+ <B>Paved::label</B> - an extension of the label widget 
+</P>
+<A NAME="toc2"></A>
+<H2>SYNOPSIS</H2>
+<P>
+  package require <B>Paved::label</B>
+</P>
+<P>
+  <B>Paved::label</B> <I>pathName</I> ?<I>options</I>? 
+</P>
+<P>
+  <B>Paved::label</B> <B>create</B> <I>pathName</I> ?<I>options</I>? 
+</P>
+<P>
+  <B>Paved::label</B> <B>adapt</B>  <I>pathName</I> ?<I>options</I>? 
+</P>
+<A NAME="toc3"></A>
+<H2>INTRODUCTION</H2>
+<P>
+ <B>Paved::label</B> is an extension of the label widget.
+</P>
+<P>
+ A <B>Paved-Label</B> is simply a label with a paved (tiled) background.
+</P>
+<P>
+ First and second command above are equivalent; they create a new paved-label.
+</P>
+<P>
+ Third command is for transforming an existing label in a paved-label.
+ Once a <B>label</B> has been transformed in a paved-label, you can use all its
+ options/sub-commands/bindings as if it were an <I>original</I> <B>Paved::label</B>.
+</P>
+<A NAME="toc4"></A>
+<H2>STANDARD OPTIONS</H2>
+<P>
+  .. all <B>label</B> options are supported.
+</P>
+<P>
+  Be careful that <B>-image</B> option has been removed (replaced by <B>-tile</B>) (see below)
+</P>
+<P>
+  The <B>-compound</B> option only accepts the following values: <B>none</B>, <B>center</B>.
+  Other 'valid' values are forced to <B>center</B>. 
+</P>
+<A NAME="toc5"></A>
+<H2>PAVED-SPECIFIC OPTIONS</H2>
+<DL>
+<DT><B>-tile</B>  <I>image</I></DT><DD>
+    Specifies an image to display as background, which must have been created with the "image create" command. 
+    If <I>image</I> is the empty string, the background is disabled.
+<DT><B>-tile</B>  <I>filename</I>    </DT><DD>
+    <I>filename</I> can be also the name of a supported graphic file ( see [ image types ] )
+</DL>
+
+<A NAME="toc6"></A>
+<H2>WIDGET COMMANDS</H2>
+<P>
+  .. all <B>label</B> widget commands are supported.
+</P>
+<A NAME="toc7"></A>
+<H2>EXTENDED COMMANDS</H2>
+<P>
+   no extended command.
+</P>
+<A NAME="toc8"></A>
+<H2>BINDINGS</H2>
+<P>
+  A script is attached to the &lt;Configure&gt; event for the <I>pseudo class</I>
+  <B>PavedLabel</B>, so that each time the widget is resized,
+  the background image is resized accordling.
+</P>
+<A NAME="toc9"></A>
+<H2>EXAMPLE</H2>
+<PRE>
+    package require Paved::label
+     # suppose xyz.gif is in current directory
+    image create photo xyzImage -file xyz.gif 
+     # create a tiled-label widget; use 'xyzImage' as background.
+     #  and place a text centered
+    Paved::label .c -tile xyzImage -borderwidth 10 -relief sunken \
+      -compound center -text "This is a paved-label widget"
+    pack .c -fill both -expand true
+    wm geometry . 200x200
+</PRE>
+<P>
+ or in a more compact form:
+</P>
+<PRE>
+    package require Paved::label
+    Paved::label .c -tile xyz.gif -borderwidth 10 -relief sunken \
+           -compound center -text "This is a paved-label widget"
+    pack .c -fill both -expand true
+    wm geometry . 200x200
+</PRE>
+<P></P>
+<A NAME="toc10"></A>
+<H2>NOTES</H2>
+<P>
+  Unless your <B>Paved::label</B> is 'expanded' by the geometry manager 
+   (e.g. 'packer'), ALWAYS set a (minumum) height/width (options -width,
+   -height), or, its size will 'collapse' to the text size (if any), or to
+   few pixels (if -text is empty). 
+</P>
+<P>
+   For each <B>Paved::label</B> widget ".x" , the following items will be created:
+</P>
+   <UL>
+   <LI><B>.x_bg</B>    - an auxiliary 'image'
+   <LI><B>imageNN</B>  - another auxiliary 'image' (NN is a serial number)
+   </UL>
+
+<P>
+   These items should never be manipulated.
+   They will be automatically destroyed when widget ".x" is destroyed.
+</P>
+<A NAME="toc11"></A>
+<H2>HISTORY</H2>
+<UL>
+<LI>1.0
+ <UL>
+ <LI>initial revision
+ </UL>
+<LI>1.1
+ <UL>
+ <LI>Added Paved::labelAdaptor for 'paving' existing label widgets.
+ <LI>Removed dependency from a fixed 'Snit' package (required Snit 0.91 or later). 
+ </UL>
+<LI>1.2
+ <UL>
+ <LI>Added a more permissive license
+ <LI>A new way for adapting existing widgets - Paved::labelAdaptor is now deprecated
+ <P></P>
+ </UL>
+</UL>
+
+
+<!-- html code generated by txt2tags 2.3 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags c:\Documents and Settings\Aldo\Desktop\paved\doc\srcDoc\pavelabel.t2t -->
+</BODY></HTML>

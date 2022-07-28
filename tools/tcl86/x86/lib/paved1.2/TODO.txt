@@ -1,0 +1,17 @@
+TODO
+
+** analyze deeper the following TK 8.4.3 bug (?)
+
+  # it seems that whwn you change -bd of a toplevel,
+  #  the 'painting' is wrong (but if you click the window,
+  #  it goes right) 
+
+  toplevel .x
+   # wait for window (i.e. simulate the following 
+   #   ".x configure ..." is typed after toplevel has been painted.
+  tkwait visibility .x
+  .x configure -bd 10 -relief sunken
+
+
+
+

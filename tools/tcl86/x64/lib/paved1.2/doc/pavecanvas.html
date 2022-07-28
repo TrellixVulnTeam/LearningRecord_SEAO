@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="stylesheet" TYPE="text/css" HREF="style.css">
+<TITLE>Paved::canvas 1.2</TITLE>
+</HEAD><BODY BGCOLOR="white" TEXT="black">
+<P ALIGN="center"><CENTER><H1>Paved::canvas 1.2</H1>
+<FONT SIZE="4">
+<I>an extension of the canvas widget</I><BR>
+</FONT></CENTER>
+
+<H4>Table Of Contents</H4>
+    <UL>
+    <LI><A HREF="#toc1">NAME</A>
+    <LI><A HREF="#toc2">SYNOPSIS</A>
+    <LI><A HREF="#toc3">INTRODUCTION</A>
+    <LI><A HREF="#toc4">STANDARD OPTIONS</A>
+    <LI><A HREF="#toc5">PAVED-SPECIFIC OPTIONS</A>
+    <LI><A HREF="#toc6">WIDGET COMMANDS</A>
+    <LI><A HREF="#toc7">EXTENDED COMMANDS</A>
+    <LI><A HREF="#toc8">ITEM IDS AND TAGS</A>
+    <LI><A HREF="#toc9">BINDINGS</A>
+    <LI><A HREF="#toc10">EXAMPLE</A>
+    <LI><A HREF="#toc11">NOTES</A>
+    <LI><A HREF="#toc12">HISTORY</A>
+    </UL>
+
+<P></P>
+<A NAME="toc1"></A>
+<H2>NAME</H2>
+<P>
+ <B>Paved::canvas</B> - an extension of the canvas widget 
+</P>
+<A NAME="toc2"></A>
+<H2>SYNOPSIS</H2>
+<P>
+ package require <B>Paved::canvas</B>
+</P>
+<P>
+ <B>Paved::canvas</B> <I>pathName</I> ?<I>options</I>? 
+</P>
+<P>
+ <B>Paved::canvas</B> <B>create</B> <I>pathName</I> ?<I>options</I>? 
+</P>
+<P>
+ <B>Paved::canvas</B> <B>adapt</B>  <I>pathName</I> ?<I>options</I>? 
+</P>
+<A NAME="toc3"></A>
+<H2>INTRODUCTION</H2>
+<P>
+ <B>Paved::canvas</B> is an extension of the canvas widget.
+</P>
+<P>
+ A <B>Paved-canvas</B> is simply a canvas with an image item acting as a paved (tiled) background.
+</P>
+<P>
+ First and second command above are equivalent; they create a new paved-canvas.
+</P>
+<P>
+ Third command is for transforming an existing canvas in a paved-canvas.
+ Once a <B>canvas</B> has been transformed in a paved-canvas, you can use all its
+ options/sub-commands/bindings as if it were an <I>original</I> <B>Paved::canvas</B>.
+</P>
+<P>
+ The background image is dinamically sized in order to cover all the visible canvas.
+</P>
+<P>
+ This widget can handle huge scrollregions; actually image size is 'one tile' more the canvas size, and it is automatically panned when canvas scrolls.
+</P>
+<A NAME="toc4"></A>
+<H2>STANDARD OPTIONS</H2>
+<P>
+ .. all <B>canvas</B> options are supported.
+</P>
+<A NAME="toc5"></A>
+<H2>PAVED-SPECIFIC OPTIONS</H2>
+<DL>
+<DT><B>-tile</B>  <I>image</I></DT><DD>
+    Specifies an image to display as background, which must have been created with the "image create" command. 
+    If <I>image</I> is the empty string, the background is disabled.
+<DT><B>-tile</B>  <I>filename</I>    </DT><DD>
+    <I>filename</I> can be also the name of a supported graphic file ( see [ image types ] )
+<DT><B>-bgzoom</B>  <I>n</I></DT><DD>
+    <I>n</I> is an integer value (default 1). With this option, each pixel of the source image will be expanded into a block of <I>n</I> x <I>n</I> pixels.
+<DT><B>-tileorigin</B>  <I>tuple</I></DT><DD>
+    <I>tuple</I> is a list with two coordinates describing where the top-left corner of the 'first' tile will be placed in the canvas.
+    Default is { 0 0 }.
+    Each of the coordinates may be specified in any of the valid forms for the 'canvas' COORDINATES.     
+    If you have a MxN tile and you want its center be on the point (0,0) of the canvas, specify -tileorigin { M/2 N/2 } (or, equivalently {-M/2 -N/2}, by virtue of coherence properties)
+</DL>
+
+<A NAME="toc6"></A>
+<H2>WIDGET COMMANDS</H2>
+<P>
+ .. all <B>canvas</B> widget commands are supported.
+</P>
+<A NAME="toc7"></A>
+<H2>EXTENDED COMMANDS</H2>
+<DL>
+<DT><I>pathName</I>  <B>clean</B></DT><DD>
+    delete all items on canvas (leaving the background-image intact).
+    <B>This command is obsolete</B>; now you can safely use the <B>delete</B> command.
+</DL>
+
+<A NAME="toc8"></A>
+<H2>ITEM IDS AND TAGS</H2>
+<P>
+ the embedded background image is tagged as "<B>bgimage</B>" (<I>this tag is reserved</I>).
+</P>
+<A NAME="toc9"></A>
+<H2>BINDINGS</H2>
+<P>
+ A script is attached to the &lt;Configure&gt; event for the <I>pseudo class</I> <B>PavedCanvas</B>, so that each time the widget is resized, the background image is resized accordling.
+</P>
+<A NAME="toc10"></A>
+<H2>EXAMPLE</H2>
+<PRE>
+   package require Paved::canvas
+    # suppose xyz.gif is in current directory
+   image create photo xyzImage -file xyz.gif 
+    # create a tiled-canvas widget; use 'xyzImage' as background.
+   Paved::canvas .c -tile xyzImage
+    # display it.
+   pack .c -expand true -fill both
+</PRE>
+<P>
+ or in a more compact form:
+</P>
+<PRE>
+   package require Paved::canvas
+   Paved::canvas .c -tile xyz.gif
+   pack .c -expand true -fill both
+</PRE>
+<P></P>
+<A NAME="toc11"></A>
+<H2>NOTES</H2>
+<P>
+ A Paved-canvas is simply a canvas with an image item.
+ This image item is automatically created and it is tagged as "<B>bgimage</B>"
+</P>
+<P>
+ (Within the next paragraphs, we assume that $c is the paved-canvas widget).
+</P>
+<P>
+ Few things you should always remember:
+</P>
+ <UL>
+ <LI>In general, the background image item <B>bgimage</B> should never be selected.
+   Be careful using the special tags "all" and "current" :
+   <UL>
+   <LI>Never use the "all" tag ; instead use "!bgimage" (i.e. "all" but "bgimage" )
+   <LI>An exception of the above rule is for the <B>delete</B> command; it has been safely redefined, so that it is <I>quite</I> impossible to delete the background image.
+      <UL>
+      <LI>you can write "$c delete all" without fear to delete the background.
+      </UL>
+   <LI>Be careful with other canvas subcommands, since the "all" and "current" tags are not filtered for them.
+   <P></P>
+<PRE>
+   Example: 
+      # *WRONG* way to get the bounding-box (since the background is included, too!)
+     $c bbox all  
+      # *RIGHT* way get the bounding-box   
+     $c bbox !bgimage
+</PRE>
+   <LI>Instead of using "current", use "current&amp;&amp;!bgimage"
+<PRE>
+   Example: 
+     # *WRONG* way to move the item under the cursor 
+     #   (if mouse pointer is over the canvas background, bgimage is moved)
+    $c move current $dx $dy
+     # *RIGHT* way to move the item under the cursor 
+    $c move current&amp;&amp;!bgimage $dx $dy
+</PRE>
+   </UL>
+ </UL>
+
+<A NAME="toc12"></A>
+<H2>HISTORY</H2>
+<UL>
+<LI>1.0
+ <UL>
+ <LI>initial revision
+ </UL>
+<LI>1.1
+ <UL>
+ <LI>Bug-fixing for -scrollregion update
+ <LI>Added special trap for 'delete' command:
+   <UL>
+   <LI>'current' and 'all' tags are transparently
+     transformed, so that the background image cannot
+     be deleted (..with some limitations..)
+   </UL>
+ <LI>Added Paved::canvasAdaptor for 'paving' existing canvas widgets.
+ <LI>Removed dependency from a fixed 'Snit' package (required Snit 0.91 or later). 
+ </UL>
+<LI>1.2
+ <UL>
+ <LI>Added a more permissive license
+ <LI>A new way for adapting existing widgets - Paved::canvasAdaptor is now deprecated
+ <P></P>
+ </UL>
+</UL>
+
+
+<!-- html code generated by txt2tags 2.3 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags c:\Documents and Settings\Aldo\Desktop\paved\doc\srcDoc\pavecanvas.t2t -->
+</BODY></HTML>
