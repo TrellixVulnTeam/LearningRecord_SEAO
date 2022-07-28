@@ -9,11 +9,18 @@ git clone https://github.com/songwenhao/LearningRecord
 tools\python38\python.exe init-submodules.py
 
 ## Open Visual Studio 2019 Command Prompt
-### x86
-![image](https://user-images.githubusercontent.com/11570113/159846227-d79197c9-4556-45c6-9cc6-ce94908a6174.png)
+### see. https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-160
+* x86 Native Tools Command Prompt - Sets the environment to use 32-bit, x86-native tools to build 32-bit, x86-native code.
+* x64 Native Tools Command Prompt - Sets the environment to use 64-bit, x64-native tools to build 64-bit, x64-native code.
+* x86_x64 Cross Tools Command Prompt - Sets the environment to use 32-bit, x86-native tools to build 64-bit, x64-native code.
+* x64_x86 Cross Tools Command Prompt - Sets the environment to use 64-bit, x64-native tools to build 32-bit, x86-native code.
 
-### x64
-![image](https://user-images.githubusercontent.com/11570113/159846126-c89339fa-9cf9-484b-aa90-30c6c885f641.png)
+### Below is my machine
+#### x86
+![image](https://user-images.githubusercontent.com/11570113/181400614-734160bb-1b91-4de6-b0cc-6ccaf81640bc.png)
+
+#### x64
+![image](https://user-images.githubusercontent.com/11570113/181400726-c88043e3-1845-4b46-95c5-2dec4bba7993.png)
 
 **And change path to current path.**
 
