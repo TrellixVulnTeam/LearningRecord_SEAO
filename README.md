@@ -6,7 +6,7 @@
 ## Clone codes
 git clone https://github.com/songwenhao/LearningRecord
 
-tools\python38\python.exe init-submodules.py
+double click cmd file: **init-submodules.cmd**
 
 ## Open Visual Studio 2019 Command Prompt
 ### see. https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-160
