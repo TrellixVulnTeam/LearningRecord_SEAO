@@ -21,10 +21,8 @@ extern "C" {
 
 namespace EmlUtils {
 
-    void GetMailAddr(
-        EmlInfo &emlInfo,
-        const std::wstring &wstrDecodeValue,
-        bool isFrom
+    std::wstring GetFormatMailAddr(
+        const std::wstring &wstrValue
     );
 
     EmlInfo ParseEmlFile(
@@ -38,11 +36,19 @@ namespace EmlUtils {
             emlInfoEx = ParseEmlFileEx(wstrEmlFilePath.c_str());
 
             if (emlInfoEx.from) {
-                GetMailAddr(emlInfo, StringUtils::Utf8ToUtf16(emlInfoEx.from), true);
+                emlInfo.wstrFromAddr = GetFormatMailAddr(StringUtils::Utf8ToUtf16(emlInfoEx.from));
+            }
+
+            if (emlInfoEx.fromWithName) {
+                emlInfo.wstrFromAddrName = GetFormatMailAddr(StringUtils::Utf8ToUtf16(emlInfoEx.fromWithName));
             }
 
             if (emlInfoEx.to) {
-                GetMailAddr(emlInfo, StringUtils::Utf8ToUtf16(emlInfoEx.to), false);
+                emlInfo.wstrToAddr = GetFormatMailAddr(StringUtils::Utf8ToUtf16(emlInfoEx.to));
+            }
+
+            if (emlInfoEx.toWithName) {
+                emlInfo.wstrToAddrName = GetFormatMailAddr(StringUtils::Utf8ToUtf16(emlInfoEx.toWithName));
             }
 
             if (emlInfoEx.subject) {
@@ -70,45 +76,36 @@ namespace EmlUtils {
         return emlInfo;
     }
 
-    void GetMailAddr(
-        EmlInfo &emlInfo,
-        const std::wstring &wstrMailAddr,
-        bool isFrom
+    std::wstring GetFormatMailAddr(
+        const std::wstring& wstrValue
     ) {
-        // eg. 张三 <18061474689@163.com> 或者 95555@message.cmbchina.com
-        std::wstring wstrAddr, wstrAddrName;
+        std::wstring wstrAddr = wstrValue;
 
-        size_t pos1 = wstrMailAddr.find(L"<");
-        if (pos1 != std::wstring::npos) {
-            wstrAddrName = wstrMailAddr.substr(0, pos1);
+        if (!wstrAddr.empty()) {
+            while (!wstrAddr.empty()) {
+                if (wstrAddr.back() == L'\r' ||
+                    wstrAddr.back() == L'\n' ||
+                    wstrAddr.back() == L' ' ||
+                    wstrAddr.back() == L'\"') {
+                    wstrAddr.pop_back();
+                } else {
+                    break;
+                }
+            }
 
-            size_t pos2 = wstrMailAddr.rfind(L">");
-            if (pos2 != std::wstring::npos && pos2 > pos1) {
-                wstrAddr = wstrMailAddr.substr(pos1 + 1, pos2 - pos1 - 1);
+            while (!wstrAddr.empty()) {
+                if (wstrAddr.front() == L'\r' ||
+                    wstrAddr.front() == L'\n' ||
+                    wstrAddr.front() == L' ' ||
+                    wstrAddr.front() == L'\"') {
+                    wstrAddr.erase(0, 1);
+                } else {
+                    break;
+                }
             }
         }
 
-        if (isFrom) {
-            if (!wstrAddrName.empty()) {
-                emlInfo.wstrFromAddrName = wstrAddrName;
-            }
-
-            if (!wstrAddr.empty()) {
-                emlInfo.wstrFromAddr = wstrAddr;
-            } else {
-                emlInfo.wstrFromAddr = wstrMailAddr;
-            }
-        } else {
-            if (!wstrAddrName.empty()) {
-                emlInfo.wstrToAddrName = wstrAddrName;
-            }
-
-            if (!wstrAddr.empty()) {
-                emlInfo.wstrToAddr = wstrAddr;
-            } else {
-                emlInfo.wstrToAddr = wstrMailAddr;
-            }
-        }
+        return wstrAddr;
     }
 
 }

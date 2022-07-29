@@ -106,6 +106,9 @@ void g_mime_format_options_clear_hidden_headers (GMimeFormatOptions *options);
 void g_mime_format_options_set_parse_richtext(GMimeFormatOptions *options, gboolean parse_richtext);
 gboolean g_mime_format_options_is_parse_richtext(GMimeFormatOptions *options);
 
+void g_mime_format_options_set_parse_addrname(GMimeFormatOptions* options, gboolean parse_addrname);
+gboolean g_mime_format_options_is_parse_addrname(GMimeFormatOptions* options);
+
 G_END_DECLS
 
 #endif /* __GMIME_FORMAT_OPTIONS_H__ */

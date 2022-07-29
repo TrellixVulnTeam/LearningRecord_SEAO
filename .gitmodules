@@ -33,7 +33,7 @@
 	url = https://github.com/ImageMagick/ImageMagick.git
 [submodule "C-C++/ThirdPartyLibrarys/database/sqlite"]
 	path = C-C++/ThirdPartyLibrarys/database/sqlite
-	url = https://github.com/mackyle/sqlite.git
+	url = https://github.com/sqlite/sqlite.git
 [submodule "C-C++/ThirdPartyLibrarys/database/sqlcipher"]
 	path = C-C++/ThirdPartyLibrarys/database/sqlcipher
 	url = https://github.com/songwenhao/sqlcipher.git

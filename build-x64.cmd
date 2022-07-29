@@ -1,6 +1,6 @@
 @echo off
 
-SET PATH=%cd%\tools\strawberry\perl\bin;%cd%\tools\nasm;%cd%\tools\jom;%cd%\tools\cmake\bin;%cd%\tools\yasm;%cd%\tools\groff\bin;%PATH%
+SET PATH=%cd%\tools\strawberry\perl\bin;%cd%\tools\nasm;%cd%\tools\jom;%cd%\tools\cmake\bin;%cd%\tools\tcl86\x64\bin;%cd%\tools\groff\bin;%PATH%
 
 ::openssl
 cd C-C++\ThirdPartyLibrarys\crypto\openssl
@@ -172,6 +172,30 @@ call xcopy build-x64\RelWithDebInfo\tinyxml2.dll ..\..\..\Output\x64\Release /y
 call xcopy build-x64\RelWithDebInfo\tinyxml2.pdb ..\..\..\Output\x64\Release /y
 call rmdir /s /q build-x64
 call git checkout master
+
+::SQLite
+cd ..\..\database
+call mkdir build-sqlite
+cd build-sqlite
+call nmake /f ..\sqlite\Makefile.msc TOP=..\sqlite USE_CRT_DLL=1 DEBUG=3
+call mkdir ..\..\..\Includes\sqlite3
+call xcopy sqlite3.h ..\..\..\Includes\sqlite /y
+call xcopy sqlite3ext.h ..\..\..\Includes\sqlite /y
+call xcopy sqlite3.lib ..\..\..\Output\x64\Debug /y
+call xcopy sqlite3.dll ..\..\..\Output\x64\Debug /y
+call xcopy sqlite3.pdb ..\..\..\Output\x64\Debug /y
+call xcopy sqlite3.exe ..\..\..\Output\x64\Debug /y
+cd ..
+call rmdir /s /q build-sqlite
+call mkdir build-sqlite
+cd build-sqlite
+call nmake /f ..\sqlite\Makefile.msc TOP=..\sqlite USE_CRT_DLL=1
+call xcopy sqlite3.lib ..\..\..\Output\x64\Release /y
+call xcopy sqlite3.dll ..\..\..\Output\x64\Release /y
+call xcopy sqlite3.pdb ..\..\..\Output\x64\Release /y
+call xcopy sqlite3.exe ..\..\..\Output\x64\Release /y
+cd ..
+call rmdir /s /q build-sqlite
 
 ::SQLCipher 
 cd ..\..\database\sqlcipher

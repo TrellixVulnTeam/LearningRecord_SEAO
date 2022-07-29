@@ -20,8 +20,10 @@ extern "C" {
 
 typedef struct EmlInfoEx {
     char *subject;
-    char *from;
-    char *to;
+    char* from;
+    char* fromWithName;
+    char* to;
+    char* toWithName;
     char *body;
     char *richbody;
     long long date;

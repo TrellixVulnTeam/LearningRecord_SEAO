@@ -54,12 +54,12 @@ EmlInfoEx ParseEmlFileEx(
             break;
         }
 
-        fileContent = (char*)malloc(fileSize);
+        fileContent = (char*)malloc(fileSize + 1);
         if (!fileContent) {
             break;
         }
 
-        fileContent[fileSize - 1] = 0;
+        fileContent[fileSize] = 0;
         size_t readSize = fread(fileContent, 1, fileSize, fp);
         if (readSize != fileSize) {
             break;
@@ -103,16 +103,44 @@ EmlInfoEx ParseEmlFileEx(
         g_object_unref(parser);
 
         if (message) {
-            GMimeObject *object = (GMimeObject *)message;
-            int count = g_mime_header_list_get_count(object->headers);
-            int index = 0;
-            const char *header_content = NULL;
-            char *convert_header_content = NULL;
-
             const char *subject = g_mime_message_get_subject(message);
             if (subject) {
                 emlInfoEx.subject = _strdup(subject);
             }
+
+            GMimeFormatOptions* options = g_mime_format_options_new();
+            g_mime_format_options_set_parse_addrname(options, FALSE);
+
+            InternetAddressList* from = g_mime_message_get_from(message);
+            const char* from_ptr = internet_address_list_to_string(from, NULL, 0);
+            if (from_ptr) {
+                emlInfoEx.fromWithName = _strdup(from_ptr);
+            }
+
+            from_ptr = internet_address_list_to_string(from, options, 0);
+            if (from_ptr) {
+                emlInfoEx.from = _strdup(from_ptr);
+            }
+
+            InternetAddressList* to = g_mime_message_get_to(message);
+            const char* to_ptr = internet_address_list_to_string(to, NULL, 0);
+            if (to_ptr) {
+                emlInfoEx.toWithName = _strdup(to_ptr);
+            }
+
+            to_ptr = internet_address_list_to_string(to, options, 0);
+            if (to_ptr) {
+                emlInfoEx.to = _strdup(to_ptr);
+            }
+
+            g_mime_format_options_free(options);
+            options = NULL;
+
+            /*GMimeObject* object = (GMimeObject*)message;
+            int count = g_mime_header_list_get_count(object->headers);
+            int index = 0;
+            const char* header_content = NULL;
+            char* convert_header_content = NULL;
 
             while (index < count) {
                 GMimeHeader *header = g_mime_header_list_get_header_at(object->headers, index);
@@ -153,7 +181,7 @@ EmlInfoEx ParseEmlFileEx(
                 }
 
                 index++;
-            }
+            }*/
 
             wchar_t *attach_dirPath = NULL;
             gsize attach_dirPath_len = 1024;
@@ -173,7 +201,7 @@ EmlInfoEx ParseEmlFileEx(
 
             swprintf_s(attach_dirPath, attach_dirPath_len, L"%s-attachFiles\\", attach_dirPath);
 
-            GMimeFormatOptions *options = g_mime_format_options_new();
+            options = g_mime_format_options_new();
             g_mime_format_options_set_parse_richtext(options, FALSE);
             char *body = g_mime_object_to_string_with_attachfile(NULL, attach_dirPath, (GMimeObject *)message, options);
             if (body) {

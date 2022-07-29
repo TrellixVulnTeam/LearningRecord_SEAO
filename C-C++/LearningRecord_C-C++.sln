@@ -33,6 +33,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleApplication1", "test
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParseAppleCookieFile", "test\ParseAppleCookieFile\ParseAppleCookieFile.vcxproj", "{44AE9614-461E-41CD-A7A5-31E7B2D24043}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AESUtils", "Utils\AESUtils\AESUtils.vcxproj", "{0390C04A-0E11-4492-938D-18329A6C5168}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -145,6 +147,14 @@ Global
 		{44AE9614-461E-41CD-A7A5-31E7B2D24043}.Release|x64.Build.0 = Release|x64
 		{44AE9614-461E-41CD-A7A5-31E7B2D24043}.Release|x86.ActiveCfg = Release|Win32
 		{44AE9614-461E-41CD-A7A5-31E7B2D24043}.Release|x86.Build.0 = Release|Win32
+		{0390C04A-0E11-4492-938D-18329A6C5168}.Debug|x64.ActiveCfg = Debug|x64
+		{0390C04A-0E11-4492-938D-18329A6C5168}.Debug|x64.Build.0 = Debug|x64
+		{0390C04A-0E11-4492-938D-18329A6C5168}.Debug|x86.ActiveCfg = Debug|Win32
+		{0390C04A-0E11-4492-938D-18329A6C5168}.Debug|x86.Build.0 = Debug|Win32
+		{0390C04A-0E11-4492-938D-18329A6C5168}.Release|x64.ActiveCfg = Release|x64
+		{0390C04A-0E11-4492-938D-18329A6C5168}.Release|x64.Build.0 = Release|x64
+		{0390C04A-0E11-4492-938D-18329A6C5168}.Release|x86.ActiveCfg = Release|Win32
+		{0390C04A-0E11-4492-938D-18329A6C5168}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +173,7 @@ Global
 		{6C2E1895-8FE5-42B8-A1F4-377E341BF3B2} = {606D337D-1E58-4212-A59B-3A161DCEA41F}
 		{96C1A8AB-E79F-4934-A275-03DA382C3D15} = {8F7A47F0-C918-4C72-8003-E9086B4142E6}
 		{44AE9614-461E-41CD-A7A5-31E7B2D24043} = {8F7A47F0-C918-4C72-8003-E9086B4142E6}
+		{0390C04A-0E11-4492-938D-18329A6C5168} = {606D337D-1E58-4212-A59B-3A161DCEA41F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A11F5242-34C4-46E0-84A8-387142C49557}
