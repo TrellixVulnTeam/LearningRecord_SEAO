@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MasmDemo_x64", "MasmDemo_x6
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MasmDemo_x86", "MasmDemo_x86\MasmDemo_x86.vcxproj", "{4164AA65-1EF9-4E69-899B-D1BED776070B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NasmDemo_x86", "NasmDemo_x86\NasmDemo_x86.vcxproj", "{14042EB3-F66F-44EA-A853-AA225CC03D67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,12 @@ Global
 		{4164AA65-1EF9-4E69-899B-D1BED776070B}.Release|x64.ActiveCfg = Release|Win32
 		{4164AA65-1EF9-4E69-899B-D1BED776070B}.Release|x86.ActiveCfg = Release|Win32
 		{4164AA65-1EF9-4E69-899B-D1BED776070B}.Release|x86.Build.0 = Release|Win32
+		{14042EB3-F66F-44EA-A853-AA225CC03D67}.Debug|x64.ActiveCfg = Debug|Win32
+		{14042EB3-F66F-44EA-A853-AA225CC03D67}.Debug|x86.ActiveCfg = Debug|Win32
+		{14042EB3-F66F-44EA-A853-AA225CC03D67}.Debug|x86.Build.0 = Debug|Win32
+		{14042EB3-F66F-44EA-A853-AA225CC03D67}.Release|x64.ActiveCfg = Release|Win32
+		{14042EB3-F66F-44EA-A853-AA225CC03D67}.Release|x86.ActiveCfg = Release|Win32
+		{14042EB3-F66F-44EA-A853-AA225CC03D67}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
